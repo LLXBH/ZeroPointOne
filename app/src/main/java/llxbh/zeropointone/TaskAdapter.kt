@@ -1,16 +1,15 @@
 package llxbh.zeropointone
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import llxbh.zeropointone.dao.Task
 
 class TaskAdapter(
-    private val taskData: List<TaskData>
+    private val taskData: List<Task>
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var mOnTaskClick: OnTaskClick? = null
