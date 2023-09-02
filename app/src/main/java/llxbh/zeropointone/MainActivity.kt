@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import llxbh.zeropointone.dao.AppDatabase
+import llxbh.zeropointone.dao.Task
 
 /**
  * 主界面。主要展示当前全部任务和添加删除
@@ -18,18 +19,18 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "database-ZeroPointOne"
-        ).build()
-        TaskApi.setTaskData(db.taskDao())
+//        val db = Room.databaseBuilder(
+//            applicationContext,
+//            AppDatabase::class.java,
+//            "database-ZeroPointOne"
+//        ).build()
+//        TaskApi.setTaskData(db.taskDao())
 
-        val taskDataList = TaskApi.getAll()
+        val taskDataList = listOf<Task>()
         findViewById<RecyclerView>(R.id.rv_taskList).also {
             it.layoutManager =  LinearLayoutManager(this)
-            it.adapter = TaskAdapter(TaskApi.getAll()).apply {
-                // 当个清单的点击事件
+            it.adapter = TaskAdapter(taskDataList).apply {
+                // 清单的点击事件
                 setTaskClick(object: TaskAdapter.OnTaskClick {
                     override fun setOnTaskClick(position: Int) {
                         // 传递当前的清单数据给 “详细” 界面展现
