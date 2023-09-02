@@ -33,4 +33,40 @@ object TaskApi {
         }
     }
 
+    /**
+     * 根据 id 去找对于的任务
+     */
+    suspend fun get(taskId: Int): Task? {
+        return withContext(Dispatchers.IO) {
+            sTaskDao.get(taskId)
+        }
+    }
+
+    /**
+     * 插入新的数据
+     */
+    suspend fun insert(task: Task) {
+        return withContext(Dispatchers.IO) {
+            sTaskDao.insert(task)
+        }
+    }
+
+    /**
+     * 更新数据
+     */
+    suspend fun update(task: Task) {
+        return withContext(Dispatchers.IO) {
+            sTaskDao.update(task)
+        }
+    }
+
+    /**
+     * 删除数据
+     */
+    suspend fun delete(task: Task) {
+        return withContext(Dispatchers.IO) {
+            sTaskDao.delete(task)
+        }
+    }
+
 }
