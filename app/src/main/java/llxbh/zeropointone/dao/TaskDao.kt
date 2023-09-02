@@ -20,6 +20,12 @@ interface TaskDao {
     fun getAll(): List<Task>
 
     /**
+     * 获取全部的任务，且按时间排序
+     */
+    @Query("SELECT * FROM Task ORDER BY date")
+    fun getAllAndTimeOrder(): List<Task>
+
+    /**
      * 获取指定的清单任务
      */
    @Query("SELECT * FROM Task WHERE id = :taskId")

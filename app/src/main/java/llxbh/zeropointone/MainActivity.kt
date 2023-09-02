@@ -2,6 +2,8 @@ package llxbh.zeropointone
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,9 +62,28 @@ class MainActivity: AppCompatActivity() {
         }
     }
 
+
     override fun onStart() {
         super.onStart()
         runBlocking { updateDataOrUI() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_taskTimeOrder -> {
+                runBlocking {
+                    sTaskDataList.clear()
+                    sTaskDataList.addAll(TaskApi.getAllAndTimeOrder())
+                    sTaskListAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private suspend fun updateDataOrUI() {

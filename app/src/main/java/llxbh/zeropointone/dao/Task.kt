@@ -2,6 +2,7 @@ package llxbh.zeropointone.dao
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
 
 /**
  * 清单任务数据类
@@ -13,5 +14,6 @@ data class Task(
     val id: Int = 0,
     val state: Boolean = false,
     val title: String,
-    val content: String = ""
+    val content: String = "",
+    val date: Date?
 )
