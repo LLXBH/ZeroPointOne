@@ -37,6 +37,11 @@ object TaskApi {
             sTaskDao.getAllAndTimeOrder()
         }
     }
+    suspend fun getAllAndStateOrder(): List<Task> {
+        return withContext(Dispatchers.IO) {
+            sTaskDao.getAllAndStateOrder()
+        }
+    }
 
     /**
      * 根据 id 去找对于的任务

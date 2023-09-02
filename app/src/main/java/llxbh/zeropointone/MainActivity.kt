@@ -74,23 +74,23 @@ class MainActivity: AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.menu_taskTimeOrder -> {
-                runBlocking {
-                    sTaskDataList.clear()
-                    sTaskDataList.addAll(TaskApi.getAllAndTimeOrder())
-                    sTaskListAdapter.notifyDataSetChanged()
-                }
-            }
+        runBlocking {
+            updateDataOrUI(when(item.itemId) {
+                R.id.menu_taskList -> TaskApi.getAll()
+                R.id.menu_taskTimeOrder -> TaskApi.getAllAndTimeOrder()
+                R.id.menu_taskStateOrder -> TaskApi.getAllAndStateOrder()
+                else -> return@runBlocking
+            })
         }
         return super.onOptionsItemSelected(item)
     }
 
     private suspend fun updateDataOrUI() {
-        withContext(Dispatchers.IO) {
-            sTaskDataList.clear()
-            sTaskDataList.addAll(TaskApi.getAll())
-        }
+        updateDataOrUI(TaskApi.getAll())
+    }
+    private suspend fun updateDataOrUI(list: List<Task>) {
+        sTaskDataList.clear()
+        sTaskDataList.addAll(list)
         sTaskListAdapter.notifyDataSetChanged()
     }
 
