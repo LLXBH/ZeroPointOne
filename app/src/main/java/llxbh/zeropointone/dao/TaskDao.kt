@@ -22,7 +22,7 @@ interface TaskDao {
     /**
      * 获取指定的清单任务
      */
-   @Query("SELECT id FROM Task")
+   @Query("SELECT * FROM Task WHERE id = :taskId")
     fun get(taskId: Int): Task
 
     /**

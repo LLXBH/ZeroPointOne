@@ -24,6 +24,9 @@ object TaskApi {
     /**
      * 获取当前全部的清单数据
      */
-    fun getAll(): List<Task> = sTaskDao.getAll()
+    fun getAll(): List<Task> {
+        return listOf()
+//        return sTaskDao.getAll()
+    }
 
 }

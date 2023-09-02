@@ -19,14 +19,8 @@ class MainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        val db = Room.databaseBuilder(
-//            applicationContext,
-//            AppDatabase::class.java,
-//            "database-ZeroPointOne"
-//        ).build()
-//        TaskApi.setTaskData(db.taskDao())
 
-        val taskDataList = listOf<Task>()
+        val taskDataList = TaskApi.getAll()
         findViewById<RecyclerView>(R.id.rv_taskList).also {
             it.layoutManager =  LinearLayoutManager(this)
             it.adapter = TaskAdapter(taskDataList).apply {
