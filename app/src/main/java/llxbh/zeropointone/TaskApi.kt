@@ -1,6 +1,9 @@
 package llxbh.zeropointone
 
 import androidx.room.Room
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import llxbh.zeropointone.app.appContext
 import llxbh.zeropointone.dao.AppDatabase
 import llxbh.zeropointone.dao.Task
@@ -24,9 +27,10 @@ object TaskApi {
     /**
      * 获取当前全部的清单数据
      */
-    fun getAll(): List<Task> {
-        return listOf()
-//        return sTaskDao.getAll()
+    suspend fun getAll(): List<Task> {
+        return withContext(Dispatchers.IO) {
+            sTaskDao.getAll()
+        }
     }
 
 }
