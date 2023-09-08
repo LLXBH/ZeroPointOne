@@ -7,6 +7,7 @@ pluginManagement {
         maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { setUrl("https://maven.aliyun.com/repository/public") }
         maven { setUrl("https://jitpack.io") }
+
         // Google 默认源
         google()
         // Jcenter 默认源
@@ -24,6 +25,7 @@ dependencyResolutionManagement {
         maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
         maven { setUrl("https://maven.aliyun.com/repository/public") }
         maven { setUrl("https://jitpack.io") }
+
         // Google 默认源
         google()
         // Jcenter 默认源
