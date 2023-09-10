@@ -21,7 +21,16 @@ class TaskAdapter(
      * 向外暴露的点击接口
      */
     interface OnTaskClick {
+
+        /**
+         * 清单的点击事件
+         */
         fun setOnTaskClick(position: Int)
+
+        /**
+         * 清单的状态点击事件
+         */
+        fun setOnTaskStateClick(position: Int, isChecked: Boolean)
     }
 
     fun setTaskClick(onTaskClick: OnTaskClick) {
@@ -40,11 +49,14 @@ class TaskAdapter(
         val task = taskData[position]
         (holder as ViewHolder).apply {
             taskState.isChecked = task.state
+            taskState.setOnCheckedChangeListener { buttonView, isChecked ->
+                mOnTaskClick?.setOnTaskStateClick(position, isChecked)
+            }
             taskTitle.text = task.title
             taskTitle.setOnClickListener {
                 mOnTaskClick?.setOnTaskClick(position)
             }
-            taskDate.text = task?.date?.let { TimeTools.dateToString(it) }
+            taskDate.text = task.date?.let { TimeTools.dateToString(it) }
         }
     }
 

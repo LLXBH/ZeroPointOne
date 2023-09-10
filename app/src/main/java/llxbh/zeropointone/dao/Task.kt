@@ -12,8 +12,8 @@ import java.util.Date
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val state: Boolean = false,
-    val title: String,
-    val content: String = "",
-    val date: Date?
+    var state: Boolean = false,
+    var title: String,
+    var content: String = "",
+    var date: Date?
 )

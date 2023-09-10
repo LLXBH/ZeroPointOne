@@ -16,7 +16,7 @@ import llxbh.zeropointone.dao.Task
 /**
  * 主界面。主要展示当前全部任务和添加删除
  */
-class MainActivity: AppCompatActivity() {
+class MainActivity: BaseActivity() {
 
     private val sTaskDataList = mutableListOf<Task>()
     private val sTaskListAdapter = TaskAdapter(sTaskDataList)
@@ -44,13 +44,22 @@ class MainActivity: AppCompatActivity() {
                             )
                             startActivity(intent)
                         }
+
+                        override fun setOnTaskStateClick(position: Int, isChecked: Boolean) {
+                            runBlocking {
+                                TaskApi.update(sTaskDataList[position].apply {
+                                    state = isChecked
+                                })
+                            }
+                        }
+
                     })
                 }
                 updateDataOrUI()
             }
         }
 
-        // 点击按钮进入 “内容” 界面创建新的任务
+        // 点击按钮（+）进入 “内容” 界面创建新的任务
         findViewById<Button>(R.id.btn_taskAdd).also {
             it.setOnClickListener {
                 val intent = Intent(
@@ -75,12 +84,13 @@ class MainActivity: AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         runBlocking {
-            updateDataOrUI(when(item.itemId) {
+            val taskListData = when(item.itemId) {
                 R.id.menu_taskList -> TaskApi.getAll()
                 R.id.menu_taskTimeOrder -> TaskApi.getAllAndTimeOrder()
                 R.id.menu_taskStateOrder -> TaskApi.getAllAndStateOrder()
                 else -> return@runBlocking
-            })
+            }
+            updateDataOrUI(taskListData)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -88,7 +98,7 @@ class MainActivity: AppCompatActivity() {
     private suspend fun updateDataOrUI() {
         updateDataOrUI(TaskApi.getAll())
     }
-    private suspend fun updateDataOrUI(list: List<Task>) {
+    private fun updateDataOrUI(list: List<Task>) {
         sTaskDataList.clear()
         sTaskDataList.addAll(list)
         sTaskListAdapter.notifyDataSetChanged()

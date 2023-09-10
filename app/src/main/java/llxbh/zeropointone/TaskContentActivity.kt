@@ -9,18 +9,15 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.dao.Task
 import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Date
 
 /**
  * 清单任务的详细界面
  */
-class TaskContentActivity: AppCompatActivity() {
+class TaskContentActivity: BaseActivity() {
 
     companion object {
         val MODE_CREATE = "Task_Create"     // 创建
@@ -76,7 +73,7 @@ class TaskContentActivity: AppCompatActivity() {
 
         // 点击时间则展示显示日期选
         mTaskDate.setOnClickListener {
-            val newFragment = DatePickerFragment()
+            val newFragment = DatePickerDialogFragment()
             newFragment.show(supportFragmentManager, "datePicker")
         }
     }

@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 /**
  * 日期选择视图
  */
-class DatePickerFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
+class DatePickerDialogFragment: DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     @SuppressLint("UseRequireInsteadOfGet")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
