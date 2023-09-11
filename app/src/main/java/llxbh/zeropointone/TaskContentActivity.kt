@@ -88,11 +88,12 @@ class TaskContentActivity: BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.menu_taskInsert -> insertTask()
-            R.id.menu_taskUpdate -> updateTask()
-            R.id.menu_taskDelete -> deleteTask()
-            else -> Toast.makeText(this, "操作异常！", Toast.LENGTH_SHORT).show()
+        runBlocking {
+            when(item.itemId) {
+                R.id.menu_taskInsert -> insertTask()
+                R.id.menu_taskUpdate -> updateTask()
+                R.id.menu_taskDelete -> deleteTask()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -126,16 +127,17 @@ class TaskContentActivity: BaseActivity() {
      * 插入新数据
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun insertTask() {
+    private suspend fun insertTask() {
         if (mTaskId != 0 && mMode == MODE_EXAMINE) {
             Toast.makeText(this, "当前模式不对劲！", Toast.LENGTH_SHORT)
                 .show()
         } else {
             runBlocking {
-                TaskApi.insert(getUiData())
-                Toast.makeText(this@TaskContentActivity, "插入数据！", Toast.LENGTH_SHORT)
-                    .show()
+
             }
+            TaskApi.insert(getUiData())
+            Toast.makeText(this@TaskContentActivity, "插入数据！", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -143,13 +145,11 @@ class TaskContentActivity: BaseActivity() {
      * 更新当前数据
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateTask() {
+    private suspend fun updateTask() {
         if (mTaskId != 0 && mMode == MODE_EXAMINE) {
-            runBlocking {
-                TaskApi.update(getUiData())
-                Toast.makeText(this@TaskContentActivity, "更新数据！", Toast.LENGTH_SHORT)
-                    .show()
-            }
+            TaskApi.update(getUiData())
+            Toast.makeText(this@TaskContentActivity, "更新数据！", Toast.LENGTH_SHORT)
+                .show()
         } else {
             Toast.makeText(this, "当前模式不对劲！", Toast.LENGTH_SHORT)
                 .show()
@@ -160,13 +160,11 @@ class TaskContentActivity: BaseActivity() {
      * 删除当前数据
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun deleteTask() {
+    private suspend fun deleteTask() {
         if (mTaskId != 0 && mMode == MODE_EXAMINE) {
-            runBlocking {
-                TaskApi.delete(getUiData())
-                Toast.makeText(this@TaskContentActivity, "删除数据！", Toast.LENGTH_SHORT)
-                    .show()
-            }
+            TaskApi.delete(getUiData())
+            Toast.makeText(this@TaskContentActivity, "删除数据！", Toast.LENGTH_SHORT)
+                .show()
         } else {
             Toast.makeText(this, "当前模式不对劲！", Toast.LENGTH_SHORT)
                 .show()
