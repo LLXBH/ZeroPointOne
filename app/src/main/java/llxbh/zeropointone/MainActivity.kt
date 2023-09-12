@@ -47,15 +47,12 @@ class MainActivity: BaseActivity() {
 
                         override fun setOnTaskStateClick(position: Int, isChecked: Boolean) {
                             runBlocking {
-                                TaskApi.update(sTaskDataList[position].apply {
-                                    state = isChecked
-                                })
+                                updateDataStateOrUI(position, isChecked)
                             }
                         }
 
                     })
                 }
-                updateDataOrUI()
             }
         }
 
@@ -74,7 +71,9 @@ class MainActivity: BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        runBlocking { updateDataOrUI() }
+        runBlocking {
+            updateDataOrUI()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -95,12 +94,26 @@ class MainActivity: BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private suspend fun updateDataOrUI() {
-        updateDataOrUI(TaskApi.getAll())
+    private suspend fun updateDataStateOrUI(position: Int, state: Boolean) {
+        // 更新数据
+        val data = sTaskDataList[position]
+        data.state = state
+        TaskApi.update(data)
+
+        // 更新UI
+        sTaskDataList.remove(data)
+        val newPosition = if (state) sTaskDataList.size else 0
+        sTaskDataList.add(newPosition, data)
+        sTaskListAdapter.notifyItemMoved(position, newPosition)
     }
-    private fun updateDataOrUI(list: List<Task>) {
+
+    private suspend fun updateDataOrUI(list: List<Task>? = null) {
         sTaskDataList.clear()
-        sTaskDataList.addAll(list)
+        if (list == null) {
+            sTaskDataList.addAll(TaskApi.getAllAndStateOrder())
+        } else {
+            sTaskDataList.addAll(list)
+        }
         sTaskListAdapter.notifyDataSetChanged()
     }
 

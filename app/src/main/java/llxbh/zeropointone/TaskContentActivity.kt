@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -26,9 +27,10 @@ class TaskContentActivity: BaseActivity() {
 
     private var mMode = MODE_EXAMINE
     private var mTaskId = 0
+    private var mState = false
     private var mSelectDate: Date? = null
 
-    private lateinit var mTaskState: CheckBox
+    private lateinit var mTaskState: TaskStateButton
     private lateinit var mTaskTitle: EditText
     private lateinit var mTaskContent: EditText
     private lateinit var mTaskDate: TextView
@@ -48,7 +50,12 @@ class TaskContentActivity: BaseActivity() {
         }
 
         // 绑定试图
-        mTaskState  = findViewById(R.id.cb_taskState)
+        mTaskState  = findViewById(R.id.ibtn_taskState)
+        mTaskState.setOnClickListener {
+            mState = !mState
+            mTaskState.state = mState
+        }
+
         mTaskTitle = findViewById(R.id.et_taskTitle)
         mTaskContent = findViewById(R.id.et_taskTitle)
         mTaskDate = findViewById(R.id.tv_taskDate)
@@ -103,7 +110,8 @@ class TaskContentActivity: BaseActivity() {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateUI(data: Task) {
-        mTaskState.isChecked = data.state
+        mState = data.state
+        mTaskState.state = data.state
         mTaskTitle.setText(data.title)
         mTaskContent.setText(data.content)
         mTaskDate.text = data.date?.let { TimeTools.dateToString(it) }
@@ -116,7 +124,7 @@ class TaskContentActivity: BaseActivity() {
     private fun getUiData(): Task {
         return Task(
             mTaskId,
-            mTaskState.isChecked,
+            mState,
             mTaskTitle.text.toString(),
             mTaskContent.text.toString(),
             mSelectDate
@@ -132,9 +140,6 @@ class TaskContentActivity: BaseActivity() {
             Toast.makeText(this, "当前模式不对劲！", Toast.LENGTH_SHORT)
                 .show()
         } else {
-            runBlocking {
-
-            }
             TaskApi.insert(getUiData())
             Toast.makeText(this@TaskContentActivity, "插入数据！", Toast.LENGTH_SHORT)
                 .show()

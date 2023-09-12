@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <CheckBox
-        android:id="@+id/cb_taskState"
+    <llxbh.zeropointone.TaskStateButton
+        android:id="@+id/ibtn_taskState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/task_state_incomplete_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,9 +20,9 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:text="title"
-        app:layout_constraintTop_toTopOf="@id/cb_taskState"
-        app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
-        app:layout_constraintStart_toEndOf="@id/cb_taskState"
+        app:layout_constraintTop_toTopOf="@id/ibtn_taskState"
+        app:layout_constraintBottom_toBottomOf="@id/ibtn_taskState"
+        app:layout_constraintStart_toEndOf="@id/ibtn_taskState"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView

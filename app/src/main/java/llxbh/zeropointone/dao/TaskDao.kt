@@ -25,6 +25,9 @@ interface TaskDao {
     @Query("SELECT * FROM Task ORDER BY date")
     fun getAllAndTimeOrder(): List<Task>
 
+    /**
+     * 获取全部的任务，且按状态排序
+     */
     @Query("SELECT * FROM Task ORDER BY state")
     fun getAllAndStateOrder(): List<Task>
 
