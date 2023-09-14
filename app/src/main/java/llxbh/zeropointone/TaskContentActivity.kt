@@ -85,6 +85,23 @@ class TaskContentActivity: BaseActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onStop() {
+        super.onStop()
+        val task = getUiData()
+        if (task.title.isNullOrEmpty()) {
+            return
+        } else if (mTaskId == 0) {
+            runBlocking {
+                insertTask()
+            }
+        } else {
+            runBlocking {
+                updateTask()
+            }
+        }
+    }
+
     /**
      * 绑定并且显示 Menu 菜单
      */

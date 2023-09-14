@@ -2,6 +2,8 @@ package llxbh.zeropointone
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import llxbh.zeropointone.dao.Task
@@ -20,6 +23,13 @@ class MainActivity: BaseActivity() {
 
     private val sTaskDataList = mutableListOf<Task>()
     private val sTaskListAdapter = TaskAdapter(sTaskDataList)
+    private val sHandleUpdateUI = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            runBlocking {
+                updateDataOrUI()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,9 +81,7 @@ class MainActivity: BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        runBlocking {
-            updateDataOrUI()
-        }
+        sHandleUpdateUI.handleMessage(Message())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -6,8 +6,8 @@
 
     <llxbh.zeropointone.TaskStateButton
         android:id="@+id/ibtn_taskState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_margin="5dp"
         app:state="false"
         app:layout_constraintStart_toStartOf="parent"

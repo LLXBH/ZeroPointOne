@@ -19,6 +19,10 @@ class TaskStateButton: ImageButton {
         }
 
     constructor(context: Context): super(context)
-    constructor(context: Context, attributeSet: AttributeSet): super(context, attributeSet)
+    constructor(context: Context, attributeSet: AttributeSet): super(context, attributeSet) {
+        state = context.theme
+            .obtainStyledAttributes(R.styleable.TaskStateButton)
+            .getBoolean(R.styleable.TaskStateButton_state, false)
+    }
 
 }
