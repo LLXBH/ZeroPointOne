@@ -1,5 +1,6 @@
 package llxbh.zeropointone
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -88,17 +89,8 @@ class TaskContentActivity: BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStop() {
         super.onStop()
-        val task = getUiData()
-        if (task.title.isNullOrEmpty()) {
-            return
-        } else if (mTaskId == 0) {
-            runBlocking {
-                insertTask()
-            }
-        } else {
-            runBlocking {
-                updateTask()
-            }
+        runBlocking {
+            onBackOrUpdateData()
         }
     }
 
@@ -123,6 +115,23 @@ class TaskContentActivity: BaseActivity() {
     }
 
     /**
+     * 关闭该界面时，需要执行的操作
+     * 修改，实时更新当前的数据
+     * 创建，检查标题或内容是否为空，都为空的话则无需保存数据
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun onBackOrUpdateData() {
+        when (mMode) {
+            MODE_CREATE -> {
+                insertTask()
+            }
+            MODE_EXAMINE -> {
+                updateTask()
+            }
+        }
+    }
+
+    /**
      * 使用输入的数据更新视图
      */
     @RequiresApi(Build.VERSION_CODES.O)
@@ -143,8 +152,7 @@ class TaskContentActivity: BaseActivity() {
             mTaskId,
             mState,
             mTaskTitle.text.toString(),
-            mTaskContent.text.toString(),
-            mSelectDate
+            mTaskContent.text.toString()
         )
     }
 

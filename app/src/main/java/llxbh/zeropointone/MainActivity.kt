@@ -10,8 +10,11 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import llxbh.zeropointone.dao.Task
@@ -21,67 +24,84 @@ import llxbh.zeropointone.dao.Task
  */
 class MainActivity: BaseActivity() {
 
+    companion object {
+        val TASK_RESULT = "Task_Result"
+        val TASK_INSERT = "Task_Insert"
+        val TASK_UPDATE = "Task_Update"
+        val TASK_DELETE = "Task_Delete"
+    }
+
     private val sTaskDataList = mutableListOf<Task>()
     private val sTaskListAdapter = TaskAdapter(sTaskDataList)
-    private val sHandleUpdateUI = object : Handler() {
-        override fun handleMessage(msg: Message) {
-            runBlocking {
-                updateDataOrUI()
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // 绑定列表的视图和数据
-        runBlocking {
-            findViewById<RecyclerView>(R.id.rv_taskList).also {
-                it.layoutManager =  LinearLayoutManager(this@MainActivity)
-                it.adapter = sTaskListAdapter.apply {
-                    // 清单的点击事件
-                    setTaskClick(object: TaskAdapter.OnTaskClick {
-                        override fun setOnTaskClick(position: Int) {
-                            // 传递当前的清单数据给 “详细” 界面展现
-                            val intent = Intent(
-                                this@MainActivity,
-                                TaskContentActivity::class.java
-                            )
-                            intent.putExtra(
-                                TaskApi.TASK_PASS,
-                                sTaskDataList[position].id
-                            )
-                            startActivity(intent)
-                        }
+        findViewById<RecyclerView>(R.id.rv_taskList).also {
+            it.layoutManager =  LinearLayoutManager(this@MainActivity)
+            it.adapter = sTaskListAdapter.apply {
+                // 清单的点击事件
+                setTaskClick(object: TaskAdapter.OnTaskClick {
+                    override fun setOnTaskClick(position: Int) {
+                        // 传递当前的清单数据给 “详细” 界面展现
+                        onOpenTaskContent(false, sTaskDataList[position])
+                    }
 
-                        override fun setOnTaskStateClick(position: Int, isChecked: Boolean) {
-                            runBlocking {
-                                updateDataStateOrUI(position, isChecked)
-                            }
+                    override fun setOnTaskStateClick(position: Int, isChecked: Boolean) {
+                        runBlocking {
+                            updateDataStateOrUI(position, isChecked)
                         }
+                    }
 
-                    })
-                }
+                })
             }
         }
 
         // 点击按钮（+）进入 “内容” 界面创建新的任务
         findViewById<Button>(R.id.btn_taskAdd).also {
             it.setOnClickListener {
-                val intent = Intent(
-                    this@MainActivity,
-                    TaskContentActivity::class.java
-                )
-                startActivity(intent)
+                onOpenTaskContent(true, null)
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != 1 && resultCode != RESULT_OK) {
+            return
+        }
+        // 通过了上面的条件，接收到了内容界面返回的信号，需要对界面操作
+//        when(data?.getStringExtra(TASK_RESULT)) {
+//            TASK_DELETE -> {
+//                val taskId = data.getStringExtra(TASK_DELETE)
+////                while ()
+//            }
+//            TASK_UPDATE -> {
+//                val taskId = data.getIntExtra(TASK_UPDATE, 0)
+//                for (task in sTaskDataList) {
+//                    if (task.id == taskId) {
+//
+//                    }
+//                }
+//            }
+//            TASK_INSERT -> {
+//                val task = Task(0 ,false, data.getStringExtra(TASK_INSERT) ?: "")
+//                sTaskDataList.add(0, task)
+//            }
+//        }
     }
 
 
     override fun onStart() {
         super.onStart()
-        sHandleUpdateUI.handleMessage(Message())
+        GlobalScope.launch {
+            delay(1000)
+            launch(Dispatchers.Main) {
+                updateDataOrUI()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -123,6 +143,27 @@ class MainActivity: BaseActivity() {
             sTaskDataList.addAll(list)
         }
         sTaskListAdapter.notifyDataSetChanged()
+    }
+
+    /**
+     * 以什么样的状态进入内容界面
+     */
+    private fun onOpenTaskContent(create: Boolean, taskData: Task?) {
+        val intent = Intent(
+            this@MainActivity,
+            TaskContentActivity::class.java
+        )
+        if (create || taskData == null) {
+
+        } else {
+            intent.putExtra(
+                TaskApi.TASK_PASS,
+                taskData.id
+            )
+        }
+        // 通知内容界面，带个数据回来
+        startActivity(intent)
+//        startActivityForResult(intent, 1)
     }
 
 }

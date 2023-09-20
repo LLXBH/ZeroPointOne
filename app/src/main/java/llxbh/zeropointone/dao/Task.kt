@@ -15,5 +15,5 @@ data class Task(
     var state: Boolean = false,
     var title: String,
     var content: String = "",
-    var date: Date?
+    var date: Date? = null
 )
