@@ -24,13 +24,6 @@ import llxbh.zeropointone.dao.Task
  */
 class MainActivity: BaseActivity() {
 
-    companion object {
-        val TASK_RESULT = "Task_Result"
-        val TASK_INSERT = "Task_Insert"
-        val TASK_UPDATE = "Task_Update"
-        val TASK_DELETE = "Task_Delete"
-    }
-
     private val sTaskDataList = mutableListOf<Task>()
     private val sTaskListAdapter = TaskAdapter(sTaskDataList)
 
@@ -66,33 +59,6 @@ class MainActivity: BaseActivity() {
             }
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode != 1 && resultCode != RESULT_OK) {
-            return
-        }
-        // 通过了上面的条件，接收到了内容界面返回的信号，需要对界面操作
-//        when(data?.getStringExtra(TASK_RESULT)) {
-//            TASK_DELETE -> {
-//                val taskId = data.getStringExtra(TASK_DELETE)
-////                while ()
-//            }
-//            TASK_UPDATE -> {
-//                val taskId = data.getIntExtra(TASK_UPDATE, 0)
-//                for (task in sTaskDataList) {
-//                    if (task.id == taskId) {
-//
-//                    }
-//                }
-//            }
-//            TASK_INSERT -> {
-//                val task = Task(0 ,false, data.getStringExtra(TASK_INSERT) ?: "")
-//                sTaskDataList.add(0, task)
-//            }
-//        }
-    }
-
 
     override fun onStart() {
         super.onStart()
@@ -154,7 +120,7 @@ class MainActivity: BaseActivity() {
             TaskContentActivity::class.java
         )
         if (create || taskData == null) {
-
+            // 无需操作
         } else {
             intent.putExtra(
                 TaskApi.TASK_PASS,
@@ -163,7 +129,6 @@ class MainActivity: BaseActivity() {
         }
         // 通知内容界面，带个数据回来
         startActivity(intent)
-//        startActivityForResult(intent, 1)
     }
 
 }
