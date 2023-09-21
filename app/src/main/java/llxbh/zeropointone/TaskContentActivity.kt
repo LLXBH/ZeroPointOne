@@ -55,7 +55,7 @@ class TaskContentActivity: BaseActivity() {
         }
 
         mTaskTitle = findViewById(R.id.et_taskTitle)
-        mTaskContent = findViewById(R.id.et_taskTitle)
+        mTaskContent = findViewById(R.id.et_taskContent)
         mTaskDate = findViewById(R.id.tv_taskDate)
 
         // 判断是否为 "查看" 模式，如是则需要获取数据
@@ -78,8 +78,7 @@ class TaskContentActivity: BaseActivity() {
 
         // 点击时间则展示显示日期选
         mTaskDate.setOnClickListener {
-            val newFragment = DatePickerDialogFragment()
-            newFragment.show(supportFragmentManager, "datePicker")
+            DatePickerDialogFragment().show(supportFragmentManager, "datePicker")
         }
     }
 
@@ -120,7 +119,16 @@ class TaskContentActivity: BaseActivity() {
     private suspend fun onBackOrUpdateData() {
         when (mMode) {
             MODE_CREATE -> {
-                insertTask()
+                val task = getUiData()
+                if (task.title.isNullOrEmpty() && task.content.isNullOrEmpty()) {
+                    return
+                } else if (!task.title.isNullOrEmpty()) {
+                    insertTask()
+                } else {
+                    mTaskTitle.text = mTaskContent.text
+                    mTaskContent.setText("")
+                    insertTask()
+                }
             }
             MODE_EXAMINE -> {
                 updateTask()
@@ -137,7 +145,9 @@ class TaskContentActivity: BaseActivity() {
         mTaskState.state = data.state
         mTaskTitle.setText(data.title)
         mTaskContent.setText(data.content)
-        mTaskDate.text = data.date?.let { TimeTools.dateToString(it) }
+        mTaskDate.text = data.date?.let {
+            TimeTools.dateToString(it)
+        }
     }
 
     /**
@@ -145,11 +155,12 @@ class TaskContentActivity: BaseActivity() {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getUiData(): Task {
-        return Task(
+          return Task(
             mTaskId,
             mState,
             mTaskTitle.text.toString(),
-            mTaskContent.text.toString()
+            mTaskContent.text.toString(),
+            TimeTools.stringToDate(mTaskDate.text.toString())
         )
     }
 

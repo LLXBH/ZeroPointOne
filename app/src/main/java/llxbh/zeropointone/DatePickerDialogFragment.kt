@@ -25,6 +25,7 @@ class DatePickerDialogFragment: DialogFragment(), DatePickerDialog.OnDateSetList
         return DatePickerDialog(activity!!, this, year, month, day)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
         (activity as TaskContentActivity).setDate(p1, p2, p3)
     }
