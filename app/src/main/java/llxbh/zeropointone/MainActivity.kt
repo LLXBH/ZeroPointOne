@@ -1,12 +1,14 @@
 package llxbh.zeropointone
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +44,7 @@ class MainActivity: BaseActivity() {
                         onOpenTaskContent(false, sTaskDataList[position])
                     }
 
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun setOnTaskStateClick(position: Int, isChecked: Boolean) {
                         runBlocking {
                             updateDataStateOrUI(position, isChecked)
@@ -88,6 +91,7 @@ class MainActivity: BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun updateDataStateOrUI(position: Int, state: Boolean) {
         // 更新数据
         val data = sTaskDataList[position]
@@ -95,10 +99,12 @@ class MainActivity: BaseActivity() {
         TaskApi.update(data)
 
         // 更新UI
-        sTaskDataList.remove(data)
-        val newPosition = if (state) sTaskDataList.size else 0
-        sTaskDataList.add(newPosition, data)
-        sTaskListAdapter.notifyItemMoved(position, newPosition)
+        GlobalScope.launch {
+            delay(1000)
+            launch(Dispatchers.Main) {
+                updateDataOrUI()
+            }
+        }
     }
 
     private suspend fun updateDataOrUI(list: List<Task>? = null) {

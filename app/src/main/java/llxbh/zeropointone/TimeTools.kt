@@ -47,4 +47,15 @@ object TimeTools {
         }
     }
 
+    fun onDateOnAddDay(date: Date?, dayNum: Int): Date? {
+        if (date == null) {
+            return null
+        }
+        val date =  date.toInstant()
+            .atZone(zoneId)
+            .toLocalDate()
+            .plusDays(dayNum.toLong())
+        return stringToDate(toString(date.year, date.monthValue, date.dayOfMonth))
+    }
+
 }

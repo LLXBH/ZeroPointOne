@@ -1,5 +1,7 @@
 package llxbh.zeropointone
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -8,6 +10,8 @@ import llxbh.zeropointone.app.appContext
 import llxbh.zeropointone.dao.AppDatabase
 import llxbh.zeropointone.dao.Task
 import llxbh.zeropointone.dao.TaskDao
+import java.time.LocalDate
+import java.util.Date
 
 /**
  * 有关清单的各种接口执行
@@ -64,9 +68,21 @@ object TaskApi {
     /**
      * 更新数据
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun update(task: Task) {
         return withContext(Dispatchers.IO) {
             sTaskDao.update(task)
+            // 任务完成且自增日期不为 0 ，需要创建个相同的任务（日期不同）
+            if (task.state && task.date != null && task.dateAddDay != 0) {
+                val newTask = Task(
+                    state = false,
+                    title = task.title,
+                    content = task.content,
+                    date = TimeTools.onDateOnAddDay(task.date, task.dateAddDay),
+                    dateAddDay = task.dateAddDay
+                )
+                insert(newTask)
+            }
         }
     }
 

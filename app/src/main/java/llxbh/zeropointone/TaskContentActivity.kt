@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.dao.Task
+import java.lang.Exception
 import java.time.LocalDate
 import java.util.Date
 
@@ -32,6 +33,7 @@ class TaskContentActivity: BaseActivity() {
     private lateinit var mTaskTitle: EditText
     private lateinit var mTaskContent: EditText
     private lateinit var mTaskDate: TextView
+    private lateinit var mTaskNextDate: EditText
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +59,7 @@ class TaskContentActivity: BaseActivity() {
         mTaskTitle = findViewById(R.id.et_taskTitle)
         mTaskContent = findViewById(R.id.et_taskContent)
         mTaskDate = findViewById(R.id.tv_taskDate)
+        mTaskNextDate = findViewById(R.id.et_taskNextDate)
 
         // 判断是否为 "查看" 模式，如是则需要获取数据
         if (mMode == MODE_EXAMINE) {
@@ -140,14 +143,15 @@ class TaskContentActivity: BaseActivity() {
      * 使用输入的数据更新视图
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun updateUI(data: Task) {
-        mState = data.state
-        mTaskState.state = data.state
-        mTaskTitle.setText(data.title)
-        mTaskContent.setText(data.content)
-        mTaskDate.text = data.date?.let {
+    private fun updateUI(task: Task) {
+        mState = task.state
+        mTaskState.state = task.state
+        mTaskTitle.setText(task.title)
+        mTaskContent.setText(task.content)
+        mTaskDate.text = task.date?.let {
             TimeTools.dateToString(it)
         }
+        mTaskNextDate.setText(task.dateAddDay.toString())
     }
 
     /**
@@ -156,11 +160,16 @@ class TaskContentActivity: BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getUiData(): Task {
           return Task(
-            mTaskId,
-            mState,
-            mTaskTitle.text.toString(),
-            mTaskContent.text.toString(),
-            TimeTools.stringToDate(mTaskDate.text.toString())
+              mTaskId,
+              mState,
+              mTaskTitle.text.toString(),
+              mTaskContent.text.toString(),
+              TimeTools.stringToDate(mTaskDate.text.toString()),
+              try {
+                  mTaskNextDate.text.toString().toInt()
+              } catch (e: Exception) {
+                  0
+              }
         )
     }
 
