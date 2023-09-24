@@ -19,7 +19,7 @@
         android:lines="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:text="title"
+        android:hint="无标题"
         app:layout_constraintTop_toTopOf="@id/ibtn_taskState"
         app:layout_constraintBottom_toBottomOf="@id/ibtn_taskState"
         app:layout_constraintStart_toEndOf="@id/ibtn_taskState"

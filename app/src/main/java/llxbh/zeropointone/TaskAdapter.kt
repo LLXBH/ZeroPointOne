@@ -60,7 +60,13 @@ class TaskAdapter(
             taskTitle.setOnClickListener {
                 mOnTaskClick?.setOnTaskClick(adapterPosition)
             }
-            taskDate.text = task.date?.let { TimeTools.dateToString(it) }
+            taskDate.text = task.startTimes.let {
+                if (it != 0L) {
+                    TimeTools.timesToString(it)
+                } else {
+                    ""
+                }
+            }
         }
     }
 

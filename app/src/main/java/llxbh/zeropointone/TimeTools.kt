@@ -1,13 +1,18 @@
 package llxbh.zeropointone
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.lang.Exception
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
 
 object TimeTools {
+
+    val ONE_DAY_TIMES: Long = 86400000
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val zoneId = ZoneId.systemDefault()
@@ -47,6 +52,7 @@ object TimeTools {
         }
     }
 
+    @SuppressLint("NewApi")
     fun onDateOnAddDay(date: Date?, dayNum: Int): Date? {
         if (date == null) {
             return null
@@ -58,4 +64,30 @@ object TimeTools {
         return stringToDate(toString(date.year, date.monthValue, date.dayOfMonth))
     }
 
-}
+    /**
+     * 获取当前时间的时间戳
+     */
+    fun getNowTime(): Long {
+        return System.currentTimeMillis()
+    }
+
+    /**
+     * 根据需要的增加天数后的时间戳
+     */
+    fun getNewTime(times: Long, dayNum: Int): Long {
+        return times+(dayNum * ONE_DAY_TIMES)
+    }
+
+    @SuppressLint("NewApi")
+    fun timesToString(times: Long): String {
+        val date =  Instant.ofEpochMilli(times)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+        return toString(date.year, date.monthValue, date.dayOfMonth)
+    }
+
+    @SuppressLint("NewApi")
+    fun stringToTimes(dateTime: String): Long? {
+        return stringToDate(dateTime)?.time
+    }
+ }

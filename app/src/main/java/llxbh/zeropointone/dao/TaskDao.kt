@@ -22,7 +22,7 @@ interface TaskDao {
     /**
      * 获取全部的任务，且按时间排序
      */
-    @Query("SELECT * FROM Task ORDER BY date")
+    @Query("SELECT * FROM Task ORDER BY startTimes")
     fun getAllAndTimeOrder(): List<Task>
 
     /**

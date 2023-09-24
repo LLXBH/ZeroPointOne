@@ -148,10 +148,14 @@ class TaskContentActivity: BaseActivity() {
         mTaskState.state = task.state
         mTaskTitle.setText(task.title)
         mTaskContent.setText(task.content)
-        mTaskDate.text = task.date?.let {
-            TimeTools.dateToString(it)
+        mTaskDate.text = task.startTimes.let {
+            if (it != 0L) {
+                TimeTools.timesToString(it)
+            } else {
+                ""
+            }
         }
-        mTaskNextDate.setText(task.dateAddDay.toString())
+        mTaskNextDate.setText(task.addTimeDay.toString())
     }
 
     /**
@@ -164,7 +168,9 @@ class TaskContentActivity: BaseActivity() {
               mState,
               mTaskTitle.text.toString(),
               mTaskContent.text.toString(),
-              TimeTools.stringToDate(mTaskDate.text.toString()),
+              TimeTools.getNowTime(),
+              TimeTools.stringToTimes(mTaskDate.text.toString()) ?: 0L,
+              0L,
               try {
                   mTaskNextDate.text.toString().toInt()
               } catch (e: Exception) {

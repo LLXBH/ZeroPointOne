@@ -1,8 +1,11 @@
 package llxbh.zeropointone
 
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.room.Room
+import androidx.room.util.copy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -61,6 +64,9 @@ object TaskApi {
      */
     suspend fun insert(task: Task) {
         return withContext(Dispatchers.IO) {
+            if (! onInspectData(task)) {
+                Log.e("Task", "数据检查不通过。")
+            }
             sTaskDao.insert(task)
         }
     }
@@ -71,18 +77,36 @@ object TaskApi {
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun update(task: Task) {
         return withContext(Dispatchers.IO) {
-            sTaskDao.update(task)
-            // 任务完成且自增日期不为 0 ，需要创建个相同的任务（日期不同）
-            if (task.state && task.date != null && task.dateAddDay != 0) {
-                val newTask = Task(
-                    state = false,
-                    title = task.title,
-                    content = task.content,
-                    date = TimeTools.onDateOnAddDay(task.date, task.dateAddDay),
-                    dateAddDay = task.dateAddDay
-                )
-                insert(newTask)
+            if (! onInspectData(task)) {
+                Log.e("Task", "数据检查不通过。")
             }
+            sTaskDao.update(task)
+            // 检查是否需要循环创建清单
+            onCirculateAddNewTask(task)?.also {
+                insert(it)
+            }
+        }
+    }
+
+    /**
+     * 判断是否需要创建新的清单
+     */
+    private fun onCirculateAddNewTask(task: Task): Task? {
+        if (task.state
+            && task.startTimes != 0L
+            && task.endTimes != 0L
+            && task.addTimeDay != 0)
+        {
+            return task.copy()
+                .apply {
+                    id = 0
+                    state = false
+                    updateTimes = TimeTools.getNowTime()
+                    startTimes = TimeTools.getNewTime(startTimes, addTimeDay)
+                    endTimes = TimeTools.getNewTime(endTimes, addTimeDay)
+                }
+        } else {
+            return null
         }
     }
 
@@ -92,6 +116,41 @@ object TaskApi {
     suspend fun delete(task: Task) {
         return withContext(Dispatchers.IO) {
             sTaskDao.delete(task)
+        }
+    }
+
+    /**
+     * 检查数据是否有不规范的dif
+     */
+    private fun onInspectData(task: Task): Boolean {
+        // 标题和内容不能都为空
+        try {
+            if (task.title.isNullOrEmpty() && task.content.isNullOrEmpty()) {
+                throw Exception("清单：标题和内容不能都为空。")
+            }
+            if (task.addTimeDay != 0 && task.startTimes == 0L && task.endTimes == 0L) {
+                throw Exception("清单：若设置了自增天数，开始时间和结束时间都不为 0 。")
+            }
+        } catch (e: Exception) {
+            Log.e("Task", e.message.toString())
+            return false
+        }
+        onInspectDataTime(task)
+        return true
+    }
+
+    /**
+     * 检查且修正有关于时间的设置
+     */
+    private fun onInspectDataTime(task: Task) {
+        if (task.addTimeDay != 0 && task.startTimes == 0L && task.endTimes == 0L) {
+            // 若设置了自增天数，开始时间和结束时间都不为 0 ；
+            task.addTimeDay == 0
+        } else if (task.startTimes != 0L && task.endTimes == 0L) {
+            // 开始时间和结束时间不能一边不为 0 ，一边为 0 ，如果设置同一天，则开始和结束需要相同
+            task.endTimes = task.startTimes
+        } else if (task.startTimes == 0L && task.endTimes != 0L) {
+            task.startTimes = task.endTimes
         }
     }
 

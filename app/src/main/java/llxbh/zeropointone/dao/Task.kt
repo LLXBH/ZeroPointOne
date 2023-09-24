@@ -11,10 +11,12 @@ import java.util.Date
 @Entity(tableName = "Task")
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    var id: Int = 0,
     var state: Boolean = false,
     var title: String,
     var content: String = "",
-    var date: Date? = null,
-    var dateAddDay: Int = 0
+    var updateTimes: Long = 0,
+    var startTimes: Long = 0,
+    var endTimes: Long = 0,
+    var addTimeDay: Int = 0
 )
