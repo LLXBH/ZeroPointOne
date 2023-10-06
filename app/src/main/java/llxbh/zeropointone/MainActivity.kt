@@ -110,7 +110,7 @@ class MainActivity: BaseActivity() {
     private suspend fun updateDataOrUI(list: List<Task>? = null) {
         sTaskDataList.clear()
         if (list == null) {
-            sTaskDataList.addAll(TaskApi.getAllAndStateOrder())
+            sTaskDataList.addAll(TaskApi.getAll())
         } else {
             sTaskDataList.addAll(list)
         }

@@ -31,6 +31,9 @@ interface TaskDao {
     @Query("SELECT * FROM Task ORDER BY state")
     fun getAllAndStateOrder(): List<Task>
 
+    @Query("SELECT * FROM TASK WHERE state = :state")
+    fun getAll(state: Boolean): List<Task>
+
     /**
      * 获取指定的清单任务
      */
