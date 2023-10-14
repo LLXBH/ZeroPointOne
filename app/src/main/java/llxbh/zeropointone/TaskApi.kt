@@ -38,37 +38,14 @@ object TaskApi {
     suspend fun getAll(): List<Task> {
         return withContext(Dispatchers.IO) {
             sTaskDao.getAll()
-                .sortedWith { t1, t2 ->
-                    // 通过正数和负数排序
-                    // -1, 0, 1
-                    when {
-                        // 先按任务的状态区分开
-                        (t1.state != t2.state) -> {
-                            // Log.e("ce", "t1.state=${t1.state}, t2.state=${t2.state}, t1Tot2CompareTo=${t1.state.compareTo(t2.state)}")
-                            // t1.state=true, t2.state=false, t1Tot2CompareTo=1     // 则 t2：前, t1：后
-                            // t1.state=false, t2.state=true, t1Tot2CompareTo=-1    // 则 t1：前, t2：后
-                            t1.state.compareTo(t2.state)
-                        }
-
-                        // 已完成的任务，按更新的时间排序（降序）
-                        (t1.state) -> {
-                            // Log.e("ce", "t1.updateTimes=${t1.updateTimes}, t2.updateTimes=${t2.updateTimes}, t2Tot1CompareTo=${t2.updateTimes.compareTo(t1.updateTimes)}")
-                            // t1.updateTimes=1695568443290, t2.updateTimes=1696591044852, t2Tot1CompareTo=1    // 则 t2：前, t1：后
-                            // t1.updateTimes=1696593948276, t2.updateTimes=1696592207670, t2Tot1CompareTo=-1   // 则 t1：前, t2：后
-                            t2.updateTimes.compareTo(t1.updateTimes)
-                        }
-
-                        // 未完成的任务，按开始时间来排序（升序）
-                        // 未设定时间的，放后面
-                        (t1.startTimes) == 0L -> 1
-                        else -> {
-                            // Log.e("ce", "t1.startTimes=${t1.startTimes}, t2.startTimes=${t2.startTimes}, t1Tot2CompareTo=${t1.startTimes.compareTo(t2.startTimes)}")
-                            // t1.startTimes=1695513600000, t2.startTimes=1694304000000, t1Tot2CompareTo=1      // 则 t2：前, t1：后
-                            // t1.startTimes=1692403200000, t2.startTimes=1694217600000, t1Tot2CompareTo=-1     // 则 t1：前, t2：后
-                            t1.startTimes.compareTo(t2.startTimes)
-                        }
-                    }
-                }
+                .sortedWith(compareBy(
+                    // 先按任务的状态区分开（未完成在前，已完成在后）
+                    { it.state },
+                    // 未完成的任务，按开始时间来排序（升序）
+                    { if (!it.state) it.startTimes else -1},
+                    // 已完成的任务，按更新的时间排序（降序）
+                    { if (it.state) -it.updateTimes else 0}
+                ))
         }
     }
     suspend fun getAllAndTimeOrder(): List<Task> {
@@ -99,6 +76,7 @@ object TaskApi {
             if (! onInspectData(task)) {
                 Log.e("Task", "数据检查不通过。")
             }
+            task.updateTimes = TimeTools.getNowTime()
             sTaskDao.insert(task)
         }
     }
@@ -112,6 +90,7 @@ object TaskApi {
             if (! onInspectData(task)) {
                 Log.e("Task", "数据检查不通过。")
             }
+            task.updateTimes = TimeTools.getNowTime()
             sTaskDao.update(task)
             // 检查是否需要循环创建清单
             onCirculateAddNewTask(task)?.also {
@@ -147,6 +126,7 @@ object TaskApi {
      */
     suspend fun delete(task: Task) {
         return withContext(Dispatchers.IO) {
+            task.updateTimes = TimeTools.getNowTime()
             sTaskDao.delete(task)
         }
     }
