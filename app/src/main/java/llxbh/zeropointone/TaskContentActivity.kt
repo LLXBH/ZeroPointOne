@@ -2,6 +2,7 @@ package llxbh.zeropointone
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText

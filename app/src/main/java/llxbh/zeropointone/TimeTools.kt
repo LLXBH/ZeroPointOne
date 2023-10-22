@@ -35,7 +35,7 @@ object TimeTools {
     }
 
     fun toString(year: Int, month: Int, day: Int): String {
-        return "$year-${month+1}-$day"
+        return "$year-${month}-$day"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

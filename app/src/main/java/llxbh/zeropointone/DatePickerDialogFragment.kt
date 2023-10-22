@@ -27,7 +27,8 @@ class DatePickerDialogFragment: DialogFragment(), DatePickerDialog.OnDateSetList
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        (activity as TaskContentActivity).setDate(p1, p2, p3)
+        // 月从 0 开始，+1 修正
+        (activity as TaskContentActivity).setDate(p1, p2+1, p3)
     }
 
 }
