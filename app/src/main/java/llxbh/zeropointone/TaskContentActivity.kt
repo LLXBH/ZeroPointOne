@@ -227,8 +227,9 @@ class TaskContentActivity: BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun setDate(year: Int, month: Int, day: Int) {
-        mTaskDate.text = TimeTools.toString(year, month, day)
-        mSelectDate = TimeTools.localDateToDate(LocalDate.of(year, month, day))
+        val time = LocalDate.of(year, month, day)
+        mTaskDate.text = time.toString()
+        mSelectDate = TimeTools.localDateToDate(time)
     }
 
 }
