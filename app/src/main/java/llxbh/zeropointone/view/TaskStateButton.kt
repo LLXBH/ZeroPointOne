@@ -1,11 +1,14 @@
-package llxbh.zeropointone
+package llxbh.zeropointone.view
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.widget.ImageButton
+import llxbh.zeropointone.R
 
+/**
+ * 根据完成或未完成来自动切换不同图片
+ */
 @SuppressLint("AppCompatCustomView")
 class TaskStateButton: ImageButton {
 

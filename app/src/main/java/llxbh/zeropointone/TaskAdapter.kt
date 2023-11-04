@@ -4,13 +4,12 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import llxbh.zeropointone.dao.Task
-import java.time.ZoneId
+import llxbh.zeropointone.tools.TimeTools
+import llxbh.zeropointone.view.TaskStateButton
 
 class TaskAdapter(
     private val taskData: List<Task>
@@ -62,8 +61,10 @@ class TaskAdapter(
             }
             taskDate.text = task.startTimes.let {
                 if (it != 0L) {
+                    taskDate.height = 60
                     TimeTools.timesToString(it)
                 } else {
+                    taskDate.height = 0
                     ""
                 }
             }

@@ -1,4 +1,4 @@
-package llxbh.zeropointone
+package llxbh.zeropointone.tools
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import java.lang.Exception
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
 
@@ -52,6 +51,9 @@ object TimeTools {
         }
     }
 
+    /**
+     * 根据给的时间往后增加天数，给出新的时间
+     */
     @SuppressLint("NewApi")
     fun onDateOnAddDay(date: Date?, dayNum: Int): Date? {
         if (date == null) {
