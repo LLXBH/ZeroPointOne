@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -33,7 +34,7 @@ class TaskContentActivity: BaseActivity() {
     private var mState = false
     private var mSelectDate: Date? = null
 
-    private lateinit var mTaskState: TaskStateButton
+    private lateinit var mTaskState: CheckBox
     private lateinit var mTaskTitle: EditText
     private lateinit var mTaskContent: EditText
     private lateinit var mTaskDate: TextView
@@ -54,10 +55,10 @@ class TaskContentActivity: BaseActivity() {
         }
 
         // 绑定试图
-        mTaskState  = findViewById(R.id.ibtn_taskState)
+        mTaskState  = findViewById(R.id.cb_taskState)
         mTaskState.setOnClickListener {
             mState = !mState
-            mTaskState.state = mState
+            mTaskState.isChecked = mState
         }
 
         mTaskTitle = findViewById(R.id.et_taskTitle)
@@ -149,7 +150,7 @@ class TaskContentActivity: BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateUI(task: Task) {
         mState = task.state
-        mTaskState.state = task.state
+        mTaskState.isChecked = task.state
         mTaskTitle.setText(task.title)
         mTaskContent.setText(task.content)
         mTaskDate.text = task.startTimes.let {

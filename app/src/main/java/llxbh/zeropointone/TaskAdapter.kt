@@ -4,6 +4,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -48,11 +49,18 @@ class TaskAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val task = taskData[position]
         (holder as ViewHolder).apply {
-            taskState.state = task.state
-            taskState.setOnClickListener {
-                // 反向当前状态
+//            taskState.isSelected = task.state
+//            taskState.setOnClickListener {
+//                // 反向当前状态
+//                val newState = !task.state
+//                taskState.isSelected = newState
+//                mOnTaskClick?.setOnTaskStateClick(adapterPosition, newState)
+//            }
+            taskState.isChecked = task.state
+            taskState.setOnClickListener { _ ->
+                // 点击后，反向当前状态
                 val newState = !task.state
-                taskState.state = newState
+                taskState.isChecked = newState
                 mOnTaskClick?.setOnTaskStateClick(adapterPosition, newState)
             }
             taskTitle.text = task.title
@@ -72,7 +80,7 @@ class TaskAdapter(
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val taskState: TaskStateButton = itemView.findViewById(R.id.ibtn_taskState)
+        val taskState: CheckBox = itemView.findViewById(R.id.cb_taskState)
         val taskTitle: TextView = itemView.findViewById(R.id.tv_taskTitle)
         val taskDate: TextView = itemView.findViewById(R.id.tv_taskDate)
     }

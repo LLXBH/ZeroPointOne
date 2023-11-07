@@ -12,10 +12,22 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 231104001
-        versionName = "1.0.6"
+        versionCode = 231107001
+        versionName = "1.0.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // 输出类型
+    android.applicationVariants.all {
+        // 编译类型
+        val buildType = this.buildType.name
+        outputs.all {
+            // 判断是否是输出 apk 类型
+            if (this is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
+                this.outputFileName = "零点壹_${defaultConfig.versionName}_$buildType.apk"
+            }
+        }
     }
 
     buildTypes {
@@ -25,11 +37,18 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
         }
+    }
+    buildFeatures {
+        compose = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
     kotlinOptions {
         jvmTarget = "17"
@@ -50,4 +69,8 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     // 协程
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+    // Material Design 3
+    val material3_version = "1.0.1"
+    implementation("androidx.compose.material3:material3:$material3_version")
+    implementation("androidx.compose.material3:material3-window-size-class:$material3_version")
 }
