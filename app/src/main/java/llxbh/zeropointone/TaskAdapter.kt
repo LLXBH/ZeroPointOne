@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.unit.Constraints
+import androidx.constraintlayout.solver.state.State.Constraint
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import llxbh.zeropointone.dao.Task
 import llxbh.zeropointone.tools.TimeTools
@@ -63,10 +66,19 @@ class TaskAdapter(
                 taskState.isChecked = newState
                 mOnTaskClick?.setOnTaskStateClick(adapterPosition, newState)
             }
+
             taskTitle.text = task.title
             taskTitle.setOnClickListener {
                 mOnTaskClick?.setOnTaskClick(adapterPosition)
             }
+
+            if (task.content.isNotEmpty()) {
+                taskContent.height = 60
+                taskContent.text = task.content
+            } else {
+                taskContent.height = 0
+            }
+
             taskDate.text = task.startTimes.let {
                 if (it != 0L) {
                     taskDate.height = 60
@@ -82,6 +94,7 @@ class TaskAdapter(
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val taskState: CheckBox = itemView.findViewById(R.id.cb_taskState)
         val taskTitle: TextView = itemView.findViewById(R.id.tv_taskTitle)
+        val taskContent: TextView = itemView.findViewById(R.id.tv_taskContent)
         val taskDate: TextView = itemView.findViewById(R.id.tv_taskDate)
     }
 

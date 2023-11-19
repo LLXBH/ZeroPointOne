@@ -12,8 +12,8 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 231107001
-        versionName = "1.0.7"
+        versionCode = 231119001
+        versionName = "1.0.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,7 +25,7 @@ android {
         outputs.all {
             // 判断是否是输出 apk 类型
             if (this is com.android.build.gradle.internal.api.ApkVariantOutputImpl) {
-                this.outputFileName = "零点壹_${defaultConfig.versionName}_$buildType.apk"
+                this.outputFileName = "${defaultConfig.versionName}_$buildType.apk"
             }
         }
     }
