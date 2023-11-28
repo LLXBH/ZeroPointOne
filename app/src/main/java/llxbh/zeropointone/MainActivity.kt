@@ -3,6 +3,7 @@ package llxbh.zeropointone
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -25,6 +26,10 @@ class MainActivity: BaseActivity() {
 
     private val sTaskDataList = mutableListOf<Task>()
     private val sTaskListAdapter = TaskAdapter(sTaskDataList)
+
+    // 是否显示已经完成的任务
+    private var viewComplete = false
+    private var hideList = mutableListOf<Task>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,13 +82,25 @@ class MainActivity: BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         runBlocking {
-            val taskListData = when(item.itemId) {
-                R.id.menu_taskList -> TaskApi.getAll()
-                R.id.menu_taskTimeOrder -> TaskApi.getAllAndTimeOrder()
-                R.id.menu_taskStateOrder -> TaskApi.getAllAndStateOrder()
-                else -> return@runBlocking
+            when(item.itemId) {
+                R.id.menu_taskViewComplete -> {
+                    viewComplete = true
+                    updateDataOrUI(listOf(), false)
+                }
+                R.id.menu_taskHideComplete -> {
+                    viewComplete = false
+                    updateDataOrUI(listOf(), false)
+                }
+                R.id.menu_taskList -> {
+                    updateDataOrUI(TaskApi.getAll())
+                }
+                R.id.menu_taskTimeOrder -> {
+                    updateDataOrUI(TaskApi.getAllAndTimeOrder())
+                }
+                R.id.menu_taskStateOrder -> {
+                    updateDataOrUI(TaskApi.getAllAndStateOrder())
+                }
             }
-            updateDataOrUI(taskListData)
         }
         return super.onOptionsItemSelected(item)
     }
@@ -104,13 +121,17 @@ class MainActivity: BaseActivity() {
         }
     }
 
-    private suspend fun updateDataOrUI(list: List<Task>? = null) {
-        sTaskDataList.clear()
+    private suspend fun updateDataOrUI(list: List<Task>? = null, clear:Boolean = true) {
+        if (clear) {
+            sTaskDataList.clear()
+            hideList.clear()
+        }
         if (list == null) {
             sTaskDataList.addAll(TaskApi.getAll())
         } else {
             sTaskDataList.addAll(list)
         }
+        onViewComplete()
         sTaskListAdapter.notifyDataSetChanged()
     }
 
@@ -132,6 +153,23 @@ class MainActivity: BaseActivity() {
         }
         // 通知内容界面，带个数据回来
         startActivity(intent)
+    }
+
+    private fun onViewComplete() {
+        if (viewComplete) {
+            // 显示
+            sTaskDataList.addAll(hideList)
+            hideList = mutableListOf()
+        } else {
+            // 隐藏
+            for (index in 0 until sTaskDataList.size) {
+                val data = sTaskDataList[index]
+                if (data.state) {
+                    hideList.add(data)
+                }
+            }
+            sTaskDataList.removeAll(hideList)
+        }
     }
 
 }

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/menu_taskViewComplete"
+        android:title="显示已完成" />
+
+    <item android:id="@+id/menu_taskHideComplete"
+        android:title="隐藏已完成" />
+
     <item android:id="@+id/menu_taskList"
         android:title="重新获取" />
 
