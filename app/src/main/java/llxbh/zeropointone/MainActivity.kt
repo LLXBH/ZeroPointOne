@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -58,7 +59,7 @@ class MainActivity: BaseActivity() {
         }
 
         // 点击按钮（+）进入 “内容” 界面创建新的任务
-        findViewById<Button>(R.id.btn_taskAdd).also {
+        findViewById<FloatingActionButton>(R.id.fabtn_taskAdd).also {
             it.setOnClickListener {
                 onOpenTaskContent(true, null)
             }
@@ -143,7 +144,7 @@ class MainActivity: BaseActivity() {
             this@MainActivity,
             TaskContentActivity::class.java
         )
-        if (create || taskData == null) {
+        if (create || (taskData == null)) {
             // 无需操作
         } else {
             intent.putExtra(

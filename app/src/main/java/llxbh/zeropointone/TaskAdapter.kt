@@ -52,13 +52,6 @@ class TaskAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val task = taskData[position]
         (holder as ViewHolder).apply {
-//            taskState.isSelected = task.state
-//            taskState.setOnClickListener {
-//                // 反向当前状态
-//                val newState = !task.state
-//                taskState.isSelected = newState
-//                mOnTaskClick?.setOnTaskStateClick(adapterPosition, newState)
-//            }
             taskState.isChecked = task.state
             taskState.setOnClickListener { _ ->
                 // 点击后，反向当前状态

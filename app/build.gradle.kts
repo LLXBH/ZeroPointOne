@@ -12,8 +12,8 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 231124001
-        versionName = "1.0.9"
+        versionCode = 231128001
+        versionName = "1.0.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -73,4 +73,6 @@ dependencies {
     val material3_version = "1.0.1"
     implementation("androidx.compose.material3:material3:$material3_version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3_version")
+    // BaseRecyclerViewAdapterHelper
+    implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.0")
 }
