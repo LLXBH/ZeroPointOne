@@ -12,8 +12,8 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 231128001
-        versionName = "1.0.10"
+        versionCode = 231210001
+        versionName = "1.0.11"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        dataBinding = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -74,5 +75,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:$material3_version")
     implementation("androidx.compose.material3:material3-window-size-class:$material3_version")
     // BaseRecyclerViewAdapterHelper
-    implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.0")
+    implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.3")
+    // Gson
+    implementation("com.google.code.gson:gson:2.9.0")
 }

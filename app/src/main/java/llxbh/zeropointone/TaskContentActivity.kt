@@ -9,12 +9,15 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.base.BaseActivity
 import llxbh.zeropointone.dao.Task
+import llxbh.zeropointone.data.TaskCheck
 import llxbh.zeropointone.tools.TaskApi
 import llxbh.zeropointone.tools.TimeTools
-import llxbh.zeropointone.view.TaskStateButton
 import java.lang.Exception
 import java.time.LocalDate
 import java.util.Date
@@ -33,12 +36,15 @@ class TaskContentActivity: BaseActivity() {
     private var mTaskId = 0
     private var mState = false
     private var mSelectDate: Date? = null
+    private var mCheckAdapter = TaskContentCheckAdapter()
 
     private lateinit var mTaskState: CheckBox
     private lateinit var mTaskTitle: EditText
     private lateinit var mTaskContent: EditText
     private lateinit var mTaskDate: TextView
     private lateinit var mTaskNextDate: EditText
+    private lateinit var mTaskCheckList: RecyclerView
+    private lateinit var mTaskCheckAdd: MaterialButton
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +71,13 @@ class TaskContentActivity: BaseActivity() {
         mTaskContent = findViewById(R.id.et_taskContent)
         mTaskDate = findViewById(R.id.tv_taskDate)
         mTaskNextDate = findViewById(R.id.et_taskNextDate)
+        mTaskCheckList = findViewById(R.id.rv_taskCheckList)
+        mTaskCheckList.layoutManager = LinearLayoutManager(this)
+        mTaskCheckList.adapter = mCheckAdapter
+        mTaskCheckAdd = findViewById(R.id.btn_taskCheckAdd)
+        mTaskCheckAdd.setOnClickListener {
+            mCheckAdapter.add(TaskCheck())
+        }
 
         // 判断是否为 "查看" 模式，如是则需要获取数据
         if (mMode == MODE_EXAMINE) {
@@ -161,6 +174,9 @@ class TaskContentActivity: BaseActivity() {
             }
         }
         mTaskNextDate.setText(task.addTimeDay.toString())
+        mCheckAdapter.submitList(task.checks ?: arrayListOf(
+            TaskCheck(false, "")
+        ))
     }
 
     /**
@@ -168,19 +184,20 @@ class TaskContentActivity: BaseActivity() {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getUiData(): Task {
-          return Task(
-              mTaskId,
-              mState,
-              mTaskTitle.text.toString(),
-              mTaskContent.text.toString(),
-              TimeTools.getNowTime(),
-              TimeTools.stringToTimes(mTaskDate.text.toString()) ?: 0L,
-              0L,
-              try {
-                  mTaskNextDate.text.toString().toInt()
-              } catch (e: Exception) {
-                  0
-              }
+        return Task(
+          mTaskId,
+          mState,
+          mTaskTitle.text.toString(),
+          mTaskContent.text.toString(),
+          mCheckAdapter.items,
+          TimeTools.getNowTime(),
+          TimeTools.stringToTimes(mTaskDate.text.toString()) ?: 0L,
+          0L,
+          try {
+              mTaskNextDate.text.toString().toInt()
+          } catch (e: Exception) {
+              0
+          }
         )
     }
 

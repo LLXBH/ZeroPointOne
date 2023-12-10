@@ -7,13 +7,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.unit.Constraints
-import androidx.constraintlayout.solver.state.State.Constraint
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import llxbh.zeropointone.dao.Task
 import llxbh.zeropointone.tools.TimeTools
-import llxbh.zeropointone.view.TaskStateButton
 
 class TaskAdapter(
     private val taskData: List<Task>
