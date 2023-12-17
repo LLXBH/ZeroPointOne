@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -7,25 +8,42 @@
             type="llxbh.zeropointone.data.TaskCheck" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <CheckBox
             android:id="@+id/cb_taskContentCheckItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{check.state}"/>
+            android:checked="@={check.state}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/et_taskContentCheckContent"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="换行即可添加检查事项"
             android:background="#00000000"
-            android:text="@{check.content}" />
+            android:hint="换行即可添加检查事项"
+            android:text="@={check.content}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_taskContentCheckDelete"
+            app:layout_constraintStart_toEndOf="@id/cb_taskContentCheckItem"
+            app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem" />
 
-    </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_taskContentCheckDelete"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/task_delete"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem"
+            app:layout_constraintBottom_toBottomOf="@id/cb_taskContentCheckItem"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </layout>

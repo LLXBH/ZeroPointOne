@@ -29,14 +29,15 @@ class TaskContentCheckAdapter: BaseQuickAdapter<TaskCheck, TaskContentCheckAdapt
     }
 
     override fun onBindViewHolder(holder: VH, position: Int, item: TaskCheck?) {
-        holder.binding.check = item
-        holder.binding.executePendingBindings()
+        holder.binding.apply {
+            check = item
+            btnTaskContentCheckDelete.setOnClickListener {
+                item?.let {
+                    remove(it)
+                }
+            }
+            executePendingBindings()
+        }
     }
-
-//    fun getData(): List<TaskCheck> {
-//        for (index in 0 until items.size) {
-//            items[index].state =
-//        }
-//    }
 
 }

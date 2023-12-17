@@ -71,9 +71,11 @@ class TaskContentActivity: BaseActivity() {
         mTaskContent = findViewById(R.id.et_taskContent)
         mTaskDate = findViewById(R.id.tv_taskDate)
         mTaskNextDate = findViewById(R.id.et_taskNextDate)
+        // 子项列表
         mTaskCheckList = findViewById(R.id.rv_taskCheckList)
         mTaskCheckList.layoutManager = LinearLayoutManager(this)
         mTaskCheckList.adapter = mCheckAdapter
+        // 添加子项
         mTaskCheckAdd = findViewById(R.id.btn_taskCheckAdd)
         mTaskCheckAdd.setOnClickListener {
             mCheckAdapter.add(TaskCheck())
@@ -174,9 +176,7 @@ class TaskContentActivity: BaseActivity() {
             }
         }
         mTaskNextDate.setText(task.addTimeDay.toString())
-        mCheckAdapter.submitList(task.checks ?: arrayListOf(
-            TaskCheck(false, "")
-        ))
+        mCheckAdapter.submitList(task.checks ?: arrayListOf(TaskCheck()))
     }
 
     /**

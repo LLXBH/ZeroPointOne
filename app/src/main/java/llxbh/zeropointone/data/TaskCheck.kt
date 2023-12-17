@@ -1,9 +1,12 @@
 package llxbh.zeropointone.data
 
+import android.database.Observable
+import androidx.databinding.ObservableField
+
 /**
  * 清单任务里面的检查事项
  */
-data class TaskCheck(
-    val state: Boolean = false,
-    val content: String = ""
+class TaskCheck(
+    val state: ObservableField<Boolean> = ObservableField(false),
+    val content: ObservableField<String> = ObservableField("")
 )
