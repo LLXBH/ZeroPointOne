@@ -1,90 +1,64 @@
 package llxbh.zeropointone
 
+import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter4.BaseQuickAdapter
+import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.dao.Task
+import llxbh.zeropointone.databinding.TaskItemBinding
+import llxbh.zeropointone.tools.TaskApi
 import llxbh.zeropointone.tools.TimeTools
 
-class TaskAdapter(
-    private val taskData: List<Task>
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TaskAdapter: BaseQuickAdapter<Task, TaskAdapter.VH>() {
 
-    private var mOnTaskClick: OnTaskClick? = null
+    class VH(
+        parent: ViewGroup,
+        val binding: TaskItemBinding = TaskItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+    ): RecyclerView.ViewHolder(binding.root)
 
-    /**
-     * 向外暴露的点击接口
-     */
-    interface OnTaskClick {
-
-        /**
-         * 清单的点击事件
-         */
-        fun setOnTaskClick(position: Int)
-
-        /**
-         * 清单的状态点击事件
-         */
-        fun setOnTaskStateClick(position: Int, isChecked: Boolean)
+    override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
+        return VH(parent)
     }
-
-    fun setTaskClick(onTaskClick: OnTaskClick) {
-        mOnTaskClick = onTaskClick
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-      return ViewHolder(LayoutInflater.from(parent.context)
-          .inflate(R.layout.task_item, parent, false))
-    }
-
-    override fun getItemCount(): Int = taskData.size
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val task = taskData[position]
-        (holder as ViewHolder).apply {
-            taskState.isChecked = task.state
-            taskState.setOnClickListener { _ ->
-                // 点击后，反向当前状态
-                val newState = !task.state
-                taskState.isChecked = newState
-                mOnTaskClick?.setOnTaskStateClick(adapterPosition, newState)
-            }
+    override fun onBindViewHolder(holder: VH, position: Int, item: Task?) {
 
-            taskTitle.text = task.title
-            taskTitle.setOnClickListener {
-                mOnTaskClick?.setOnTaskClick(adapterPosition)
+        holder.binding.apply {
+            if (item == null) {
+                return
             }
-
-            if (task.content.isNotEmpty()) {
-                taskContent.height = 60
-                taskContent.text = task.content
+            task = item
+            // 数据为空的时候不显示
+            if (item.content.isEmpty()) {
+                tvTaskContent.visibility = View.GONE
             } else {
-                taskContent.height = 0
+                tvTaskContent.visibility = View.VISIBLE
             }
-
-            taskDate.text = task.startTimes.let {
-                if (it != 0L) {
-                    taskDate.height = 60
-                    TimeTools.timesToString(it)
-                } else {
-                    taskDate.height = 0
-                    ""
+            if (item.startTimes == 0L) {
+                tvTaskDate.visibility = View.GONE
+            } else {
+                tvTaskDate.visibility = View.VISIBLE
+                tvTaskDate.text = TimeTools.timesToString(item.startTimes)
+            }
+            // 点击完成与否
+            cbTaskState.setOnClickListener {
+                val isChecked = cbTaskState.isChecked
+                cbTaskState.setChecked(isChecked)
+                item.state = isChecked
+                runBlocking {
+                    TaskApi.update(item)
                 }
             }
         }
-    }
-
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val taskState: CheckBox = itemView.findViewById(R.id.cb_taskState)
-        val taskTitle: TextView = itemView.findViewById(R.id.tv_taskTitle)
-        val taskContent: TextView = itemView.findViewById(R.id.tv_taskContent)
-        val taskDate: TextView = itemView.findViewById(R.id.tv_taskDate)
     }
 
 }

@@ -1,14 +1,9 @@
 package llxbh.zeropointone
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.Button
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -26,7 +21,7 @@ import llxbh.zeropointone.tools.TaskApi
  */
 class MainActivity: BaseActivity() {
 
-    private val sTaskListAdapter = NewTaskAdapter()
+    private val sTaskListAdapter = TaskAdapter()
 
     // 是否显示已经完成的任务
     private var viewComplete = false

@@ -12,8 +12,8 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 231217001
-        versionName = "1.0.12"
+        versionCode = 231218001
+        versionName = "1.0.13"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -58,7 +58,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     testImplementation("junit:junit:4.13.2")
@@ -69,11 +69,11 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     // 协程
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     // Material Design 3
-    val material3_version = "1.0.1"
-    implementation("androidx.compose.material3:material3:$material3_version")
-    implementation("androidx.compose.material3:material3-window-size-class:$material3_version")
+    val material3Version = "1.0.1"
+    implementation("androidx.compose.material3:material3:$material3Version")
+    implementation("androidx.compose.material3:material3-window-size-class:$material3Version")
     // BaseRecyclerViewAdapterHelper
     implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.3")
     // Gson

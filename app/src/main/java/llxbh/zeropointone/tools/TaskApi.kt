@@ -84,34 +84,49 @@ object TaskApi {
                 Log.e("Task", "数据检查不通过。")
             }
             task.updateTimes = TimeTools.getNowTime()
-            sTaskDao.update(task)
             // 检查是否需要循环创建清单
             onCirculateAddNewTask(task)?.also {
                 insert(it)
             }
+            // 更新数据
+            sTaskDao.update(task)
         }
     }
 
     /**
      * 判断是否需要创建新的清单
      */
-    private fun onCirculateAddNewTask(task: Task): Task? {
-        if (task.state
-            && task.startTimes != 0L
-            && task.endTimes != 0L
-            && task.addTimeDay != 0)
-        {
-            return task.copy()
-                .apply {
-                    id = 0
-                    state = false
-                    updateTimes = TimeTools.getNowTime()
-                    startTimes = TimeTools.getNewTime(startTimes, addTimeDay)
-                    endTimes = TimeTools.getNewTime(endTimes, addTimeDay)
-                }
-        } else {
+    private suspend fun onCirculateAddNewTask(task: Task): Task? {
+        if (! task.state) {
+            // 任务未完成
             return null
         }
+        if (task.startTimes == 0L
+            || task.endTimes == 0L
+            || task.addTimeDay == 0
+        ) {
+            // 时间未设置全面
+            return null
+        }
+        if (get(task.id)?.state == true) {
+            // 在数据库中原数据已经是完成的了
+            return null
+        }
+        val newTask = task.copy()
+        newTask.apply {
+            id = 0
+            state = false
+            updateTimes = TimeTools.getNowTime()
+            startTimes = TimeTools.getNewTime(startTimes, addTimeDay)
+            endTimes = TimeTools.getNewTime(endTimes, addTimeDay)
+            // 将子项设置为未完成的状态
+            if (! newTask.checks.isNullOrEmpty()) {
+                for (check in newTask.checks!!) {
+                    check.state.set(false)
+                }
+            }
+        }
+        return newTask
     }
 
     /**

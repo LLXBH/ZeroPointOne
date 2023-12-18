@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 231217001,
-      "versionName": "1.0.12",
-      "outputFile": "1.0.12_release.apk"
+      "versionCode": 231218001,
+      "versionName": "1.0.13",
+      "outputFile": "1.0.13_release.apk"
     }
   ],
   "elementType": "File"

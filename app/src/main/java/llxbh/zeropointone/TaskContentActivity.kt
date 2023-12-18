@@ -1,16 +1,25 @@
 package llxbh.zeropointone
 
+import android.animation.ValueAnimator
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chad.library.adapter4.BaseQuickAdapter
+import com.chad.library.adapter4.BaseQuickAdapter.OnItemChildLongClickListener
+import com.chad.library.adapter4.dragswipe.QuickDragAndSwipe
+import com.chad.library.adapter4.dragswipe.listener.OnItemDragListener
+import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.base.BaseActivity
@@ -36,7 +45,8 @@ class TaskContentActivity: BaseActivity() {
     private var mTaskId = 0
     private var mState = false
     private var mSelectDate: Date? = null
-    private var mCheckAdapter = TaskContentCheckAdapter()
+    private var sCheckAdapter = TaskContentCheckAdapter()
+    private val sQuickDragAndSwipe = QuickDragAndSwipe()
 
     private lateinit var mTaskState: CheckBox
     private lateinit var mTaskTitle: EditText
@@ -71,14 +81,39 @@ class TaskContentActivity: BaseActivity() {
         mTaskContent = findViewById(R.id.et_taskContent)
         mTaskDate = findViewById(R.id.tv_taskDate)
         mTaskNextDate = findViewById(R.id.et_taskNextDate)
-        // 子项列表
+        // ----- 子项列表（开始） -----
         mTaskCheckList = findViewById(R.id.rv_taskCheckList)
-        mTaskCheckList.layoutManager = LinearLayoutManager(this)
-        mTaskCheckList.adapter = mCheckAdapter
+        mTaskCheckList.apply {
+            layoutManager = LinearLayoutManager(this@TaskContentActivity)
+            adapter = sCheckAdapter
+        }
+        // 适配器
+        sCheckAdapter.apply {
+            // 点击删除子项
+            addOnItemChildClickListener(R.id.btn_taskContentCheckDelete) { adapter, view, position ->
+                adapter.remove(adapter.items[position])
+            }
+            // 长按拖拽排序
+            addOnItemChildLongClickListener(R.id.btn_taskContentCheckSliders) { adapter, view, position ->
+                sQuickDragAndSwipe.startDrag(position)
+                false
+            }
+        }
+        // 拖拽功能
+        sQuickDragAndSwipe.apply {
+            // 绑定 recycleView 和 适配器
+            attachToRecyclerView(mTaskCheckList)
+            setDataCallback(sCheckAdapter)
+            // 设置可以上下拖动
+            setDragMoveFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN)
+            // 关闭自带长按拖动功能
+            isLongPressDragEnabled = false
+        }
+        // ----- 子项列表（结束） -----
         // 添加子项
         mTaskCheckAdd = findViewById(R.id.btn_taskCheckAdd)
         mTaskCheckAdd.setOnClickListener {
-            mCheckAdapter.add(TaskCheck())
+            sCheckAdapter.add(TaskCheck())
         }
 
         // 判断是否为 "查看" 模式，如是则需要获取数据
@@ -135,12 +170,13 @@ class TaskContentActivity: BaseActivity() {
 
     /**
      * 关闭该界面时，需要执行的操作
-     * 修改，实时更新当前的数据
      * 创建，检查标题或内容是否为空，都为空的话则无需保存数据
+     * 修改，实时更新当前的数据
      */
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun onBackOrUpdateData() {
         when (mMode) {
+            // 创建
             MODE_CREATE -> {
                 val task = getUiData()
                 if (task.title.isNullOrEmpty() && task.content.isNullOrEmpty()) {
@@ -153,6 +189,7 @@ class TaskContentActivity: BaseActivity() {
                     insertTask()
                 }
             }
+            // 修改
             MODE_EXAMINE -> {
                 updateTask()
             }
@@ -176,7 +213,7 @@ class TaskContentActivity: BaseActivity() {
             }
         }
         mTaskNextDate.setText(task.addTimeDay.toString())
-        mCheckAdapter.submitList(task.checks ?: arrayListOf(TaskCheck()))
+        sCheckAdapter.submitList(task.checks ?: arrayListOf(TaskCheck()))
     }
 
     /**
@@ -189,7 +226,7 @@ class TaskContentActivity: BaseActivity() {
           mState,
           mTaskTitle.text.toString(),
           mTaskContent.text.toString(),
-          mCheckAdapter.items,
+          sCheckAdapter.items,
           TimeTools.getNowTime(),
           TimeTools.stringToTimes(mTaskDate.text.toString()) ?: 0L,
           0L,
