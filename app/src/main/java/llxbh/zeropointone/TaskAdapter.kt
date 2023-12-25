@@ -39,7 +39,11 @@ class TaskAdapter: BaseQuickAdapter<Task, TaskAdapter.VH>() {
             task = item
             // 数据为空的时候不显示
             if (item.content.isEmpty()) {
-                tvTaskContent.visibility = View.GONE
+                if (item.checks?.isNotEmpty() == true) {
+                    item.content = item.checks!![0].content.get().toString()
+                } else {
+                    tvTaskContent.visibility = View.GONE
+                }
             } else {
                 tvTaskContent.visibility = View.VISIBLE
             }
@@ -52,7 +56,7 @@ class TaskAdapter: BaseQuickAdapter<Task, TaskAdapter.VH>() {
             // 点击完成与否
             cbTaskState.setOnClickListener {
                 val isChecked = cbTaskState.isChecked
-                cbTaskState.setChecked(isChecked)
+                cbTaskState.isChecked = isChecked
                 item.state = isChecked
                 runBlocking {
                     TaskApi.update(item)

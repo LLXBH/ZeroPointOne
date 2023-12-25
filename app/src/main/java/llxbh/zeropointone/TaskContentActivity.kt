@@ -1,25 +1,19 @@
 package llxbh.zeropointone
 
-import android.animation.ValueAnimator
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter4.BaseQuickAdapter
-import com.chad.library.adapter4.BaseQuickAdapter.OnItemChildLongClickListener
 import com.chad.library.adapter4.dragswipe.QuickDragAndSwipe
-import com.chad.library.adapter4.dragswipe.listener.OnItemDragListener
-import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.base.BaseActivity
@@ -55,6 +49,7 @@ class TaskContentActivity: BaseActivity() {
     private lateinit var mTaskNextDate: EditText
     private lateinit var mTaskCheckList: RecyclerView
     private lateinit var mTaskCheckAdd: MaterialButton
+    private lateinit var mTaskContentSwitchCheck: MaterialButton
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,6 +109,47 @@ class TaskContentActivity: BaseActivity() {
         mTaskCheckAdd = findViewById(R.id.btn_taskCheckAdd)
         mTaskCheckAdd.setOnClickListener {
             sCheckAdapter.add(TaskCheck())
+        }
+        // 将内容转换为 Check
+        mTaskContentSwitchCheck = findViewById(R.id.btn_taskContentSwitchCheck)
+        mTaskContentSwitchCheck.setOnClickListener {
+            val isContentCheck = sCheckAdapter.items.isNullOrEmpty()
+            if (isContentCheck) {
+                // 为空，将内容转换为子项
+                val content = mTaskContent.text.toString()
+                // 内容为空就只创建个空的子项
+                if (content.isNullOrEmpty()) {
+                    sCheckAdapter.add(TaskCheck())
+                    return@setOnClickListener
+                }
+                val contentList = content.split("\n")
+                val checkList = arrayListOf<TaskCheck>()
+                for (newCheck in contentList) {
+                    checkList.add(TaskCheck(
+                        ObservableField(false),
+                        ObservableField(newCheck)
+                    ))
+                }
+                sCheckAdapter.addAll(checkList)
+                mTaskContent.setText("")
+            } else {
+                // 有了，将子项转换为内容
+                var newContentList = ""
+                for ((index, newContent) in sCheckAdapter.items.withIndex()) {
+                    newContentList += if (index == 0) {
+                        "${newContent.content.get()}"
+                    } else {
+                        "\n${newContent.content.get()}"
+                    }
+                }
+                var content = mTaskContent.text.toString()
+                if (! content.isNullOrEmpty()) {
+                    content += "\n"
+                }
+                content += newContentList
+                mTaskContent.setText(content)
+                sCheckAdapter.submitList(arrayListOf())
+            }
         }
 
         // 判断是否为 "查看" 模式，如是则需要获取数据

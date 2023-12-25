@@ -14,8 +14,9 @@
 
         <CheckBox
             android:id="@+id/cb_taskContentCheckItem"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginVertical="5dp"
             android:checked="@={check.state}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -24,19 +25,18 @@
             android:id="@+id/et_taskContentCheckContent"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:background="#00000000"
             android:hint="换行即可添加检查事项"
             android:text="@={check.content}"
             app:layout_constraintEnd_toStartOf="@id/btn_taskContentCheckDelete"
             app:layout_constraintStart_toEndOf="@+id/cb_taskContentCheckItem"
-            app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_taskContentCheckDelete"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/task_delete"
             app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem"
             app:layout_constraintBottom_toBottomOf="@id/cb_taskContentCheckItem"
@@ -44,22 +44,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_taskContentCheckSliders"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/task_sliders"
             app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem"
             app:layout_constraintBottom_toBottomOf="@id/cb_taskContentCheckItem"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="#555555"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </layout>
