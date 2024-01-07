@@ -53,15 +53,15 @@ class TaskAdapter: BaseQuickAdapter<Task, TaskAdapter.VH>() {
                 tvTaskDate.visibility = View.VISIBLE
                 tvTaskDate.text = TimeTools.timesToString(item.startTimes)
             }
-            // 点击完成与否
-            cbTaskState.setOnClickListener {
-                val isChecked = cbTaskState.isChecked
-                cbTaskState.isChecked = isChecked
-                item.state = isChecked
-                runBlocking {
-                    TaskApi.update(item)
-                }
-            }
+//            // 点击完成与否
+//            cbTaskState.setOnClickListener {
+//                val isChecked = cbTaskState.isChecked
+//                cbTaskState.isChecked = isChecked
+//                item.state = isChecked
+//                runBlocking {
+//                    TaskApi.update(item)
+//                }
+//            }
         }
     }
 

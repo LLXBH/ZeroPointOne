@@ -176,11 +176,20 @@ class TaskContentActivity: BaseActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onStop() {
-        super.onStop()
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    override fun onStop() {
+//        super.onStop()
+//        runBlocking {
+//            onBackOrUpdateData()
+//        }
+//    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         runBlocking {
-            onBackOrUpdateData()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                onBackOrUpdateData()
+            }
         }
     }
 

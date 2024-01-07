@@ -1,9 +1,12 @@
 package llxbh.zeropointone
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.CheckBox
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,6 +30,7 @@ class MainActivity: BaseActivity() {
     private var viewComplete = false
     private var hideList = mutableListOf<Task>()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,6 +41,20 @@ class MainActivity: BaseActivity() {
             it.adapter = sTaskListAdapter.apply {
                 setOnItemClickListener { adapter, view, position ->
                     onOpenTaskContent(false, adapter.getItem(position))
+                }
+                // 点击任务的完成状态
+                addOnItemChildClickListener(R.id.cb_taskState) { adapter, view, position ->
+                    // 切换控件状态
+                    val taskStateView = view as CheckBox
+                    val isChecked = taskStateView.isChecked
+                    taskStateView.isChecked = isChecked
+                    // 更新数据
+                    val data = adapter.items[position]
+                    data.state = isChecked
+                    runBlocking {
+                        TaskApi.update(data)
+                        updateDataOrUI()
+                    }
                 }
             }
         }
