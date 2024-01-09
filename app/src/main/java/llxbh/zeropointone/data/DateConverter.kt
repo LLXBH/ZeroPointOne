@@ -1,4 +1,4 @@
-package llxbh.zeropointone.dao
+package llxbh.zeropointone.data
 
 import androidx.room.TypeConverter
 import java.util.Date

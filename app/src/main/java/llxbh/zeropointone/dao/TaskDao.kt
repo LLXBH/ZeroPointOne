@@ -16,7 +16,7 @@ interface TaskDao {
     /**
      * 获取全部的清单任务
      */
-    @Query("SELECT * FROM Task")
+    @Query("select * from Task where isDelete = false")
     fun getAll(): List<Task>
 
     /**
@@ -31,13 +31,10 @@ interface TaskDao {
     @Query("SELECT * FROM Task ORDER BY state")
     fun getAllAndStateOrder(): List<Task>
 
-    @Query("SELECT * FROM TASK WHERE state = :state")
-    fun getAll(state: Boolean): List<Task>
-
     /**
      * 获取指定的清单任务
      */
-   @Query("SELECT * FROM Task WHERE id = :taskId")
+    @Query("SELECT * FROM Task WHERE id = :taskId")
     fun get(taskId: Int): Task
 
     /**
@@ -58,4 +55,6 @@ interface TaskDao {
     @Delete
     fun delete(task: Task)
 
+    @Query("select * from Task where isDelete = true")
+    fun getRecycleBin(): List<Task>
 }

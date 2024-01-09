@@ -16,4 +16,7 @@
     <item android:id="@+id/menu_taskStateOrder"
         android:title="按状态排序" />
 
+    <item android:id="@+id/menu_taskRecycleBin"
+        android:title="回收站" />
+
 </menu>

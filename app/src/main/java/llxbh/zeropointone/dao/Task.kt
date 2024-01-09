@@ -23,5 +23,6 @@ data class Task(
     var updateTimes: Long = 0,
     var startTimes: Long = 0,
     var endTimes: Long = 0,
-    var addTimeDay: Int = 0
+    var addTimeDay: Int = 0,
+    var isDelete: Boolean = false
 )

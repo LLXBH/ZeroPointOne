@@ -10,4 +10,7 @@
     <item android:id="@+id/menu_taskDelete"
         android:title="删除" />
 
+    <item android:id="@+id/menu_taskRestore"
+        android:title="恢复" />
+
 </menu>

@@ -18,11 +18,9 @@ object TaskApi {
     const val DATA_BASE = "database-ZeroPointOne"
     const val TASK_PASS = "TASK_PASS"
 
-    private val sDB = Room.databaseBuilder(
-        appContext,
-        AppDatabase::class.java,
-        DATA_BASE
-    ).build()
+    private val sDB = Room.databaseBuilder(appContext, AppDatabase::class.java, DATA_BASE)
+        .addMigrations(AppDatabase.MIGRATION_1_2)
+        .build()
     private val sTaskDao = sDB.taskDao()
 
     /**
@@ -58,6 +56,15 @@ object TaskApi {
     suspend fun get(taskId: Int): Task? {
         return withContext(Dispatchers.IO) {
             sTaskDao.get(taskId)
+        }
+    }
+
+    /**
+     * 已经删除的数据
+     */
+    suspend fun getRecycleBin(): List<Task> {
+        return  withContext(Dispatchers.IO) {
+            sTaskDao.getRecycleBin()
         }
     }
 
@@ -132,10 +139,26 @@ object TaskApi {
     /**
      * 删除数据
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun delete(task: Task) {
         return withContext(Dispatchers.IO) {
             task.updateTimes = TimeTools.getNowTime()
-            sTaskDao.delete(task)
+            // 不是实际删除，打上标记，进入回收站
+            // sTaskDao.delete(task)
+            task.isDelete = true
+            update(task)
+        }
+    }
+
+    /**
+     * 恢复数据
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun restore(task: Task) {
+        return withContext(Dispatchers.IO) {
+            task.updateTimes = TimeTools.getNowTime()
+            task.isDelete = false
+            update(task)
         }
     }
 

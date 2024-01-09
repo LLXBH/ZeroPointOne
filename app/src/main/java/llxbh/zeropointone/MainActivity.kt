@@ -102,6 +102,9 @@ class MainActivity: BaseActivity() {
                 R.id.menu_taskStateOrder -> {
                     updateDataOrUI(TaskApi.getAllAndStateOrder())
                 }
+                R.id.menu_taskRecycleBin -> {
+                    updateDataOrUI(TaskApi.getRecycleBin())
+                }
             }
         }
         return super.onOptionsItemSelected(item)

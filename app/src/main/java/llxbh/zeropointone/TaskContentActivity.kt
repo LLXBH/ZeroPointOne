@@ -31,14 +31,15 @@ import java.util.Date
 class TaskContentActivity: BaseActivity() {
 
     companion object {
-        val MODE_CREATE = "Task_Create"     // 创建
-        val MODE_EXAMINE = "Task_Examine"   // 查看
+        const val MODE_CREATE = "Task_Create"     // 创建
+        const val MODE_EXAMINE = "Task_Examine"   // 查看
     }
 
     private var mMode = MODE_EXAMINE
     private var mTaskId = 0
     private var mState = false
     private var mSelectDate: Date? = null
+    private var mIsDelete = false
     private var sCheckAdapter = TaskContentCheckAdapter()
     private val sQuickDragAndSwipe = QuickDragAndSwipe()
 
@@ -184,12 +185,11 @@ class TaskContentActivity: BaseActivity() {
 //        }
 //    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDestroy() {
         super.onDestroy()
         runBlocking {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                onBackOrUpdateData()
-            }
+            onBackOrUpdateData()
         }
     }
 
@@ -208,6 +208,7 @@ class TaskContentActivity: BaseActivity() {
                 R.id.menu_taskInsert -> insertTask()
                 R.id.menu_taskUpdate -> updateTask()
                 R.id.menu_taskDelete -> deleteTask()
+                R.id.menu_taskRestore -> restoreTask()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -259,6 +260,7 @@ class TaskContentActivity: BaseActivity() {
         }
         mTaskNextDate.setText(task.addTimeDay.toString())
         sCheckAdapter.submitList(task.checks ?: arrayListOf(TaskCheck()))
+        mIsDelete = task.isDelete
     }
 
     /**
@@ -267,19 +269,20 @@ class TaskContentActivity: BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getUiData(): Task {
         return Task(
-          mTaskId,
-          mState,
-          mTaskTitle.text.toString(),
-          mTaskContent.text.toString(),
-          sCheckAdapter.items,
-          TimeTools.getNowTime(),
-          TimeTools.stringToTimes(mTaskDate.text.toString()) ?: 0L,
-          0L,
-          try {
+            mTaskId,
+            mState,
+            mTaskTitle.text.toString(),
+            mTaskContent.text.toString(),
+            sCheckAdapter.items,
+            TimeTools.getNowTime(),
+            TimeTools.stringToTimes(mTaskDate.text.toString()) ?: 0L,
+            0L,
+            try {
               mTaskNextDate.text.toString().toInt()
-          } catch (e: Exception) {
+            } catch (e: Exception) {
               0
-          }
+            },
+            mIsDelete
         )
     }
 
@@ -319,8 +322,22 @@ class TaskContentActivity: BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun deleteTask() {
         if (mTaskId != 0 && mMode == MODE_EXAMINE) {
+            mIsDelete = true
             TaskApi.delete(getUiData())
             Toast.makeText(this@TaskContentActivity, "删除数据！", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(this, "当前模式不对劲！", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun restoreTask() {
+        if (mTaskId != 0 && mMode == MODE_EXAMINE) {
+            mIsDelete = false
+            TaskApi.restore(getUiData())
+            Toast.makeText(this@TaskContentActivity, "恢复数据！", Toast.LENGTH_SHORT)
                 .show()
         } else {
             Toast.makeText(this, "当前模式不对劲！", Toast.LENGTH_SHORT)
