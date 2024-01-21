@@ -5,10 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Adapter
 import android.widget.CheckBox
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,6 +26,8 @@ import llxbh.zeropointone.tools.TaskApi
  */
 class MainActivity: BaseActivity() {
 
+    private lateinit var mTaskListRefresh: SwipeRefreshLayout
+
     private val sTaskListAdapter = TaskAdapter()
 
     // 是否显示已经完成的任务
@@ -34,7 +38,6 @@ class MainActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         // 绑定列表的视图和数据
         findViewById<RecyclerView>(R.id.rv_taskList).also {
             it.layoutManager =  LinearLayoutManager(this@MainActivity)
@@ -59,6 +62,19 @@ class MainActivity: BaseActivity() {
             }
         }
 
+        // 下拉刷新
+        mTaskListRefresh = findViewById<SwipeRefreshLayout>(R.id.srl_taskList).also {
+            it.setOnRefreshListener {
+                GlobalScope.launch {
+                    delay(1000)
+                    launch(Dispatchers.Main) {
+                        updateDataOrUI()
+                    }
+                    it.isRefreshing = false
+                }
+            }
+        }
+
         // 点击按钮（+）进入 “内容” 界面创建新的任务
         findViewById<FloatingActionButton>(R.id.fabtn_taskAdd).also {
             it.setOnClickListener {
@@ -67,12 +83,16 @@ class MainActivity: BaseActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        GlobalScope.launch {
-            delay(1000)
-            launch(Dispatchers.Main) {
-                updateDataOrUI()
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (sTaskListAdapter.items.isEmpty()) {
+            mTaskListRefresh.isRefreshing = true
+            GlobalScope.launch {
+                delay(1000)
+                launch(Dispatchers.Main) {
+                    updateDataOrUI()
+                }
+                mTaskListRefresh.isRefreshing = false
             }
         }
     }
@@ -111,6 +131,10 @@ class MainActivity: BaseActivity() {
     }
 
     private suspend fun updateDataOrUI(list: List<Task>? = null, clear:Boolean = true) {
+        /*
+        先获取数据，对比有所不同了
+         */
+
         if (clear) {
             sTaskListAdapter.submitList(arrayListOf())
             hideList.clear()

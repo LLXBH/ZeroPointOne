@@ -12,8 +12,8 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 240109001
-        versionName = "1.0.16"
+        versionCode = 240121001
+        versionName = "1.0.17"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -78,4 +78,6 @@ dependencies {
     implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.3")
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
+    // SwipeRefreshLayout 下拉刷新
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
