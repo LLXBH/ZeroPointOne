@@ -21,8 +21,10 @@ class DatePickerDialogFragment: DialogFragment(), DatePickerDialog.OnDateSetList
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        return DatePickerDialog(activity!!, this, year, month, day)
+        return DatePickerDialog(activity!!, this, year, month, day).apply {
+            // 默认第一天是周一
+            datePicker.firstDayOfWeek = Calendar.MONDAY
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
