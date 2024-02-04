@@ -5,12 +5,14 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Adapter
 import android.widget.CheckBox
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.chad.library.adapter4.BaseQuickAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -59,6 +61,29 @@ class MainActivity: BaseActivity() {
                         updateDataOrUI()
                     }
                 }
+                // 长按列表，进入多选删除模式
+//                addOnItemChildLongClickListener(R.id.tv_taskTitle, object : BaseQuickAdapter.OnItemChildLongClickListener<Task> {
+//                    override fun onItemLongClick(
+//                        adapter: BaseQuickAdapter<Task, *>,
+//                        view: View,
+//                        position: Int
+//                    ): Boolean {
+//                        onSelectDeleteMode()
+//                        return true
+//                    }
+//                })
+                setOnItemLongClickListener(object : BaseQuickAdapter.OnItemLongClickListener<Task> {
+
+                    override fun onLongClick(
+                        adapter: BaseQuickAdapter<Task, *>,
+                        view: View,
+                        position: Int
+                    ): Boolean {
+                        onSelectDeleteMode()
+                        return true
+                    }
+
+                })
             }
         }
 
@@ -124,6 +149,9 @@ class MainActivity: BaseActivity() {
                 }
                 R.id.menu_taskRecycleBin -> {
                     updateDataOrUI(TaskApi.getRecycleBin())
+                }
+                R.id.menu_taskSelectDelete -> {
+                    sTaskListAdapter.onDeleteSelect()
                 }
             }
         }
