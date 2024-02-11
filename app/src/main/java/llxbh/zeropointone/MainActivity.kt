@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Adapter
 import android.widget.CheckBox
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -179,20 +178,15 @@ class MainActivity: BaseActivity() {
      * 以什么样的状态进入内容界面
      */
     private fun onOpenTaskContent(create: Boolean, taskData: Task?) {
-        val intent = Intent(
-            this@MainActivity,
-            TaskContentActivity::class.java
-        )
         if (create || (taskData == null)) {
-            // 无需操作
+            startActivity(Intent(
+                this@MainActivity,
+                TaskContentCreateActivity::class.java
+            ))
+
         } else {
-            intent.putExtra(
-                TaskApi.TASK_PASS,
-                taskData.id
-            )
+            TaskContentUpdateActivity.start(taskData.id, this)
         }
-        // 通知内容界面，带个数据回来
-        startActivity(intent)
     }
 
     private fun onViewComplete() {

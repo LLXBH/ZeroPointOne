@@ -1,105 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--Top-->
+    <data>
+        <variable
+            name="timeTools"
+            type="llxbh.zeropointone.tools.TimeTools" />
+        <variable
+            name="task"
+            type="llxbh.zeropointone.dao.Task" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <CheckBox
-            android:id="@+id/cb_taskState"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
-
-        <TextView
-            android:id="@+id/tv_taskDate"
-            android:layout_width="wrap_content"
-            android:minWidth="50dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:hint="时间" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="\t\t任务完成后，自增几天：" />
-
-        <EditText
-            android:id="@+id/et_taskNextDate"
-            android:layout_width="wrap_content"
-            android:minWidth="50dp"
-            android:layout_height="wrap_content"
-            android:inputType="number" />
-
-    </LinearLayout>
-
-    <!--Center-->
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
+        <!--Top-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/cb_taskState"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:checked="@{task.state}"/>
+
+            <TextView
+                android:id="@+id/tv_taskDate"
+                android:layout_width="wrap_content"
+                android:minWidth="50dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:hint="时间"
+                android:text="@{task.startTimes == 0L ? null : timeTools.timesToString(task.startTimes)}"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\t\t任务完成后，自增几天：" />
 
             <EditText
-                android:id="@+id/et_taskTitle"
-                android:layout_width="match_parent"
+                android:id="@+id/et_taskNextDate"
+                android:layout_width="wrap_content"
+                android:minWidth="50dp"
                 android:layout_height="wrap_content"
-                android:minHeight="40dp"
-                android:gravity="center_vertical"
-                android:hint="准备做什么？"
-                android:textSize="20dp"
-                android:background="#00000000"/>
-
-            <EditText
-                android:id="@+id/et_taskContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="40dp"
-                android:background="#00000000"
-                android:hint="描述"
-                android:gravity="top"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_taskCheckList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:inputType="number"
+                android:text="@{String.valueOf(task.addTimeDay)}"/>
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
-
-    <!--Bottom-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="0dp"
+        <!--Center-->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_taskContentSwitchCheck"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/task_content_switch_check" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_taskCheckAdd"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/task_add" />
+                <EditText
+                    android:id="@+id/et_taskTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="40dp"
+                    android:gravity="center_vertical"
+                    android:text="@={task.title}"
+                    android:hint="准备做什么？"
+                    android:textSize="20dp"
+                    android:background="#00000000" />
+
+                <EditText
+                    android:id="@+id/et_taskContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="40dp"
+                    android:background="#00000000"
+                    android:text="@={task.content}"
+                    android:hint="描述"
+                    android:gravity="top" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_taskCheckList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <!--Bottom-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_taskContentSwitchCheck"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/task_content_switch_check" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_taskCheckAdd"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/task_add" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</layout>
