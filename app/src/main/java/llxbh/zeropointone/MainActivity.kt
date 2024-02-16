@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.base.BaseActivity
 import llxbh.zeropointone.dao.Task
+import llxbh.zeropointone.databinding.ActivityMainBinding
 import llxbh.zeropointone.tools.TaskApi
 
 /**
@@ -27,21 +28,22 @@ import llxbh.zeropointone.tools.TaskApi
  */
 class MainActivity: BaseActivity() {
 
-    private lateinit var mTaskListRefresh: SwipeRefreshLayout
-
     private val sTaskListAdapter = TaskAdapter()
 
     // 是否显示已经完成的任务
     private var viewComplete = false
     private var hideList = mutableListOf<Task>()
 
+    private lateinit var mBinding: ActivityMainBinding
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+
         // 绑定列表的视图和数据
-        findViewById<RecyclerView>(R.id.rv_taskList).also {
-            it.layoutManager =  LinearLayoutManager(this@MainActivity)
+        mBinding.rvTaskList.also {
             it.adapter = sTaskListAdapter.apply {
                 setOnItemClickListener { adapter, view, position ->
                     onOpenTaskContent(false, adapter.getItem(position))
@@ -61,16 +63,6 @@ class MainActivity: BaseActivity() {
                     }
                 }
                 // 长按列表，进入多选删除模式
-//                addOnItemChildLongClickListener(R.id.tv_taskTitle, object : BaseQuickAdapter.OnItemChildLongClickListener<Task> {
-//                    override fun onItemLongClick(
-//                        adapter: BaseQuickAdapter<Task, *>,
-//                        view: View,
-//                        position: Int
-//                    ): Boolean {
-//                        onSelectDeleteMode()
-//                        return true
-//                    }
-//                })
                 setOnItemLongClickListener(object : BaseQuickAdapter.OnItemLongClickListener<Task> {
 
                     override fun onLongClick(
@@ -87,7 +79,7 @@ class MainActivity: BaseActivity() {
         }
 
         // 下拉刷新
-        mTaskListRefresh = findViewById<SwipeRefreshLayout>(R.id.srl_taskList).also {
+        mBinding.srlTaskList.also {
             it.setOnRefreshListener {
                 GlobalScope.launch {
                     delay(1000)
@@ -110,13 +102,13 @@ class MainActivity: BaseActivity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (sTaskListAdapter.items.isEmpty()) {
-            mTaskListRefresh.isRefreshing = true
+            mBinding.srlTaskList.isRefreshing = true
             GlobalScope.launch {
                 delay(1000)
                 launch(Dispatchers.Main) {
                     updateDataOrUI()
                 }
-                mTaskListRefresh.isRefreshing = false
+                mBinding.srlTaskList.isRefreshing = false
             }
         }
     }
@@ -126,6 +118,7 @@ class MainActivity: BaseActivity() {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         runBlocking {
             when(item.itemId) {
