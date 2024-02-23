@@ -12,8 +12,8 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 240216001
-        versionName = "1.0.21"
+        versionCode = 240224001
+        versionName = "1.0.22"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,6 +54,12 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    packagingOptions {
+        exclude("META-INF/LICENSE-LGPL-2.1.txt")
+        exclude("META-INF/LICENSE-LGPL-3.txt")
+        exclude("META-INF/LICENSE-W3C-TEST")
+        exclude("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
@@ -80,4 +86,6 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.0")
     // SwipeRefreshLayout 下拉刷新
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    // Flexmark-java 文本解析
+    implementation("com.vladsch.flexmark:flexmark-all:0.64.0")
 }

@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="timeTools"
             type="llxbh.zeropointone.tools.TimeTools" />
         <variable
             name="task"
             type="llxbh.zeropointone.dao.Task" />
+        <variable
+            name="viewEdit"
+            type="Boolean" />
     </data>
 
     <LinearLayout
@@ -74,15 +79,47 @@
                     android:textSize="20dp"
                     android:background="#00000000" />
 
-                <EditText
-                    android:id="@+id/et_taskContent"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="#00000000"
-                    android:text="@={task.content}"
-                    android:hint="描述"
-                    android:gravity="top" />
+                    tools:ignore="WebViewLayout">
+
+                    <Button
+                        android:id="@+id/btn_taskContentChange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewEdit ? @string/test_flexmark_button_edit : @string/test_flexmark_button_view}"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <EditText
+                        android:id="@+id/et_taskContent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="#00000000"
+                        android:gravity="top"
+                        android:hint="描述"
+                        android:minHeight="40dp"
+                        android:text="@={task.content}"
+                        android:visibility="@{viewEdit ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btn_taskContentChange"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <WebView
+                        android:id="@+id/wv_taskContent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{viewEdit ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btn_taskContentChange"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_taskCheckList"

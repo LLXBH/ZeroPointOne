@@ -9,11 +9,13 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.chad.library.adapter4.dragswipe.QuickDragAndSwipe
+import com.vladsch.flexmark.util.format.MarkdownParagraph
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.base.BaseActivity
 import llxbh.zeropointone.dao.Task
 import llxbh.zeropointone.data.TaskCheck
 import llxbh.zeropointone.databinding.ActivityTaskContentBinding
+import llxbh.zeropointone.tools.MarkdownProcessor
 import llxbh.zeropointone.tools.TaskApi
 import llxbh.zeropointone.tools.TimeTools
 import java.time.LocalDate
@@ -28,6 +30,8 @@ open class TaskContentCreateActivity: BaseActivity() {
 
     lateinit var mBinding: ActivityTaskContentBinding
 
+    private val sMarkdownProcessor = MarkdownProcessor()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +40,26 @@ open class TaskContentCreateActivity: BaseActivity() {
         setContentView(mBinding.root)
 
         // 绑定数据
-        mBinding.also {
-            it.task = Task(title = "")
-            it.timeTools = TimeTools
+        mBinding.apply {
+            task = Task(title = "")
+            timeTools = TimeTools
 
-            it.rvTaskCheckList.adapter = sCheckAdapter
+            rvTaskCheckList.adapter = sCheckAdapter
+
+            viewEdit = false
+            btnTaskContentChange.setOnClickListener {
+                // 判断是否是编辑模式
+                if (viewEdit != false) {
+                    val text = etTaskContent.text.toString()
+                    val textMark = sMarkdownProcessor.markdownToHtml(text)
+                    wvTaskContent.loadData(
+                        textMark,
+                        "text/html; charset=UTF-8",
+                        null
+                    )
+                }
+                viewEdit = !viewEdit!!
+            }
         }
 
         // 适配器
