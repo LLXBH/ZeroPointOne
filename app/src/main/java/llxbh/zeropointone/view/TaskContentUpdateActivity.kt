@@ -1,4 +1,4 @@
-package llxbh.zeropointone
+package llxbh.zeropointone.view
 
 import android.app.Activity
 import android.content.Intent

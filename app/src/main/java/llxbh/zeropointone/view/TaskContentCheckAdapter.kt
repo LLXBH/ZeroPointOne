@@ -1,13 +1,10 @@
-package llxbh.zeropointone
+package llxbh.zeropointone.view
 
 import android.content.Context
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.core.view.get
-import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.dragswipe.listener.DragAndSwipeDataCallback
@@ -18,8 +15,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import llxbh.zeropointone.data.TaskCheck
 import llxbh.zeropointone.databinding.TaskContentCheckItemBinding
-import kotlin.concurrent.thread
-import kotlin.concurrent.timer
 
 class TaskContentCheckAdapter:
     // BRVHA

@@ -1,4 +1,4 @@
-package llxbh.zeropointone
+package llxbh.zeropointone.view
 
 import android.content.Intent
 import android.os.Build
@@ -8,9 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +15,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BaseActivity
 import llxbh.zeropointone.dao.Task
 import llxbh.zeropointone.databinding.ActivityMainBinding

@@ -1,4 +1,4 @@
-package llxbh.zeropointone
+package llxbh.zeropointone.view
 
 import android.os.Build
 import android.os.Bundle
@@ -9,8 +9,8 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.chad.library.adapter4.dragswipe.QuickDragAndSwipe
-import com.vladsch.flexmark.util.format.MarkdownParagraph
 import kotlinx.coroutines.runBlocking
+import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BaseActivity
 import llxbh.zeropointone.dao.Task
 import llxbh.zeropointone.data.TaskCheck
@@ -130,9 +130,18 @@ open class TaskContentCreateActivity: BaseActivity() {
             }
         }
 
-        // 点击时间则展示显示日期选
-        mBinding.tvTaskDate.setOnClickListener {
-            DatePickerDialogFragment().show(supportFragmentManager, "datePicker")
+        mBinding.tvTaskDate.apply {
+            // 点击时间则展示显示日期选择
+            setOnClickListener {
+                DatePickerDialogFragment().show(supportFragmentManager, "datePicker")
+            }
+            // 长按时间清空已选
+            setOnLongClickListener {
+                text = ""
+                Toast.makeText(this@TaskContentCreateActivity, "清空已选时间！", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnLongClickListener true
+            }
         }
     }
 
@@ -193,6 +202,9 @@ open class TaskContentCreateActivity: BaseActivity() {
         task.state = mBinding.cbTaskState.isChecked
         if (mBinding.tvTaskDate.text.isNotEmpty()) {
             task.startTimes = TimeTools.stringToTimes(mBinding.tvTaskDate.text.toString()) ?: 0L
+        } else {
+            task.startTimes = 0L
+            task.endTimes = 0L
         }
         if (mBinding.etTaskNextDate.text.isNotEmpty()) {
             task.addTimeDay = mBinding.etTaskNextDate.text.toString().toInt()
