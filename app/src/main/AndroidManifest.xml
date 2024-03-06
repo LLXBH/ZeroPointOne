@@ -22,8 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.TaskContentCreateActivity" />
-        <activity android:name=".view.TaskContentUpdateActivity" />
+        <activity android:name=".view.tasklist.TaskListActivity" />
+        <activity android:name=".view.taskcontent.TaskContentCreateActivity" />
+        <activity android:name=".view.taskcontent.TaskContentUpdateActivity" />
 
     </application>
 

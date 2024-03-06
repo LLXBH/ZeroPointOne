@@ -1,4 +1,4 @@
-package llxbh.zeropointone.view
+package llxbh.zeropointone.view.tasklist
 
 import android.content.Context
 import android.os.Build
@@ -17,7 +17,7 @@ import llxbh.zeropointone.databinding.TaskItemBinding
 import llxbh.zeropointone.tools.TaskApi
 import llxbh.zeropointone.tools.TimeTools
 
-class TaskAdapter: BaseQuickAdapter<Task, TaskAdapter.VH>() {
+class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
 
     // 根据状态来控制控件的显示
     private var mSelectDeleteMode = ObservableBoolean(false)

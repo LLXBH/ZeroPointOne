@@ -1,4 +1,4 @@
-package llxbh.zeropointone.view
+package llxbh.zeropointone.view.taskcontent
 
 import android.app.Activity
 import android.content.Intent
