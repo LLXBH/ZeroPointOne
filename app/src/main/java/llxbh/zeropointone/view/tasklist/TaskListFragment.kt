@@ -3,22 +3,22 @@ package llxbh.zeropointone.view.tasklist
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.annotation.RequiresApi
 import com.chad.library.adapter4.BaseQuickAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.R
-import llxbh.zeropointone.base.BindingBaseActivity
+import llxbh.zeropointone.base.BindingBaseFragment
 import llxbh.zeropointone.dao.Task
-import llxbh.zeropointone.databinding.ActivityTaskListBinding
+import llxbh.zeropointone.databinding.FragmentTaskListBinding
 import llxbh.zeropointone.tools.TaskApi
 import llxbh.zeropointone.view.taskcontent.TaskContentCreateActivity
 import llxbh.zeropointone.view.taskcontent.TaskContentUpdateActivity
@@ -26,7 +26,15 @@ import llxbh.zeropointone.view.taskcontent.TaskContentUpdateActivity
 /**
  * 主界面。主要展示当前全部任务和添加删除
  */
-class TaskListActivity: BindingBaseActivity<ActivityTaskListBinding>() {
+class TaskListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
+
+    companion object {
+
+        fun newInstance(): TaskListFragment {
+            return TaskListFragment()
+        }
+
+    }
 
     private val sTaskListAdapter = TaskListAdapter()
 
@@ -34,14 +42,21 @@ class TaskListActivity: BindingBaseActivity<ActivityTaskListBinding>() {
     private var viewComplete = false
     private var hideList = mutableListOf<Task>()
 
-    override fun setBinding(): ActivityTaskListBinding {
-        return ActivityTaskListBinding.inflate(layoutInflater)
+    override fun setBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): FragmentTaskListBinding {
+        return FragmentTaskListBinding.inflate(
+            layoutInflater,
+            container,
+            false
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // 绑定列表的视图和数据
         getBinding().rvTaskList.also {
             it.adapter = sTaskListAdapter.apply {
@@ -92,15 +107,15 @@ class TaskListActivity: BindingBaseActivity<ActivityTaskListBinding>() {
         }
 
         // 点击按钮（+）进入 “内容” 界面创建新的任务
-        findViewById<FloatingActionButton>(R.id.fabtn_taskAdd).also {
+        getBinding().fabtnTaskAdd.also {
             it.setOnClickListener {
                 onOpenTaskContent(true, null)
             }
         }
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
+    override fun onStart() {
+        super.onStart()
         if (sTaskListAdapter.items.isEmpty()) {
             getBinding().srlTaskList.isRefreshing = true
             GlobalScope.launch {
@@ -113,10 +128,14 @@ class TaskListActivity: BindingBaseActivity<ActivityTaskListBinding>() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_task_update, menu)
-        return true
-    }
+//    override fun onWindowFocusChanged(hasFocus: Boolean) {
+//        super.onWindowFocusChanged(hasFocus)
+//    }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.menu_task_update, menu)
+//        return true
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -171,14 +190,15 @@ class TaskListActivity: BindingBaseActivity<ActivityTaskListBinding>() {
      * 以什么样的状态进入内容界面
      */
     private fun onOpenTaskContent(create: Boolean, taskData: Task?) {
-        if (create || (taskData == null)) {
-            startActivity(Intent(
-                this@TaskListActivity,
-                TaskContentCreateActivity::class.java
-            ))
-
-        } else {
-            TaskContentUpdateActivity.start(taskData.id, this)
+        activity?.also {
+            if (create || (taskData == null)) {
+                startActivity(Intent(
+                    it,
+                    TaskContentCreateActivity::class.java
+                ))
+            } else {
+                TaskContentUpdateActivity.start(taskData.id, it)
+            }
         }
     }
 

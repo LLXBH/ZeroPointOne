@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="mPracticeMode"
+            type="Boolean" />
+        <variable
+            name="mPracticeTiming"
+            type="String" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_tomatoClockPracticeTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="练习时间"
+                android:inputType="number"
+                android:digits="0123456789" />
+
+            <EditText
+                android:id="@+id/et_tomatoClockPracticeInterval"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="间歇休息"
+                android:inputType="number"
+                android:digits="0123456789" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/et_tomatoClockPracticeFrequency"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="练习次数"
+                android:inputType="number"
+                android:digits="0123456789" />
+
+            <EditText
+                android:id="@+id/et_tomatoClockPracticeRest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="大休时间"
+                android:inputType="number"
+                android:digits="0123456789" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_tomatoClockMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{mPracticeMode ? @string/tomato_clock_practice : @string/tomato_clock_rest}" 
+            android:hint="@string/tomato_clock_rest" />
+
+        <TextView
+            android:id="@+id/tv_tomatoClockTime"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@={mPracticeTiming}"
+            android:hint="00：00"
+            android:textSize="60sp"
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="练习时长："/>
+
+                <TextView
+                    android:id="@+id/tv_tomatoClockPracticeAllTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="练习次数："/>
+
+                <TextView
+                    android:id="@+id/tv_tomatoClockPracticeAllFrequency"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_tomatoClockStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始" />
+
+        <Button
+            android:id="@+id/btn_tomatoClockSuspend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="暂停" />
+
+        <Button
+            android:id="@+id/btn_tomatoClockFinish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="结束" />
+
+
+    </LinearLayout>
+</layout>

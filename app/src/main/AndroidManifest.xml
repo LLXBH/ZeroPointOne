@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:name=".app.MyApplication"
         android:allowBackup="true"
@@ -22,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.tasklist.TaskListActivity" />
         <activity android:name=".view.taskcontent.TaskContentCreateActivity" />
         <activity android:name=".view.taskcontent.TaskContentUpdateActivity" />
 
