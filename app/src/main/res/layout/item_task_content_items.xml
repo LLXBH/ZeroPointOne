@@ -5,7 +5,7 @@
     <data>
         <variable
             name="check"
-            type="llxbh.zeropointone.data.TaskCheck" />
+            type="llxbh.zeropointone.data.model.TaskCheck" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             android:id="@+id/btn_taskContentCheckDelete"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/task_delete"
+            android:background="@drawable/ic_menu_delete"
             app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem"
             app:layout_constraintBottom_toBottomOf="@id/cb_taskContentCheckItem"
             app:layout_constraintEnd_toStartOf="@id/btn_taskContentCheckSliders"/>
@@ -46,7 +46,7 @@
             android:id="@+id/btn_taskContentCheckSliders"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/task_sliders"
+            android:background="@drawable/ic_menu_sliders"
             app:layout_constraintTop_toTopOf="@id/cb_taskContentCheckItem"
             app:layout_constraintBottom_toBottomOf="@id/cb_taskContentCheckItem"
             app:layout_constraintEnd_toEndOf="parent"/>

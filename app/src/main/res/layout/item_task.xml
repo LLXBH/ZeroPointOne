@@ -6,7 +6,7 @@
         <import type="android.view.View" />
         <variable
             name="task"
-            type="llxbh.zeropointone.dao.Task" />
+            type="llxbh.zeropointone.data.model.Task" />
         <variable
             name="selectDeleteMode"
             type="androidx.databinding.ObservableBoolean" />

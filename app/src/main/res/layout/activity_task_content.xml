@@ -7,10 +7,10 @@
         <import type="android.view.View" />
         <variable
             name="timeTools"
-            type="llxbh.zeropointone.tools.TimeTools" />
+            type="llxbh.zeropointone.util.TimeUtil" />
         <variable
             name="task"
-            type="llxbh.zeropointone.dao.Task" />
+            type="llxbh.zeropointone.data.model.Task" />
         <variable
             name="viewEdit"
             type="Boolean" />
@@ -88,7 +88,7 @@
                         android:id="@+id/btn_taskContentChange"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{viewEdit ? @string/test_flexmark_button_edit : @string/test_flexmark_button_view}"
+                        android:text="@{viewEdit ? @string/text_edit : @string/text_view}"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -146,13 +146,13 @@
                 android:id="@+id/btn_taskContentSwitchCheck"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/task_content_switch_check" />
+                android:background="@drawable/ic_menu_list" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_taskCheckAdd"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/task_add" />
+                android:background="@drawable/ic_menu_add" />
 
         </LinearLayout>
 

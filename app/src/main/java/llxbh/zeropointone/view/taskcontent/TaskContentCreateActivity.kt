@@ -12,12 +12,12 @@ import com.chad.library.adapter4.dragswipe.QuickDragAndSwipe
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BaseActivity
-import llxbh.zeropointone.dao.Task
-import llxbh.zeropointone.data.TaskCheck
+import llxbh.zeropointone.data.model.Task
+import llxbh.zeropointone.data.model.TaskCheck
 import llxbh.zeropointone.databinding.ActivityTaskContentBinding
-import llxbh.zeropointone.tools.MarkdownProcessor
-import llxbh.zeropointone.tools.TaskApi
-import llxbh.zeropointone.tools.TimeTools
+import llxbh.zeropointone.util.TextUtil
+import llxbh.zeropointone.api.TaskApi
+import llxbh.zeropointone.util.TimeUtil
 import java.time.LocalDate
 
 /**
@@ -30,7 +30,7 @@ open class TaskContentCreateActivity: BaseActivity() {
 
     lateinit var mBinding: ActivityTaskContentBinding
 
-    private val sMarkdownProcessor = MarkdownProcessor()
+    private val sMarkdownProcessor = TextUtil()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ open class TaskContentCreateActivity: BaseActivity() {
         // 绑定数据
         mBinding.apply {
             task = Task(title = "")
-            timeTools = TimeTools
+            timeTools = TimeUtil
 
             rvTaskCheckList.adapter = sCheckAdapter
 
@@ -104,10 +104,12 @@ open class TaskContentCreateActivity: BaseActivity() {
                 val contentList = content.split("\n")
                 val checkList = arrayListOf<TaskCheck>()
                 for (newCheck in contentList) {
-                    checkList.add(TaskCheck(
+                    checkList.add(
+                        TaskCheck(
                         ObservableField(false),
                         ObservableField(newCheck)
-                    ))
+                    )
+                    )
                 }
                 sCheckAdapter.addAll(checkList)
                 mBinding.etTaskContent.setText("")
@@ -158,7 +160,7 @@ open class TaskContentCreateActivity: BaseActivity() {
      * 绑定并且显示 Menu 菜单
      */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_task_content, menu)
+        menuInflater.inflate(R.menu.task_content_fragment_menu, menu)
         return true     // 显示
     }
 
@@ -201,7 +203,7 @@ open class TaskContentCreateActivity: BaseActivity() {
         val task = mBinding.task!!
         task.state = mBinding.cbTaskState.isChecked
         if (mBinding.tvTaskDate.text.isNotEmpty()) {
-            task.startTimes = TimeTools.stringToTimes(mBinding.tvTaskDate.text.toString()) ?: 0L
+            task.startTimes = TimeUtil.stringToTimes(mBinding.tvTaskDate.text.toString()) ?: 0L
         } else {
             task.startTimes = 0L
             task.endTimes = 0L

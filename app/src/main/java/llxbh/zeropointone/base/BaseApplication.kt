@@ -1,8 +1,8 @@
-package llxbh.zeropointone.app
+package llxbh.zeropointone.base
 
 import android.app.Application
 
-class MyApplication: Application() {
+class BaseApplication: Application() {
 
     companion object {
         lateinit var instance: Application

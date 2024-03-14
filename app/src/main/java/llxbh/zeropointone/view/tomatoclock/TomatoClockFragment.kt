@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat
 import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BindingBaseFragment
 import llxbh.zeropointone.databinding.FragmentTomatoClockBinding
-import kotlin.time.times
 
 class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
@@ -249,7 +248,7 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
         // 准备通知内容
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.mipmap.ic_zeropointone)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("零点壹")
             .setContentText("时间结束了！！！")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

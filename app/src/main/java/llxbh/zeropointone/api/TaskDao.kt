@@ -1,10 +1,11 @@
-package llxbh.zeropointone.dao
+package llxbh.zeropointone.api
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import llxbh.zeropointone.data.model.Task
 
 /**
  * 对于 Task 表的操作

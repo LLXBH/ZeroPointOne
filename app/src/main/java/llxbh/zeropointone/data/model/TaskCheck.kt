@@ -1,4 +1,4 @@
-package llxbh.zeropointone.data
+package llxbh.zeropointone.data.model
 
 import android.database.Observable
 import androidx.databinding.ObservableField

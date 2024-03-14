@@ -1,11 +1,9 @@
-package llxbh.zeropointone.dao
+package llxbh.zeropointone.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import llxbh.zeropointone.data.TaskCheck
-import llxbh.zeropointone.data.TaskCheckConverters
-import java.util.Date
+import llxbh.zeropointone.data.repository.TaskCheckConverters
 
 /**
  * 清单任务数据类

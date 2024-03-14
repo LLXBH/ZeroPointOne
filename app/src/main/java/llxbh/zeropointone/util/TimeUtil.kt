@@ -1,4 +1,4 @@
-package llxbh.zeropointone.tools
+package llxbh.zeropointone.util
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -9,13 +9,16 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 
-object TimeTools {
+object TimeUtil {
 
     val ONE_DAY_TIMES: Long = 86400000
 
     @RequiresApi(Build.VERSION_CODES.O)
     private val zoneId = ZoneId.systemDefault()
 
+    /**
+     * 将 LocalDate 转换为 Date
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun localDateToDate(value: LocalDate): Date {
         return Date.from(
@@ -25,6 +28,9 @@ object TimeTools {
         )
     }
 
+    /**
+     * 将 Date 转换为 字符串
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun dateToString(value: Date): String {
         val localDate = value.toInstant()
@@ -55,10 +61,7 @@ object TimeTools {
      * 根据给的时间往后增加天数，给出新的时间
      */
     @SuppressLint("NewApi")
-    fun onDateOnAddDay(date: Date?, dayNum: Int): Date? {
-        if (date == null) {
-            return null
-        }
+    fun onDateOnAddDay(date: Date, dayNum: Int): Date? {
         val date =  date.toInstant()
             .atZone(zoneId)
             .toLocalDate()
@@ -80,6 +83,9 @@ object TimeTools {
         return times+(dayNum * ONE_DAY_TIMES)
     }
 
+    /**
+     * 将 时间戳 转换为 字符串
+     */
     @SuppressLint("NewApi")
     fun timesToString(times: Long): String {
         val date =  Instant.ofEpochMilli(times)
@@ -88,6 +94,9 @@ object TimeTools {
         return toString(date.year, date.monthValue, date.dayOfMonth)
     }
 
+    /**
+     * 将 字符串 转换为 时间戳
+     */
     @SuppressLint("NewApi")
     fun stringToTimes(dateTime: String): Long? {
         return stringToDate(dateTime)?.time

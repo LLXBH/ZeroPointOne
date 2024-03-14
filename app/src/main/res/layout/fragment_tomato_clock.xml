@@ -71,8 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{mPracticeMode ? @string/tomato_clock_practice : @string/tomato_clock_rest}" 
-            android:hint="@string/tomato_clock_rest" />
+            android:text="@{mPracticeMode ? @string/text_practice : @string/text_rest}"
+            android:hint="@string/text_rest" />
 
         <TextView
             android:id="@+id/tv_tomatoClockTime"

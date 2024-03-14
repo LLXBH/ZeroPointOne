@@ -1,8 +1,9 @@
-package llxbh.zeropointone.data
+package llxbh.zeropointone.data.repository
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import llxbh.zeropointone.data.model.TaskCheck
 
 /**
  * 将 TaskCheck 列表转化为 Json 格式在数据库保存

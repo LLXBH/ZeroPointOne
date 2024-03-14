@@ -21,7 +21,7 @@
             android:id="@+id/bnv_mainFragmentSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/menu_main_bottom_navigation"/>
+            app:menu="@menu/main_activity_bottom_navigation_menu" />
 
     </LinearLayout>
 </layout>

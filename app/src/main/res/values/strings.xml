@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">零点壹</string>
 
-    <string name="test_flexmark_button_edit">编辑</string>
-    <string name="test_flexmark_button_view">显示</string>
+    <string name="text_edit">编辑</string>
+    <string name="text_view">显示</string>
     
-    <string name="tomato_clock_practice">练习</string>
-    <string name="tomato_clock_rest">休息</string>
+    <string name="text_practice">练习</string>
+    <string name="text_rest">休息</string>
 </resources>

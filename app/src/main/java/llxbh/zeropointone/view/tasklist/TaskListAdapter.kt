@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import llxbh.zeropointone.dao.Task
-import llxbh.zeropointone.databinding.TaskItemBinding
-import llxbh.zeropointone.tools.TaskApi
-import llxbh.zeropointone.tools.TimeTools
+import llxbh.zeropointone.data.model.Task
+import llxbh.zeropointone.databinding.ItemTaskBinding
+import llxbh.zeropointone.api.TaskApi
+import llxbh.zeropointone.util.TimeUtil
 
 class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
 
@@ -26,7 +26,7 @@ class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
 
     class VH(
         parent: ViewGroup,
-        val binding: TaskItemBinding = TaskItemBinding.inflate(
+        val binding: ItemTaskBinding = ItemTaskBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -68,7 +68,7 @@ class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
                 tvTaskDate.visibility = View.GONE
             } else {
                 tvTaskDate.visibility = View.VISIBLE
-                tvTaskDate.text = TimeTools.timesToString(item.startTimes)
+                tvTaskDate.text = TimeUtil.timesToString(item.startTimes)
             }
         }
 

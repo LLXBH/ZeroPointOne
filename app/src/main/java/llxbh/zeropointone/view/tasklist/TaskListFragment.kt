@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BindingBaseFragment
-import llxbh.zeropointone.dao.Task
+import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.databinding.FragmentTaskListBinding
-import llxbh.zeropointone.tools.TaskApi
+import llxbh.zeropointone.api.TaskApi
 import llxbh.zeropointone.view.taskcontent.TaskContentCreateActivity
 import llxbh.zeropointone.view.taskcontent.TaskContentUpdateActivity
 

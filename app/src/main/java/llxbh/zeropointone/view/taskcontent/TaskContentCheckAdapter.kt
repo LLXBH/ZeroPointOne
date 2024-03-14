@@ -13,8 +13,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import llxbh.zeropointone.data.TaskCheck
-import llxbh.zeropointone.databinding.TaskContentCheckItemBinding
+import llxbh.zeropointone.data.model.TaskCheck
+import llxbh.zeropointone.databinding.ItemTaskContentItemsBinding
 
 class TaskContentCheckAdapter:
     // BRVHA
@@ -24,7 +24,7 @@ class TaskContentCheckAdapter:
 
     class VH(
         parent: ViewGroup,
-        val binding: TaskContentCheckItemBinding = TaskContentCheckItemBinding.inflate(
+        val binding: ItemTaskContentItemsBinding = ItemTaskContentItemsBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false

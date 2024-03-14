@@ -1,4 +1,4 @@
-package llxbh.zeropointone.tools
+package llxbh.zeropointone.api
 
 import android.os.Build
 import android.util.Log
@@ -7,8 +7,9 @@ import androidx.room.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import llxbh.zeropointone.app.appContext
-import llxbh.zeropointone.dao.AppDatabase
-import llxbh.zeropointone.dao.Task
+import llxbh.zeropointone.data.repository.AppDatabase
+import llxbh.zeropointone.data.model.Task
+import llxbh.zeropointone.util.TimeUtil
 
 /**
  * 有关清单的各种接口执行
@@ -76,7 +77,7 @@ object TaskApi {
             if (! onInspectData(task)) {
                 Log.e("Task", "数据检查不通过。")
             }
-            task.updateTimes = TimeTools.getNowTime()
+            task.updateTimes = TimeUtil.getNowTime()
             sTaskDao.insert(task)
         }
     }
@@ -90,7 +91,7 @@ object TaskApi {
             if (! onInspectData(task)) {
                 Log.e("Task", "数据检查不通过。")
             }
-            task.updateTimes = TimeTools.getNowTime()
+            task.updateTimes = TimeUtil.getNowTime()
             // 检查是否需要循环创建清单
             onCirculateAddNewTask(task)?.also {
                 insert(it)
@@ -123,9 +124,9 @@ object TaskApi {
         newTask.apply {
             id = 0
             state = false
-            updateTimes = TimeTools.getNowTime()
-            startTimes = TimeTools.getNewTime(startTimes, addTimeDay)
-            endTimes = TimeTools.getNewTime(endTimes, addTimeDay)
+            updateTimes = TimeUtil.getNowTime()
+            startTimes = TimeUtil.getNewTime(startTimes, addTimeDay)
+            endTimes = TimeUtil.getNewTime(endTimes, addTimeDay)
             // 将子项设置为未完成的状态
             if (! newTask.checks.isNullOrEmpty()) {
                 for (check in newTask.checks!!) {
@@ -142,7 +143,7 @@ object TaskApi {
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun delete(task: Task) {
         return withContext(Dispatchers.IO) {
-            task.updateTimes = TimeTools.getNowTime()
+            task.updateTimes = TimeUtil.getNowTime()
             // 不是实际删除，打上标记，进入回收站
             // sTaskDao.delete(task)
             task.isDelete = true
@@ -156,7 +157,7 @@ object TaskApi {
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun restore(task: Task) {
         return withContext(Dispatchers.IO) {
-            task.updateTimes = TimeTools.getNowTime()
+            task.updateTimes = TimeUtil.getNowTime()
             task.isDelete = false
             update(task)
         }
