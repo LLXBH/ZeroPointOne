@@ -8,8 +8,11 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.api.TaskApi
+import llxbh.zeropointone.util.TextUtil
 
 class TaskContentUpdateActivity: TaskContentCreateActivity() {
+
+    private val sMarkdownProcessor = TextUtil()
 
     companion object {
 
@@ -37,6 +40,11 @@ class TaskContentUpdateActivity: TaskContentCreateActivity() {
             runBlocking {
                 mBinding.task = TaskApi.get(taskId)
                 sCheckAdapter.submitList(mBinding.task!!.checks ?: arrayListOf())
+                mBinding.wvTaskContent.loadData(
+                    sMarkdownProcessor.markdownToHtml(mBinding.task?.content ?: ""),
+                    "text/html; charset=UTF-8",
+                    null
+                )
             }
         } else {
             runBlocking {

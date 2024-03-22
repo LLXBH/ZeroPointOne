@@ -60,6 +60,7 @@ open class TaskContentCreateActivity: BaseActivity() {
                 }
                 viewEdit = !viewEdit!!
             }
+
         }
 
         // 适配器
@@ -74,6 +75,7 @@ open class TaskContentCreateActivity: BaseActivity() {
                 false
             }
         }
+
         // 拖拽功能
         sQuickDragAndSwipe.apply {
             // 绑定 recycleView 和 适配器
@@ -92,44 +94,75 @@ open class TaskContentCreateActivity: BaseActivity() {
 
         // 将内容转换为 Check
         mBinding.btnTaskContentSwitchCheck.setOnClickListener {
-            val isContentCheck = sCheckAdapter.items.isNullOrEmpty()
-            if (isContentCheck) {
-                // 为空，将内容转换为子项
-                val content = mBinding.etTaskContent.text.toString()
-                // 内容为空就只创建个空的子项
-                if (content.isEmpty()) {
-                    sCheckAdapter.add(TaskCheck())
-                    return@setOnClickListener
-                }
-                val contentList = content.split("\n")
+            // 判断是否有内容
+            val ifContent = mBinding.etTaskContent.text.toString().isNotEmpty()
+            // 判断有子项
+            val ifCheck = sCheckAdapter.items.isNotEmpty()
+
+            if (ifContent && ifCheck) {
+                // 有详情，也有子项，将详情续接到子项上
+
+                // 将内容转为 TaskCheck
+                val contentList = mBinding.etTaskContent.text.toString().split("\n")
                 val checkList = arrayListOf<TaskCheck>()
                 for (newCheck in contentList) {
                     checkList.add(
                         TaskCheck(
-                        ObservableField(false),
-                        ObservableField(newCheck)
-                    )
+                            ObservableField(false),
+                            ObservableField(newCheck)
+                        )
                     )
                 }
+
+                // 接上
                 sCheckAdapter.addAll(checkList)
                 mBinding.etTaskContent.setText("")
-            } else {
-                // 有了，将子项转换为内容
-                var newContentList = ""
-                for ((index, newContent) in sCheckAdapter.items.withIndex()) {
-                    newContentList += if (index == 0) {
-                        "${newContent.content.get()}"
+            } else if (!ifContent && ifCheck) {
+                //内容为空，子项不为空，将子项转换为内容
+
+                // 将子项的内容提取出来，每一个子项的后面添加一个回车（换行）
+                var newContent = ""
+                for ((index, check) in sCheckAdapter.items.withIndex()) {
+                    newContent += if (index == 0) {
+                        "${check.content.get()}"
                     } else {
-                        "\n${newContent.content.get()}"
+                        "\n${check.content.get()}"
                     }
                 }
-                var content = mBinding.etTaskContent.text.toString()
-                if (content.isNotEmpty()) {
-                    content += "\n"
-                }
-                mBinding.etTaskContent.setText(content)
+
+                // 更新数据
+                mBinding.etTaskContent.setText(newContent)
                 sCheckAdapter.submitList(arrayListOf())
+            } else if (ifContent && !ifCheck) {
+                // 内容不为空，子项为空，将内容转换为子项
+
+                // 将内容转为 TaskCheck
+                val contentList = mBinding.etTaskContent.text.toString().split("\n")
+                val checkList = arrayListOf<TaskCheck>()
+                for (newCheck in contentList) {
+                    checkList.add(
+                        TaskCheck(
+                            ObservableField(false),
+                            ObservableField(newCheck)
+                        )
+                    )
+                }
+
+                // 更新数据
+                sCheckAdapter.addAll(checkList)
+                mBinding.etTaskContent.setText("")
             }
+
+            // 显示详情的状态，而不是编辑，需要同步刷新一下
+            if (mBinding.viewEdit == false) {
+                val content = mBinding.etTaskContent.text.toString()
+                mBinding.wvTaskContent.loadData(
+                    sMarkdownProcessor.markdownToHtml(mBinding.task?.content ?: ""),
+                    "text/html; charset=UTF-8",
+                    null
+                )
+            }
+
         }
 
         mBinding.tvTaskDate.apply {
