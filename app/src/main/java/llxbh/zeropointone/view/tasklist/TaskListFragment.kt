@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +54,12 @@ class TaskListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
             container,
             false
         )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 告知 Fragment 此页面有选项菜单
+        setHasOptionsMenu(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -128,14 +136,11 @@ class TaskListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
         }
     }
 
-//    override fun onWindowFocusChanged(hasFocus: Boolean) {
-//        super.onWindowFocusChanged(hasFocus)
-//    }
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu_task_update, menu)
-//        return true
-//    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        // 加载菜单资源
+        inflater.inflate(R.menu.task_list_fragment_menu, menu)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
