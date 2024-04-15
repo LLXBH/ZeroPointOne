@@ -124,15 +124,13 @@ class TaskListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
 
     override fun onStart() {
         super.onStart()
-        if (sTaskListAdapter.items.isEmpty()) {
-            getBinding().srlTaskList.isRefreshing = true
-            GlobalScope.launch {
-                delay(1000)
-                launch(Dispatchers.Main) {
-                    updateDataOrUI()
-                }
-                getBinding().srlTaskList.isRefreshing = false
+        getBinding().srlTaskList.isRefreshing = true
+        GlobalScope.launch {
+            delay(1000)
+            launch(Dispatchers.Main) {
+                updateDataOrUI()
             }
+            getBinding().srlTaskList.isRefreshing = false
         }
     }
 
