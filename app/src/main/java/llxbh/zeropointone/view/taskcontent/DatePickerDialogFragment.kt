@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
+import llxbh.zeropointone.view.taskcyclecontent.TaskCycleContentCreateActivity
 
 /**
  * 日期选择视图
@@ -30,7 +31,12 @@ class DatePickerDialogFragment: DialogFragment(), DatePickerDialog.OnDateSetList
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
         // 月从 0 开始，+1 修正
-        (activity as TaskContentCreateActivity).setDate(p1, p2+1, p3)
+        when {
+            (activity is TaskContentCreateActivity) -> {
+                (activity as TaskContentCreateActivity).setDate(p1, p2+1, p3)
+            }
+
+        }
     }
 
 }

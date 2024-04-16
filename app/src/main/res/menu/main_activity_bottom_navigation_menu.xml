@@ -5,6 +5,10 @@
         android:icon="@drawable/ic_menu_list"
         android:title="任务表" />
 
+    <item android:id="@+id/action_task_cycle_list"
+        android:icon="@drawable/ic_menu_loop"
+        android:title="周期卡" />
+
     <item android:id="@+id/action_tomato_clock"
         android:icon="@drawable/ic_menu_tomato_clock"
         android:title="番茄钟" />

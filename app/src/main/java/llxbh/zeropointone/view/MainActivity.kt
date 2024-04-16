@@ -25,7 +25,8 @@ class MainActivity: BindingBaseActivity<ActivityMainBinding>() {
             bnvMainFragmentSwitch.setOnItemSelectedListener {
                 when(it.itemId) {
                     R.id.action_task_list -> vpMainFragment.currentItem = 0
-                    R.id.action_tomato_clock -> vpMainFragment.currentItem = 1
+                    R.id.action_task_cycle_list -> vpMainFragment.currentItem =1
+                    R.id.action_tomato_clock -> vpMainFragment.currentItem = 2
                     else -> {throw IllegalStateException("Unknown position ${it.itemId}")}
                 }
                 true
@@ -38,7 +39,8 @@ class MainActivity: BindingBaseActivity<ActivityMainBinding>() {
                 override fun onPageSelected(position: Int) {
                     bnvMainFragmentSwitch.selectedItemId = when(position) {
                         0 -> R.id.action_task_list
-                        1 -> R.id.action_tomato_clock
+                        1 -> R.id.action_task_cycle_list
+                        2 -> R.id.action_tomato_clock
                         else -> throw IllegalStateException("Unknown position $position")
                     }
                 }

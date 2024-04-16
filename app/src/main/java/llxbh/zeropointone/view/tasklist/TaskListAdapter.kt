@@ -21,7 +21,6 @@ class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
 
     // 根据状态来控制控件的显示
     private var mSelectDeleteMode = ObservableBoolean(false)
-
     private var mDeleteDataMap = hashMapOf<Task, Boolean>()
 
     class VH(
