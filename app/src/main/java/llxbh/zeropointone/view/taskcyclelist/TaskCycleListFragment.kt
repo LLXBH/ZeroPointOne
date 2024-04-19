@@ -1,22 +1,23 @@
 package llxbh.zeropointone.view.taskcyclelist
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.AdapterView.OnItemLongClickListener
 import androidx.databinding.ObservableBoolean
-import com.chad.library.adapter4.BaseQuickAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import llxbh.zeropointone.api.TaskApi
+import llxbh.zeropointone.api.TaskCycleApi
 import llxbh.zeropointone.base.BindingBaseFragment
 import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.databinding.FragmentTaskListBinding
-import llxbh.zeropointone.view.taskcontent.TaskContentCreateActivity
 import llxbh.zeropointone.view.taskcontent.TaskContentUpdateActivity
 import llxbh.zeropointone.view.taskcyclecontent.TaskCycleContentCreateActivity
+import llxbh.zeropointone.view.taskcyclecontent.TaskCycleContentUpdateActivity
 
 /**
  * 周期任务列表
@@ -67,6 +68,19 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
             binding.fabtnTaskAdd.setOnClickListener {
                 onOpenTaskCycleContent(true, null)
             }
+
+            // 下拉刷新
+            getBinding().srlTaskList.also {
+                it.setOnRefreshListener {
+                    GlobalScope.launch {
+                        delay(1000)
+                        launch(Dispatchers.Main) {
+                            updateDataOrUI()
+                        }
+                        it.isRefreshing = false
+                    }
+                }
+            }
         }
 
     }
@@ -76,7 +90,7 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
             if (create || (taskData == null)) {
                 TaskCycleContentCreateActivity.start(it)
             } else {
-//                TaskContentUpdateActivity.start(taskData.id, it)
+                TaskCycleContentUpdateActivity.start(it, taskData.id)
             }
 //            sTaskCycleListAdapter.addAll(listOf(
 //                TaskCycle(id = 0, title = "Test1"),
@@ -84,6 +98,26 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
 //                TaskCycle(id = 0, title = "Test3")
 //            ))
         }
+    }
+
+    private suspend fun updateDataOrUI(list: List<Task>? = null, clear:Boolean = true) {
+
+//        /*
+//        先获取数据，对比有所不同了
+//         */
+//
+//        if (clear) {
+//            sTaskListAdapter.submitList(arrayListOf())
+//            hideList.clear()
+//        }
+//        if (list == null) {
+//            sTaskListAdapter.addAll(TaskApi.getAll())
+//        } else {
+//            sTaskListAdapter.addAll(list)
+//        }
+//        onViewComplete()
+
+        sTaskCycleListAdapter.submitList(TaskCycleApi.getAll())
     }
 
 }

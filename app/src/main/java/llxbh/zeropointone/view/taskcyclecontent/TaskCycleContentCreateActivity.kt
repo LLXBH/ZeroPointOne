@@ -23,6 +23,7 @@ import llxbh.zeropointone.data.model.TaskCheck
 import llxbh.zeropointone.databinding.ActivityTaskContentBinding
 import llxbh.zeropointone.util.TextUtil
 import llxbh.zeropointone.api.TaskApi
+import llxbh.zeropointone.api.TaskCycleApi
 import llxbh.zeropointone.base.BindingBaseActivity
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.databinding.ActivityTaskCycleContentBinding
@@ -37,10 +38,10 @@ import java.time.LocalDate
  */
 open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycleContentBinding>() {
 
-    private var sCheckAdapter = TaskContentCheckAdapter()
+    var sCheckAdapter = TaskContentCheckAdapter()
     private val sQuickDragAndSwipe = QuickDragAndSwipe()
 
-    private val sMarkdownProcessor = TextUtil()
+    val sMarkdownProcessor = TextUtil()
 
     override fun setBinding(): ActivityTaskCycleContentBinding {
         return ActivityTaskCycleContentBinding.inflate(layoutInflater)
@@ -230,25 +231,31 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
 //        }
 //    }
 
-//    /**
-//     * 绑定并且显示 Menu 菜单
-//     */
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.task_content_fragment_menu, menu)
-//        return true     // 显示
-//    }
+    /**
+     * 绑定并且显示 Menu 菜单
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.task_cycle_content_fragment_menu, menu)
+        return true     // 显示
+    }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        runBlocking {
-//            when(item.itemId) {
-//                R.id.menu_taskSave -> onSaveTask()
-//                R.id.menu_taskDelete -> deleteTask()
-//                R.id.menu_taskRestore -> restoreTask()
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        runBlocking {
+            when(item.itemId) {
+                R.id.menu_taskSave -> {
+                    onSaveTask()
+                }
+                R.id.menu_taskDelete -> {
+                    onDeleteTask()
+                }
+                R.id.menu_taskRestore -> {
+                    onRestoreTask()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 //    /**
 //     * 关闭该界面时，需要执行的操作
@@ -269,49 +276,63 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
 //        }
 //    }
 
-//    /**
-//     * 获取当前显示的 UI 数据
-//     */
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    fun getUiData(): Task {
-//        val task = mBinding.task!!
-//        task.state = mBinding.cbTaskState.isChecked
-//        if (mBinding.tvTaskDate.text.isNotEmpty()) {
-//            task.startTimes = TimeUtil.stringToTimes(mBinding.tvTaskDate.text.toString()) ?: 0L
-//        } else {
-//            task.startTimes = 0L
-//            task.endTimes = 0L
-//        }
-//        if (mBinding.etTaskNextDate.text.isNotEmpty()) {
-//            task.addTimeDay = mBinding.etTaskNextDate.text.toString().toInt()
-//        }
-//        task.checks = sCheckAdapter.items
-//        return task
-//    }
+    /**
+     * 获取当前显示的 UI 数据
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getUiData(): TaskCycle? {
+        val task = getBinding().taskCycle!!
+        getBinding().apply {
+            task.addTimeDay = etTaskNextDate.text?.toString()?.toInt() ?: 0
+            task.startTimes = TimeUtil.stringToTimes(tvTaskDateStart.text.toString()) ?: 0L
+            task.endTimes = TimeUtil.stringToTimes(etTaskNextDate.text.toString()) ?: 0L
+            task.needCompleteNum = etTaskNeedCompleteNum.text?.toString()?.toInt() ?: 0
+            task.checks = sCheckAdapter.items
+        }
+        return task
+    }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    open suspend fun onSaveTask() {
-//        TaskApi.insert(getUiData())
-//        Toast.makeText(this, "插入数据！", Toast.LENGTH_SHORT)
-//            .show()
-//    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    open suspend fun onSaveTask() {
+        val data = getUiData()
+        if (data != null) {
+            TaskCycleApi.insert(data)
+            Toast.makeText(this, "插入数据！", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(this, "无法获取数据！", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
-//    /**
-//     * 删除当前数据
-//     */
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    private suspend fun deleteTask() {
-//        TaskApi.delete(getUiData())
-//        Toast.makeText(this@TaskCycleContentCreateActivity, "删除数据！", Toast.LENGTH_SHORT)
-//            .show()
-//    }
+    /**
+     * 删除当前数据
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun onDeleteTask() {
+        val data = getUiData()
+        if (data != null) {
+            TaskCycleApi.delete(data)
+            Toast.makeText(this, "删除数据！", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(this, "无法获取数据！", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    private suspend fun restoreTask() {
-//        TaskApi.restore(getUiData())
-//        Toast.makeText(this@TaskCycleContentCreateActivity, "恢复数据！", Toast.LENGTH_SHORT)
-//            .show()
-//    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private suspend fun onRestoreTask() {
+        val data = getUiData()
+        if (data != null) {
+            TaskCycleApi.restore(data)
+            Toast.makeText(this, "恢复数据！", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(this, "无法获取数据！", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 
     /**
      * 弹出时间选择器，并显示用户点击的时间

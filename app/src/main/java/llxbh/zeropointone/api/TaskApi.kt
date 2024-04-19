@@ -16,12 +16,9 @@ import llxbh.zeropointone.util.TimeUtil
  */
 object TaskApi {
 
-    const val DATA_BASE = "database-ZeroPointOne"
     const val TASK_PASS = "TASK_PASS"
 
-    private val sDB = Room.databaseBuilder(appContext, AppDatabase::class.java, DATA_BASE)
-        .addMigrations(AppDatabase.MIGRATION_1_2)
-        .build()
+    private val sDB = AppDatabase.appDatabase
     private val sTaskDao = sDB.taskDao()
 
     /**

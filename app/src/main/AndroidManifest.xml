@@ -26,6 +26,7 @@
         <activity android:name=".view.taskcontent.TaskContentCreateActivity" />
         <activity android:name=".view.taskcontent.TaskContentUpdateActivity" />
         <activity android:name=".view.taskcyclecontent.TaskCycleContentCreateActivity" />
+        <activity android:name=".view.taskcyclecontent.TaskCycleContentUpdateActivity" />
 
     </application>
 

@@ -3,10 +3,11 @@ package llxbh.zeropointone.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import llxbh.zeropointone.data.repository.ListLongConverters
 import llxbh.zeropointone.data.repository.TaskCheckConverters
 
 @Entity(tableName = "TaskCycle")
-@TypeConverters(TaskCheckConverters::class)
+@TypeConverters(TaskCheckConverters::class, ListLongConverters::class)
 data class TaskCycle(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
@@ -18,7 +19,7 @@ data class TaskCycle(
     var startTimes: Long = 0,
     var endTimes: Long = 0,
     val finishedTimes: List<Long> = arrayListOf(),
-    val needCompleteNum: Int = 0,
+    var needCompleteNum: Int = 0,
     var addTimeDay: Int = 0,
-    var isDelete: Boolean = false
+    var isDelete: Boolean = false,
 )
