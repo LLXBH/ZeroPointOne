@@ -92,11 +92,6 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
             } else {
                 TaskCycleContentUpdateActivity.start(it, taskData.id)
             }
-//            sTaskCycleListAdapter.addAll(listOf(
-//                TaskCycle(id = 0, title = "Test1"),
-//                TaskCycle(id = 0, title = "Test2"),
-//                TaskCycle(id = 0, title = "Test3")
-//            ))
         }
     }
 

@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "llxbh.zeropointone"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 240420001
-        versionName = "1.0.30"
+        versionCode = 240425001
+        versionName = "1.0.31"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -88,4 +88,9 @@ dependencies {
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     // Flexmark-java 文本解析
     implementation("com.vladsch.flexmark:flexmark-all:0.64.0")
+    // Navigation
+    val navigationVersion = "2.7.1" // 检查最新版本
+    implementation("androidx.navigation:navigation-fragment:$navigationVersion")
+    implementation("androidx.navigation:navigation-ui:$navigationVersion")
+    implementation("androidx.navigation:navigation-compose:$navigationVersion")
 }

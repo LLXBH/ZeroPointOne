@@ -20,7 +20,8 @@ class TaskContentCheckAdapter:
     // BRVHA
     BaseQuickAdapter<TaskCheck, TaskContentCheckAdapter.VH>(),
     // 拖拽功能接口
-    DragAndSwipeDataCallback {
+    DragAndSwipeDataCallback
+{
 
     class VH(
         parent: ViewGroup,

@@ -8,6 +8,9 @@
         <variable
             name="mPracticeTiming"
             type="String" />
+        <variable
+            name="mAllFrequency"
+            type="String" />
 
     </data>
 
@@ -71,8 +74,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:hint="@string/text_rest"
             android:text="@{mPracticeMode ? @string/text_practice : @string/text_rest}"
-            android:hint="@string/text_rest" />
+            android:textSize="24sp"/>
 
         <TextView
             android:id="@+id/tv_tomatoClockTime"
@@ -123,7 +127,8 @@
                     android:id="@+id/tv_tomatoClockPracticeAllFrequency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"/>
+                    android:hint="0"
+                    android:text="@={mAllFrequency}"/>
 
             </LinearLayout>
 

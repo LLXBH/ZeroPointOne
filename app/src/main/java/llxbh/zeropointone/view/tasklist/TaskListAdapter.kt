@@ -42,6 +42,7 @@ class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
         holder.binding.apply {
             selectDeleteMode = mSelectDeleteMode
             timeTools = TimeUtil
+
             // 通过 Map 保存选择的状态，避免 RecyclerView 的复用机制，导致显示混乱
             cbTaskSelectDelete.isChecked = mDeleteDataMap[item] ?: false
             cbTaskSelectDelete.setOnClickListener {
@@ -54,21 +55,6 @@ class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
                 return
             }
             task = item
-            // 数据为空的时候不显示
-//            if (item.content.isEmpty()) {
-//                if (item.checks?.isNotEmpty() == true) {
-//                    item.content = item.checks!![0].content.get().toString()
-//                } else {
-//                    tvTaskContent.visibility = View.GONE
-//                }
-//            } else {
-//                tvTaskContent.visibility = View.VISIBLE
-//            }
-//            if (item.startTimes == 0L) {
-//                tvTaskDate.visibility = View.GONE
-//            } else {
-//                tvTaskDate.visibility = View.VISIBLE
-//            }
         }
 
     }

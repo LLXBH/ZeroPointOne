@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.databinding.ObservableInt
 import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BindingBaseFragment
 import llxbh.zeropointone.databinding.FragmentTomatoClockBinding
@@ -57,6 +58,7 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
         super.onViewCreated(view, savedInstanceState)
         getBinding().apply {
             mPracticeMode = true
+            mAllFrequency = "0"
 
             btnTomatoClockStart.setOnClickListener {
                 // 开始倒计时
@@ -169,12 +171,14 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
     private fun setTimingTextInterval(): Long {
         getBinding().apply {
             // 当前
-            val forNew = tvTomatoClockPracticeAllFrequency.text.toString().toInt()
+            val forNew = mAllFrequency.toString().toInt()
+
             // 设定
             if (etTomatoClockPracticeFrequency.text.isEmpty()) {
                 etTomatoClockPracticeFrequency.setText(sPracticeFrequencyDefault.toString())
             }
             val setFrequency = etTomatoClockPracticeFrequency.text.toString().toInt()
+
             // 判断
             if ((forNew != 0) && (forNew % setFrequency == 0)) {
                 // 大休息
@@ -229,12 +233,13 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
         getBinding().apply {
             // 累计练习次数
             if (mPracticeMode!!) {
-                if (tvTomatoClockPracticeAllFrequency.text.isEmpty()) {
-                    tvTomatoClockPracticeAllFrequency.text = "0"
+                mAllFrequency = if (mAllFrequency.isNullOrEmpty()) {
+                    "0"
+                } else {
+                    var forNew = mAllFrequency.toString().toInt()
+                    forNew++
+                    forNew.toString()
                 }
-                var forNew = tvTomatoClockPracticeAllFrequency.text.toString().toInt()
-                forNew++
-                tvTomatoClockPracticeAllFrequency.text = "$forNew"
             }
 
             // 反转练习或休息
