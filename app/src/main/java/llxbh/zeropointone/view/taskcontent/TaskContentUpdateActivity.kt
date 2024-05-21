@@ -38,10 +38,10 @@ class TaskContentUpdateActivity: TaskContentCreateActivity() {
         val taskId = intent.getIntExtra(TaskApi.TASK_PASS, 0)
         if (taskId != 0) {
             runBlocking {
-                mBinding.task = TaskApi.get(taskId)
-                sCheckAdapter.submitList(mBinding.task!!.checks ?: arrayListOf())
-                mBinding.wvTaskContent.loadData(
-                    sMarkdownProcessor.markdownToHtml(mBinding.task?.content ?: ""),
+                getBinding().task = TaskApi.get(taskId)
+                sCheckAdapter.submitList(getBinding().task!!.checks ?: arrayListOf())
+                getBinding().wvTaskContent.loadData(
+                    sMarkdownProcessor.markdownToHtml(getBinding().task?.content ?: ""),
                     "text/html; charset=UTF-8",
                     null
                 )

@@ -17,30 +17,30 @@ import llxbh.zeropointone.data.model.TaskCheck
 import llxbh.zeropointone.databinding.ActivityTaskContentBinding
 import llxbh.zeropointone.util.TextUtil
 import llxbh.zeropointone.api.TaskApi
+import llxbh.zeropointone.base.BindingBaseActivity
 import llxbh.zeropointone.util.TimeUtil
 import java.time.LocalDate
 
 /**
  * 清单任务的详细界面
  */
-open class TaskContentCreateActivity: BaseActivity() {
+open class TaskContentCreateActivity: BindingBaseActivity<ActivityTaskContentBinding>() {
 
     var sCheckAdapter = TaskContentCheckAdapter()
     private val sQuickDragAndSwipe = QuickDragAndSwipe()
-
-    lateinit var mBinding: ActivityTaskContentBinding
-
+    
     private val sMarkdownProcessor = TextUtil()
+
+    override fun setBinding(): ActivityTaskContentBinding {
+        return ActivityTaskContentBinding.inflate(layoutInflater)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 绑定布局
-        mBinding = ActivityTaskContentBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
 
         // 绑定数据
-        mBinding.apply {
+        getBinding().apply {
             task = Task(title = "")
             timeTools = TimeUtil
 
@@ -79,7 +79,7 @@ open class TaskContentCreateActivity: BaseActivity() {
         // 拖拽功能
         sQuickDragAndSwipe.apply {
             // 绑定 recycleView 和 适配器
-            attachToRecyclerView(mBinding.rvTaskCheckList)
+            attachToRecyclerView(getBinding().rvTaskCheckList)
             setDataCallback(sCheckAdapter)
             // 设置可以上下拖动
             setDragMoveFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN)
@@ -88,14 +88,14 @@ open class TaskContentCreateActivity: BaseActivity() {
         }
 
         // 添加子项
-        mBinding.btnTaskCheckAdd.setOnClickListener {
+        getBinding().btnTaskCheckAdd.setOnClickListener {
             sCheckAdapter.add(TaskCheck())
         }
 
         // 将内容转换为 Check
-        mBinding.btnTaskContentSwitchCheck.setOnClickListener {
+        getBinding().btnTaskContentSwitchCheck.setOnClickListener {
             // 判断是否有内容
-            val ifContent = mBinding.etTaskContent.text.toString().isNotEmpty()
+            val ifContent = getBinding().etTaskContent.text.toString().isNotEmpty()
             // 判断有子项
             val ifCheck = sCheckAdapter.items.isNotEmpty()
 
@@ -103,7 +103,7 @@ open class TaskContentCreateActivity: BaseActivity() {
                 // 有详情，也有子项，将详情续接到子项上
 
                 // 将内容转为 TaskCheck
-                val contentList = mBinding.etTaskContent.text.toString().split("\n")
+                val contentList = getBinding().etTaskContent.text.toString().split("\n")
                 val checkList = arrayListOf<TaskCheck>()
                 for (newCheck in contentList) {
                     checkList.add(
@@ -116,7 +116,7 @@ open class TaskContentCreateActivity: BaseActivity() {
 
                 // 接上
                 sCheckAdapter.addAll(checkList)
-                mBinding.etTaskContent.setText("")
+                getBinding().etTaskContent.setText("")
             } else if (!ifContent && ifCheck) {
                 //内容为空，子项不为空，将子项转换为内容
 
@@ -131,13 +131,13 @@ open class TaskContentCreateActivity: BaseActivity() {
                 }
 
                 // 更新数据
-                mBinding.etTaskContent.setText(newContent)
+                getBinding().etTaskContent.setText(newContent)
                 sCheckAdapter.submitList(arrayListOf())
             } else if (ifContent && !ifCheck) {
                 // 内容不为空，子项为空，将内容转换为子项
 
                 // 将内容转为 TaskCheck
-                val contentList = mBinding.etTaskContent.text.toString().split("\n")
+                val contentList = getBinding().etTaskContent.text.toString().split("\n")
                 val checkList = arrayListOf<TaskCheck>()
                 for (newCheck in contentList) {
                     checkList.add(
@@ -150,14 +150,14 @@ open class TaskContentCreateActivity: BaseActivity() {
 
                 // 更新数据
                 sCheckAdapter.addAll(checkList)
-                mBinding.etTaskContent.setText("")
+                getBinding().etTaskContent.setText("")
             }
 
             // 显示详情的状态，而不是编辑，需要同步刷新一下
-            if (mBinding.viewEdit == false) {
-                val content = mBinding.etTaskContent.text.toString()
-                mBinding.wvTaskContent.loadData(
-                    sMarkdownProcessor.markdownToHtml(mBinding.task?.content ?: ""),
+            if (getBinding().viewEdit == false) {
+                val content = getBinding().etTaskContent.text.toString()
+                getBinding().wvTaskContent.loadData(
+                    sMarkdownProcessor.markdownToHtml(getBinding().task?.content ?: ""),
                     "text/html; charset=UTF-8",
                     null
                 )
@@ -165,7 +165,7 @@ open class TaskContentCreateActivity: BaseActivity() {
 
         }
 
-        mBinding.tvTaskDate.apply {
+        getBinding().tvTaskDate.apply {
             // 点击时间则展示显示日期选择
             setOnClickListener {
                 DatePickerDialogFragment().show(supportFragmentManager, "datePicker")
@@ -222,8 +222,8 @@ open class TaskContentCreateActivity: BaseActivity() {
         } else if (task.title.isNotEmpty()) {
             onSaveTask()
         } else {
-            mBinding.etTaskTitle.text = mBinding.etTaskContent.text
-            mBinding.etTaskContent.setText("")
+            getBinding().etTaskTitle.text = getBinding().etTaskContent.text
+            getBinding().etTaskContent.setText("")
             onSaveTask()
         }
     }
@@ -233,16 +233,16 @@ open class TaskContentCreateActivity: BaseActivity() {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUiData(): Task {
-        val task = mBinding.task!!
-        task.state = mBinding.cbTaskState.isChecked
-        if (mBinding.tvTaskDate.text.isNotEmpty()) {
-            task.startTimes = TimeUtil.stringToTimes(mBinding.tvTaskDate.text.toString()) ?: 0L
+        val task = getBinding().task!!
+        task.state = getBinding().cbTaskState.isChecked
+        if (getBinding().tvTaskDate.text.isNotEmpty()) {
+            task.startTimes = TimeUtil.stringToTimes(getBinding().tvTaskDate.text.toString()) ?: 0L
         } else {
             task.startTimes = 0L
             task.endTimes = 0L
         }
-        if (mBinding.etTaskNextDate.text.isNotEmpty()) {
-            task.addTimeDay = mBinding.etTaskNextDate.text.toString().toInt()
+        if (getBinding().etTaskNextDate.text.isNotEmpty()) {
+            task.addTimeDay = getBinding().etTaskNextDate.text.toString().toInt()
         }
         task.checks = sCheckAdapter.items
         return task
@@ -275,7 +275,7 @@ open class TaskContentCreateActivity: BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun setDate(year: Int, month: Int, day: Int) {
         val time = LocalDate.of(year, month, day)
-        mBinding.tvTaskDate.text = time.toString()
+        getBinding().tvTaskDate.text = time.toString()
     }
 
 }
