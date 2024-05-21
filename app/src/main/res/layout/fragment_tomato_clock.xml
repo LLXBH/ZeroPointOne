@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
-            name="mPracticeMode"
-            type="Boolean" />
+            name="sTomato"
+            type="llxbh.zeropointone.util.tomato.Tomato" />
         <variable
             name="mPracticeTiming"
             type="String" />
@@ -29,6 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="@{String.valueOf(sTomato.practiceTime)}"
                 android:hint="练习时间"
                 android:inputType="number"
                 android:digits="0123456789" />
@@ -38,6 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="@{String.valueOf(sTomato.practiceFrequency)}"
                 android:hint="间歇休息"
                 android:inputType="number"
                 android:digits="0123456789" />
@@ -54,6 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="@{String.valueOf(sTomato.restShortTime)}"
                 android:hint="练习次数"
                 android:inputType="number"
                 android:digits="0123456789" />
@@ -63,6 +67,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="@{String.valueOf(sTomato.restLongTime)}"
                 android:hint="大休时间"
                 android:inputType="number"
                 android:digits="0123456789" />
@@ -74,8 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:hint="@string/text_rest"
-            android:text="@{mPracticeMode ? @string/text_practice : @string/text_rest}"
+            android:hint="练习/休息"
             android:textSize="24sp"/>
 
         <TextView
