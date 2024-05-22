@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +15,11 @@ import androidx.core.app.NotificationCompat
 import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BindingBaseFragment
 import llxbh.zeropointone.databinding.FragmentTomatoClockBinding
+import llxbh.zeropointone.util.MassageUtil
 import llxbh.zeropointone.util.tomato.Tomato
 import llxbh.zeropointone.util.tomato.TomatoCloakUtil
 import llxbh.zeropointone.util.tomato.TomatoClockInterface
+import java.sql.Time
 
 class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
@@ -35,36 +39,41 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
                 }
             }
 
-            override fun onPracticeEnd(num: Long) {
+            override fun onPracticeEnd(num: Int) {
                 getBinding().also {
                     it.mPracticeTiming = getMillisecondsToTimeFormat(0)
                     it.mAllFrequency = num.toString()
                 }
+                MassageUtil.sendNotification("练习结束！")
             }
 
             override fun onRestShortTimeStartPrepared(timer: Long) {
                 getBinding().also {
                     it.tvTomatoClockMode.text = "小休息"
-                    it.tvTomatoClockTime.text = getMillisecondsToTimeFormat(timer)
+                    setTimeText(timer)
                 }
             }
 
             override fun onRestShortTimeEnd() {
-//                TODO("Not yet implemented")
+                MassageUtil.sendNotification("小消息结束！")
             }
 
             override fun onRestLongTimeStartPrepared(timer: Long) {
                 getBinding().also {
                     it.tvTomatoClockMode.text = "大休息"
-                    it.tvTomatoClockTime.text = getMillisecondsToTimeFormat(timer)
+                    setTimeText(timer)
                 }
             }
 
             override fun onRestLongTimeEnd() {
-//                TODO("Not yet implemented")
+                MassageUtil.sendNotification("大消息结束！")
             }
 
             override fun onIntermission(timer: Long) {
+                setTimeText(timer)
+            }
+
+            fun setTimeText(timer: Long) {
                 getBinding().tvTomatoClockTime.text = getMillisecondsToTimeFormat(timer)
             }
 
@@ -94,7 +103,7 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getBinding().apply {
-            sTomato = this@TomatoClockFragment.sTomato
+            mTomato = sTomato
             mAllFrequency = "0"
 
             btnTomatoClockStart.setOnClickListener {
@@ -112,37 +121,115 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
                 sTomatoCloakUtil.onEnd()
             }
 
+            // 监控用户输入的数值，同步修改到 sTomato
+            // 练习
+            etTomatoClockPracticeTime.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val input = s.toString().trim()
+                    if (input.isNotEmpty()) {
+                        try {
+                            sTomato.practiceTime = input.toInt()
+                        } catch (e: NullPointerException) {
+                            // 不变
+                        }
+                    }
+                }
+
+            })
+            etTomatoClockPracticeFrequency.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val input = s.toString().trim()
+                    if (input.isNotEmpty()) {
+                        try {
+                            sTomato.practiceFrequency = input.toInt()
+                        } catch (e: NullPointerException) {
+                            // 不变
+                        }
+                    }
+                }
+
+            })
+            // 休息
+            etTomatoClockRestShortTime.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val input = s.toString().trim()
+                    if (input.isNotEmpty()) {
+                        try {
+                            sTomato.restShortTime = input.toInt()
+                        } catch (e: NullPointerException) {
+                            // 不变
+                        }
+                    }
+                }
+
+            })
+            etTomatoClockRestLongTime.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    //TODO("Not yet implemented")
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val input = s.toString().trim()
+                    if (input.isNotEmpty()) {
+                        try {
+                            sTomato.restLongTime = input.toInt()
+                        } catch (e: NullPointerException) {
+                            // 不变
+                        }
+                    }
+                }
+
+            })
+
         }
-    }
-
-
-    /**
-     * 发送通知
-     */
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendNotification(context: Context) {
-        val channelId = "my_channel_id"
-        // 创建通知渠道
-        val notificationChannel = NotificationChannel(
-            channelId,
-            "My Notification Channel",
-            NotificationManager.IMPORTANCE_DEFAULT
-        ).apply {
-            description = "Description of my channel"
-        }
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(notificationChannel)
-
-        // 准备通知内容
-        val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("零点壹")
-            .setContentText("时间结束了！！！")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        // 发送
-        val notificationId = 1 // 通知的唯一 ID
-        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
 }

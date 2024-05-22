@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="sTomato"
+            name="mTomato"
             type="llxbh.zeropointone.util.tomato.Tomato" />
         <variable
             name="mPracticeTiming"
@@ -30,17 +30,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{String.valueOf(sTomato.practiceTime)}"
+                android:text="@{String.valueOf(mTomato.practiceTime)}"
                 android:hint="练习时间"
                 android:inputType="number"
                 android:digits="0123456789" />
 
             <EditText
-                android:id="@+id/et_tomatoClockPracticeInterval"
+                android:id="@+id/et_tomatoClockRestShortTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{String.valueOf(sTomato.practiceFrequency)}"
+                android:text="@{String.valueOf(mTomato.restShortTime)}"
                 android:hint="间歇休息"
                 android:inputType="number"
                 android:digits="0123456789" />
@@ -57,17 +57,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{String.valueOf(sTomato.restShortTime)}"
+                android:text="@{String.valueOf(mTomato.practiceFrequency)}"
                 android:hint="练习次数"
                 android:inputType="number"
                 android:digits="0123456789" />
 
             <EditText
-                android:id="@+id/et_tomatoClockPracticeRest"
+                android:id="@+id/et_tomatoClockRestLongTime"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{String.valueOf(sTomato.restLongTime)}"
+                android:text="@{String.valueOf(mTomato.restLongTime)}"
                 android:hint="大休时间"
                 android:inputType="number"
                 android:digits="0123456789" />

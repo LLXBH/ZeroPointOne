@@ -16,7 +16,7 @@ class TomatoCloakUtil(
     private val COUNTDOWN_INTERVAL = 1000L // 每秒递减
 
     // 练习次数
-    private var mPracticeFrequencyNum = 0L
+    private var mPracticeFrequencyNum = 0
 
     // 倒计时
     private var mCountDownTimer: CountDownTimer? = null
@@ -243,8 +243,8 @@ class TomatoCloakUtil(
      *
      */
     private fun isRestLong(): Boolean {
-        return (mPracticeFrequencyNum != 0L)
-                && (mPracticeFrequencyNum % tomato.practiceFrequency == 0L)
+        return (mPracticeFrequencyNum != 0)
+                && (mPracticeFrequencyNum % tomato.practiceFrequency == 0)
     }
 
     /**
@@ -253,7 +253,7 @@ class TomatoCloakUtil(
      * @return 次数
      *
      */
-    fun getPracticeFrequencyNum(): Long {
+    fun getPracticeFrequencyNum(): Int {
         return mPracticeFrequencyNum
     }
 

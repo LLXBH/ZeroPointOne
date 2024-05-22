@@ -45,7 +45,7 @@ interface TomatoClockInterface {
      * @param 已练习的次数
      *
      */
-    fun onPracticeEnd(num: Long)
+    fun onPracticeEnd(num: Int)
 
     /**
      * 小休息 - 预备
