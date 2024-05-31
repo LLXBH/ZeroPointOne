@@ -12,6 +12,9 @@
         <variable
             name="mAllFrequency"
             type="String" />
+        <variable
+            name="mTomatoClick"
+            type="android.view.View.OnClickListener" />
 
     </data>
 
@@ -142,19 +145,22 @@
             android:id="@+id/btn_tomatoClockStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="开始" />
+            android:text="开始"
+            android:onClick="@{mTomatoClick}" />
 
         <Button
             android:id="@+id/btn_tomatoClockSuspend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="暂停" />
+            android:text="暂停"
+            android:onClick="@{mTomatoClick}" />
 
         <Button
             android:id="@+id/btn_tomatoClockFinish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="结束" />
+            android:text="结束"
+            android:onClick="@{mTomatoClick}" />
 
 
     </LinearLayout>

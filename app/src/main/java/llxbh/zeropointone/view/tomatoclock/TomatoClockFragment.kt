@@ -1,8 +1,5 @@
 package llxbh.zeropointone.view.tomatoclock
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -11,15 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
-import llxbh.zeropointone.R
 import llxbh.zeropointone.base.BindingBaseFragment
 import llxbh.zeropointone.databinding.FragmentTomatoClockBinding
 import llxbh.zeropointone.util.MassageUtil
 import llxbh.zeropointone.util.tomato.Tomato
 import llxbh.zeropointone.util.tomato.TomatoCloakUtil
 import llxbh.zeropointone.util.tomato.TomatoClockInterface
-import java.sql.Time
 
 class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
@@ -80,6 +74,27 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
         }
     )
 
+    private val sTomatoClick = View.OnClickListener {
+
+        getBinding().apply {
+            when(it?.id) {
+                btnTomatoClockStart.id -> {
+                    // 开始倒计时
+                    sTomatoCloakUtil.onStart()
+                }
+
+                btnTomatoClockSuspend.id -> {
+                    // 暂停时间
+                    sTomatoCloakUtil.onPause()
+                }
+
+                btnTomatoClockFinish.id -> {
+                    // 结束时间
+                    sTomatoCloakUtil.onEnd()
+                }
+            }
+        }
+    }
 
     companion object {
         fun newInstance(): TomatoClockFragment {
@@ -105,24 +120,10 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
         getBinding().apply {
             mTomato = sTomato
             mAllFrequency = "0"
-
-            btnTomatoClockStart.setOnClickListener {
-                // 开始倒计时
-                sTomatoCloakUtil.onStart()
-            }
-
-            btnTomatoClockSuspend.setOnClickListener {
-                // 暂停时间
-                sTomatoCloakUtil.onPause()
-            }
-
-            btnTomatoClockFinish.setOnClickListener {
-                // 结束当前时间，进入下一个步骤
-                sTomatoCloakUtil.onEnd()
-            }
+            mTomatoClick = sTomatoClick
 
             // 监控用户输入的数值，同步修改到 sTomato
-            // 练习
+            // 练习数值
             etTomatoClockPracticeTime.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -138,14 +139,7 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    val input = s.toString().trim()
-                    if (input.isNotEmpty()) {
-                        try {
-                            sTomato.practiceTime = input.toInt()
-                        } catch (e: NullPointerException) {
-                            // 不变
-                        }
-                    }
+                    onAfterTextChanged(etTomatoClockPracticeTime, s)
                 }
 
             })
@@ -164,18 +158,11 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    val input = s.toString().trim()
-                    if (input.isNotEmpty()) {
-                        try {
-                            sTomato.practiceFrequency = input.toInt()
-                        } catch (e: NullPointerException) {
-                            // 不变
-                        }
-                    }
+                    onAfterTextChanged(etTomatoClockPracticeFrequency, s)
                 }
 
             })
-            // 休息
+            // 休息数值
             etTomatoClockRestShortTime.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -191,14 +178,7 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    val input = s.toString().trim()
-                    if (input.isNotEmpty()) {
-                        try {
-                            sTomato.restShortTime = input.toInt()
-                        } catch (e: NullPointerException) {
-                            // 不变
-                        }
-                    }
+                    onAfterTextChanged(etTomatoClockRestShortTime, s)
                 }
 
             })
@@ -217,18 +197,37 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    val input = s.toString().trim()
-                    if (input.isNotEmpty()) {
-                        try {
-                            sTomato.restLongTime = input.toInt()
-                        } catch (e: NullPointerException) {
-                            // 不变
-                        }
-                    }
+                    onAfterTextChanged(etTomatoClockRestLongTime, s)
                 }
 
             })
 
+        }
+    }
+
+    private fun onAfterTextChanged(view: View, editable: Editable?) {
+        val input = editable.toString().trim()
+        if (input.isNotEmpty()) {
+            try {
+                getBinding().apply {
+                    when (view.id) {
+                        etTomatoClockPracticeTime.id -> {
+                            sTomato.practiceTime = input.toInt()
+                        }
+                        etTomatoClockPracticeFrequency.id -> {
+                            sTomato.practiceFrequency = input.toInt()
+                        }
+                        etTomatoClockRestShortTime.id -> {
+                            sTomato.restShortTime = input.toInt()
+                        }
+                        etTomatoClockRestLongTime.id -> {
+                            sTomato.restLongTime = input.toInt()
+                        }
+                    }
+                }
+            } catch (e: NullPointerException) {
+                // 不变
+            }
         }
     }
 
