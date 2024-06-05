@@ -44,18 +44,6 @@ class TaskCycleListAdapter: BaseQuickAdapter<TaskCycle, TaskCycleListAdapter.VH>
 
             // 任务变量
             taskCycle = item
-
-            // 根据开始时间和结束时间，获取该范围内已经完成的次数
-            val finishedNum = arrayListOf<Long>()
-            taskCycle?.also {
-                for (times in it.finishedTimes) {
-                    if (times >= it.startTimes && times <= it.endTimes) {
-                        // 把符合范围内的时间添加进入
-                        finishedNum.add(times)
-                    }
-                }
-            }
-            tvTaskFinishedNum.text = finishedNum.size.toString()
         }
     }
 
