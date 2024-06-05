@@ -5,6 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import llxbh.zeropointone.R
@@ -19,11 +21,13 @@ object MassageUtil {
      * @param duration 需要展示多久
      */
     fun sendToast(msg: String, duration: Int = Toast.LENGTH_SHORT) {
-        Toast.makeText(
-            appContext,
-            msg,
-            duration
-        ).show()
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(
+                appContext,
+                msg,
+                duration
+            ).show()
+        }
     }
 
     /**
