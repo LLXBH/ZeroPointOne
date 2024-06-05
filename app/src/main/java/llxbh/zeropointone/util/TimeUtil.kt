@@ -105,15 +105,27 @@ object TimeUtil {
     }
 
     /**
-     * 判断该时间戳是否在给定的日期内，
+     * 判断该时间戳是否在今天内
      *
      * @param times 时间戳
-     * @param date 日期（默认为当天）
      *
      * @return 判断结果
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    fun isSomeDay(times: Long, date: LocalDate = LocalDate.now()): Boolean {
+    fun isToDay(times: Long): Boolean {
+        return isSomeDay(times, LocalDate.now())
+    }
+
+    /**
+     * 判断该时间戳是否在给定的日期内
+     *
+     * @param times 时间戳
+     * @param date 日期
+     *
+     * @return 判断结果
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isSomeDay(times: Long, date: LocalDate): Boolean {
         // 开始时间
         val startOfDayLong = getSomeDayStartTimers(date)
         // 结束时间（加一天然后 - 1）
