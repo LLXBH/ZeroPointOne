@@ -6,6 +6,8 @@ import androidx.annotation.RequiresApi
 import java.lang.Exception
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.util.Date
 
@@ -100,5 +102,36 @@ object TimeUtil {
     @SuppressLint("NewApi")
     fun stringToTimes(dateTime: String): Long? {
         return stringToDate(dateTime)?.time
+    }
+
+    /**
+     * 判断该时间戳是否在给定的日期内，
+     *
+     * @param times 时间戳
+     * @param date 日期（默认为当天）
+     *
+     * @return 判断结果
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isSomeDay(times: Long, date: LocalDate = LocalDate.now()): Boolean {
+        // 开始时间
+        val startOfDayLong = getSomeDayStartTimers(date)
+        // 结束时间（加一天然后 - 1）
+        val endOfDayLong = getSomeDayStartTimers(date.plusDays(1)) - 1
+        // 是否在范围内
+        return (startOfDayLong <= times) && (times <= endOfDayLong)
+    }
+
+    /**
+     * 返回 “当天” 的开始时间
+     *
+     * @param date 日期
+     *
+     * @return 时间戳
+     *
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getSomeDayStartTimers(date: LocalDate = LocalDate.now()): Long {
+        return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
     }
  }
