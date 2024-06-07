@@ -7,7 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.data.repository.AppDatabase
+import llxbh.zeropointone.util.MassageUtil
 import llxbh.zeropointone.util.TimeUtil
+import java.time.LocalDate
 
 object TaskCycleApi {
 
@@ -30,6 +32,47 @@ object TaskCycleApi {
         return withContext(Dispatchers.IO) {
             sTaskCycleDao.getAll()
         }
+    }
+
+    /**
+     * 完成一次打卡
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun onFinishOnce(task: TaskCycle) {
+        when {
+            // 时间设置正确
+            (task.startTimes == 0L
+                    && task.endTimes == 0L
+                    && task.addTimeDay == 0) -> {
+                MassageUtil.sendToast("时间设置空白！")
+            }
+            // 不超出时间范围
+            (TimeUtil.isToDay(task.startTimes) && TimeUtil.isToDay(task.endTimes)) -> {
+                MassageUtil.sendToast("当前时间不在可完成内！")
+            }
+            // 不超出可完成的次数
+            (task.finishedTimes.size+1 > task.needCompleteNum) -> {
+                MassageUtil.sendToast("超出了可完成的次数！")
+            }
+            // 今天是否已经打卡
+            (TimeUtil.isToDay(task.finishedTimes)) -> {
+                MassageUtil.sendToast("今天已打卡了！")
+            }
+            else -> {
+                task.finishedTimes = arrayListOf<Long>().also {
+                    it.addAll(task.finishedTimes)
+                    it.add(TimeUtil.getNowTime())
+                }
+
+                task.state = false
+            }
+        }
+
+//        // 检查是否达到了完成任务的标准
+//        if (task.finishedTimes.size == task.needCompleteNum) {
+//            onCirculateAddNewTask(task)
+//        }
+
     }
 
     /**
@@ -93,6 +136,7 @@ object TaskCycleApi {
     /**
      * 判断是否需要创建新的清单
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun onCirculateAddNewTask(taskCycle: TaskCycle): TaskCycle? {
         when {
             (! taskCycle.state) -> {
@@ -107,11 +151,16 @@ object TaskCycleApi {
                 // 在数据库中原数据已经是完成的了
                 return null
             }
+            (taskCycle.state && taskCycle.finishedTimes.size < taskCycle.needCompleteNum) -> {
+                onFinishOnce(taskCycle)
+                return null
+            }
             else -> {
                 // 因为是循环周期的任务，只需要更改时间即可
                 taskCycle.apply {
                     state = false
                     updateTimes = TimeUtil.getNowTime()
+                    finishedTimes = listOf()
                     // 向前推进日期
                     startTimes = TimeUtil.getNewTime(startTimes, addTimeDay)
                     endTimes = TimeUtil.getNewTime(endTimes, addTimeDay)
@@ -128,7 +177,7 @@ object TaskCycleApi {
     }
 
     /**
-     * 检查数据是否有不规范的dif
+     * 检查数据是否有不规范的地方
      */
     private fun onInspectData(task: TaskCycle): Boolean {
         // 标题和内容不能都为空

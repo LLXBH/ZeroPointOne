@@ -1,15 +1,18 @@
 package llxbh.zeropointone.view.taskcyclelist
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
+import androidx.annotation.RequiresApi
 import androidx.databinding.ObservableBoolean
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
 import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.databinding.ItemTaskCycleBinding
+import llxbh.zeropointone.util.TimeUtil
 
 class TaskCycleListAdapter: BaseQuickAdapter<TaskCycle, TaskCycleListAdapter.VH>() {
 
@@ -30,6 +33,7 @@ class TaskCycleListAdapter: BaseQuickAdapter<TaskCycle, TaskCycleListAdapter.VH>
         return VH(parent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: VH, position: Int, item: TaskCycle?) {
         holder.binding.apply {
             // 多选删除功能
@@ -43,7 +47,9 @@ class TaskCycleListAdapter: BaseQuickAdapter<TaskCycle, TaskCycleListAdapter.VH>
             }
 
             // 任务变量
-            taskCycle = item
+            taskCycle = item?.apply {
+                state = TimeUtil.isToDay(taskCycle?.finishedTimes ?: listOf())
+            }
         }
     }
 

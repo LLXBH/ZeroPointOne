@@ -283,9 +283,10 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
     fun getUiData(): TaskCycle? {
         val task = getBinding().taskCycle!!
         getBinding().apply {
+            task.state = cbTaskState.isChecked
             task.addTimeDay = etTaskNextDate.text?.toString()?.toInt() ?: 0
             task.startTimes = TimeUtil.stringToTimes(tvTaskDateStart.text.toString()) ?: 0L
-            task.endTimes = TimeUtil.stringToTimes(etTaskNextDate.text.toString()) ?: 0L
+            task.endTimes = TimeUtil.stringToTimes(tvTaskDateEnd.text.toString()) ?: 0L
             task.needCompleteNum = etTaskNeedCompleteNum.text?.toString()?.toInt() ?: 0
             task.checks = sCheckAdapter.items
         }
