@@ -13,7 +13,7 @@ import llxbh.zeropointone.databinding.FragmentTomatoClockBinding
 import llxbh.zeropointone.util.MassageUtil
 import llxbh.zeropointone.util.tomato.Tomato
 import llxbh.zeropointone.util.tomato.TomatoCloakUtil
-import llxbh.zeropointone.util.tomato.TomatoClockInterface
+import llxbh.zeropointone.util.tomato.TomatoClockStateInterface
 
 class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
@@ -25,11 +25,11 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
     )
     private val sTomatoCloakUtil = TomatoCloakUtil(
         sTomato,
-        object : TomatoClockInterface {
+        object : TomatoClockStateInterface {
             override fun onPracticeStartPrepare(timer: Long) {
                 getBinding().also {
                     it.tvTomatoClockMode.text = "练习"
-                    it.tvTomatoClockTime.text = getMillisecondsToTimeFormat(timer)
+                    setTimeText(timer)
                 }
             }
 
