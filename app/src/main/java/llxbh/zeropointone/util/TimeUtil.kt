@@ -116,6 +116,20 @@ object TimeUtil {
         return isSomeDay(times, LocalDate.now())
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isToDay(times: List<Long>): Boolean {
+        // 开始时间
+        val startOfDayLong = getSomeDayStartTimers(LocalDate.now())
+        // 结束时间（加一天然后 - 1）
+        val endOfDayLong = getSomeDayStartTimers(LocalDate.now().plusDays(1)) - 1
+        // 筛选，如果最后为空，则 False
+        return times.filter {
+            startOfDayLong <= it
+        }.filter {
+            it <= endOfDayLong
+        }.size >= 1
+    }
+
     /**
      * 判断该时间戳是否在给定的日期内
      *
