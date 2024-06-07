@@ -10,7 +10,7 @@ import android.os.CountDownTimer
  */
 class TomatoCloakUtil(
     val tomato: Tomato,
-    val tomatoClockInterface: TomatoClockInterface
+    val stateInterface: TomatoClockStateInterface
 ) {
 
     private val COUNTDOWN_INTERVAL = 1000L // 每秒递减
@@ -61,15 +61,15 @@ class TomatoCloakUtil(
                     when {
                         // 练习
                         (mIsPractice) -> {
-                            tomatoClockInterface.onPracticeIntermission(p0)
+                            stateInterface.onPracticeIntermission(p0)
                         }
                         // 小休息
                         (! isRestLong()) -> {
-                            tomatoClockInterface.onRestShortTimeIntermission(p0)
+                            stateInterface.onRestShortTimeIntermission(p0)
                         }
                         // 大休息
                         else -> {
-                            tomatoClockInterface.onRestLongTimeIntermission(p0)
+                            stateInterface.onRestLongTimeIntermission(p0)
                         }
                     }
 
@@ -126,15 +126,15 @@ class TomatoCloakUtil(
         when {
             // 练习
             (mIsPractice) -> {
-                tomatoClockInterface.onPracticeStartPrepare(timer)
+                stateInterface.onPracticeStartPrepare(timer)
             }
             // 小休息
             (! isRestLong()) -> {
-                tomatoClockInterface.onRestShortTimeStartPrepared(timer)
+                stateInterface.onRestShortTimeStartPrepared(timer)
             }
             // 大休息
             else -> {
-                tomatoClockInterface.onRestLongTimeStartPrepared(timer)
+                stateInterface.onRestLongTimeStartPrepared(timer)
             }
         }
     }
@@ -152,15 +152,15 @@ class TomatoCloakUtil(
         when {
             // 练习
             (mIsPractice) -> {
-                tomatoClockInterface.onPracticeStart(timer)
+                stateInterface.onPracticeStart(timer)
             }
             // 小休息
             (! isRestLong()) -> {
-                tomatoClockInterface.onRestShortTimeStart(timer)
+                stateInterface.onRestShortTimeStart(timer)
             }
             // 大休息
             else -> {
-                tomatoClockInterface.onRestLongTimeStart(timer)
+                stateInterface.onRestLongTimeStart(timer)
             }
         }
     }
@@ -184,15 +184,15 @@ class TomatoCloakUtil(
             (mIsPractice) -> {
                 // 练习次数 + 1
                 mPracticeFrequencyNum ++
-                tomatoClockInterface.onPracticeEnd(getPracticeFrequencyNum())
+                stateInterface.onPracticeEnd(getPracticeFrequencyNum())
             }
             // 小休息
             (! isRestLong()) -> {
-                tomatoClockInterface.onRestShortTimeEnd()
+                stateInterface.onRestShortTimeEnd()
             }
             // 大休息
             else -> {
-                tomatoClockInterface.onRestLongTimeEnd()
+                stateInterface.onRestLongTimeEnd()
             }
         }
 

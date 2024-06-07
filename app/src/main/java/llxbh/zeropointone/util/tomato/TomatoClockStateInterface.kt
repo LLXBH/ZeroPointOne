@@ -3,7 +3,7 @@ package llxbh.zeropointone.util.tomato
 /**
  * 番茄钟的状态回调接口，实现后可以在番茄钟的各个阶段进行界面或数据的更新；
  */
-interface TomatoClockInterface {
+interface TomatoClockStateInterface {
 
     /**
      * 练习 - 预备
