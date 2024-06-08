@@ -1,6 +1,8 @@
 package llxbh.zeropointone.util.tomato
 
+import android.content.Context
 import android.os.CountDownTimer
+import llxbh.zeropointone.app.appContext
 
 /**
  * 番茄钟
@@ -14,19 +16,27 @@ class TomatoCloakUtil(
 ) {
 
     private val COUNTDOWN_INTERVAL = 1000L // 每秒递减
+    private val SAVE_NAME = "TomatoClock"
+    private val SAVE_PRACTICE_FREQUENCY_NUM = "PracticeFrequencyNum"
+    private val SAVE_START_TIME_IN_MILLIS = "StartTimeInMillis"
+    private val SAVE_ELAPSED_TIME_IN_MILLIS = "ElapsedTimeInMillis"
+    private val SAVE_IS_PRACTICE = "IsPractice"
+    private val SAVE_IS_PAUSE = "IsPause"
+
+    private val sLoadSave = appContext.getSharedPreferences(SAVE_NAME, Context.MODE_PRIVATE)
 
     // 练习次数
-    private var mPracticeFrequencyNum = 0
+    private var mPracticeFrequencyNum: Int = sLoadSave.getInt(SAVE_PRACTICE_FREQUENCY_NUM, 0)
 
     // 倒计时
     private var mCountDownTimer: CountDownTimer? = null
 
     // 时间记录
-    private var mStartTimeInMillis = 0L
-    private var mElapsedTimeInMillis = 0L
+    private var mStartTimeInMillis = sLoadSave.getLong(SAVE_START_TIME_IN_MILLIS, 0L)
+    private var mElapsedTimeInMillis = sLoadSave.getLong(SAVE_ELAPSED_TIME_IN_MILLIS, 0L)
 
-    private var mIsPractice = true  // 练习？
-    private var mIsPause = false    // 暂停？
+    private var mIsPractice = sLoadSave.getBoolean(SAVE_IS_PRACTICE, true)  // 练习？
+    private var mIsPause = sLoadSave.getBoolean(SAVE_IS_PAUSE, false)    // 暂停？
 
     /**
      * 开始
@@ -35,6 +45,9 @@ class TomatoCloakUtil(
      *
      */
     fun onStart() {
+        // 本地保存的编写
+        val editor = sLoadSave.edit()
+
         // 没有倒计时的时候才执行下面的操作
         if (mCountDownTimer != null) {
             return
@@ -42,15 +55,21 @@ class TomatoCloakUtil(
 
         // 获取时间的同时，如果是暂停的，就将状态反转过来，无须回调 onCountDownTimeStart() 了；
         mStartTimeInMillis = getCountdownTime()
+        editor.putLong(SAVE_START_TIME_IN_MILLIS, mStartTimeInMillis)
+        editor.apply()
         if (mIsPause) {
             // 将状态扭转过来
             mIsPause = false
+            editor.putBoolean(SAVE_IS_PAUSE, mIsPause)
+            editor.apply()
         } else {
             onCountDownTimeStart(mStartTimeInMillis)
         }
 
         // 初始化一些计时的相关变量
         mElapsedTimeInMillis = 0L
+        editor.putLong(SAVE_ELAPSED_TIME_IN_MILLIS, mElapsedTimeInMillis)
+        editor.apply()
 
         // 根据当前信息初始化倒计时类
         mCountDownTimer = object : CountDownTimer(mStartTimeInMillis, COUNTDOWN_INTERVAL) {
@@ -75,6 +94,9 @@ class TomatoCloakUtil(
 
                     // 记录已经消耗的时间
                     mElapsedTimeInMillis += COUNTDOWN_INTERVAL
+                    val editor = sLoadSave.edit()
+                    editor.putLong(SAVE_ELAPSED_TIME_IN_MILLIS, mElapsedTimeInMillis)
+                    editor.apply()
                 } else {
                     // 已被暂停
                 }
@@ -95,6 +117,9 @@ class TomatoCloakUtil(
      */
     fun onPause() {
         mIsPause = true
+        val editor = sLoadSave.edit()
+        editor.putBoolean(SAVE_IS_PAUSE, mIsPause)
+        editor.apply()
         mCountDownTimer?.cancel()
         mCountDownTimer = null
     }
@@ -178,12 +203,15 @@ class TomatoCloakUtil(
         mCountDownTimer?.cancel()
         mCountDownTimer = null
 
+        val editor = sLoadSave.edit()
         // 判断模式
         when {
             // 练习
             (mIsPractice) -> {
                 // 练习次数 + 1
                 mPracticeFrequencyNum ++
+                editor.putInt(SAVE_PRACTICE_FREQUENCY_NUM, mPracticeFrequencyNum)
+                editor.apply()
                 stateInterface.onPracticeEnd(getPracticeFrequencyNum())
             }
             // 小休息
@@ -198,6 +226,8 @@ class TomatoCloakUtil(
 
         // 反转状态(练习 《=》 休息)
         mIsPractice = !mIsPractice
+        editor.putBoolean(SAVE_IS_PAUSE, mIsPractice)
+        editor.apply()
 
         // 回调进入准备状态
         onCountDownTimePrepared(getCountdownTime())
@@ -217,6 +247,9 @@ class TomatoCloakUtil(
             // 暂停过？
             (mIsPause) -> {
                 mStartTimeInMillis -= mElapsedTimeInMillis
+                val editor = sLoadSave.edit()
+                editor.putLong(SAVE_START_TIME_IN_MILLIS, mStartTimeInMillis)
+                editor.apply()
                 mStartTimeInMillis
             }
             // 练习时间

@@ -9,15 +9,9 @@ import com.vladsch.flexmark.util.data.MutableDataSet
  */
 class TextUtil {
 
-    val OPTIONS  = MutableDataSet().apply {
-//        set(Parser.EXTENSIONS, Arrays.asList(
-//            AutolinkExtension.create(),
-//            TablesExtension.create()
-//        ))
-    }
-
-    val sParser = Parser.builder(OPTIONS).build()
-    val sRenderer = HtmlRenderer.builder(OPTIONS).build()
+    private val sOptions  = MutableDataSet()
+    private val sParser = Parser.builder(sOptions).build()
+    private val sRenderer = HtmlRenderer.builder(sOptions).build()
 
     /**
      * 将 Markdown 转换为 Html
