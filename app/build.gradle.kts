@@ -56,18 +56,22 @@ android {
         jvmTarget = "17"
     }
     packagingOptions {
-        exclude("META-INF/LICENSE-LGPL-2.1.txt")
-        exclude("META-INF/LICENSE-LGPL-3.txt")
-        exclude("META-INF/LICENSE-W3C-TEST")
-        exclude("META-INF/DEPENDENCIES")
+        resources {
+            excludes += setOf(
+                "META-INF/LICENSE-LGPL-2.1.txt",
+                "META-INF/LICENSE-LGPL-3.txt",
+                "META-INF/LICENSE-W3C-TEST",
+                "META-INF/DEPENDENCIES"
+            )
+        }
     }
 }
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation("com.google.android.material:material:1.10.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -84,7 +88,7 @@ dependencies {
     // BaseRecyclerViewAdapterHelper
     implementation("io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.3")
     // Gson
-    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.google.code.gson:gson:2.10.1")
     // SwipeRefreshLayout 下拉刷新
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     // Flexmark-java 文本解析
