@@ -49,7 +49,7 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
             }
 
             override fun onRestShortTimeEnd() {
-                MassageUtil.sendNotification("小消息结束！")
+                MassageUtil.sendNotification("小休息结束！")
             }
 
             override fun onRestLongTimeStartPrepared(timer: Long) {
@@ -60,7 +60,7 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
             }
 
             override fun onRestLongTimeEnd() {
-                MassageUtil.sendNotification("大消息结束！")
+                MassageUtil.sendNotification("大休息结束！")
             }
 
             override fun onIntermission(timer: Long) {
