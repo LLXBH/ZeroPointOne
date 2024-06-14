@@ -3,10 +3,8 @@ package llxbh.zeropointone.api
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.room.Room
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import llxbh.zeropointone.app.appContext
 import llxbh.zeropointone.data.repository.AppDatabase
 import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.util.TimeUtil
@@ -101,37 +99,12 @@ object TaskApi {
     /**
      * 判断是否需要创建新的清单
      */
-    private suspend fun onCirculateAddNewTask(task: Task): Task? {
-        if (! task.state) {
-            // 任务未完成
-            return null
+    private fun onCirculateAddNewTask(task: Task): Task? {
+        return if (task.onLoopInspect()) {
+            task.onLoopNewData()
+        } else {
+            null
         }
-        if (task.startTimes == 0L
-            || task.endTimes == 0L
-            || task.addTimeDay == 0
-        ) {
-            // 时间未设置全面
-            return null
-        }
-        if (get(task.id)?.state == true) {
-            // 在数据库中原数据已经是完成的了
-            return null
-        }
-        val newTask = task.copy()
-        newTask.apply {
-            id = 0
-            state = false
-            updateTimes = TimeUtil.getNowTime()
-            startTimes = TimeUtil.getNewTime(startTimes, addTimeDay)
-            endTimes = TimeUtil.getNewTime(endTimes, addTimeDay)
-            // 将子项设置为未完成的状态
-            if (! newTask.checks.isNullOrEmpty()) {
-                for (check in newTask.checks!!) {
-                    check.state.set(false)
-                }
-            }
-        }
-        return newTask
     }
 
     /**

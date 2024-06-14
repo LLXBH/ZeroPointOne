@@ -9,7 +9,6 @@ import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.data.repository.AppDatabase
 import llxbh.zeropointone.util.MassageUtil
 import llxbh.zeropointone.util.TimeUtil
-import java.time.LocalDate
 
 object TaskCycleApi {
 
@@ -38,7 +37,7 @@ object TaskCycleApi {
      * 完成一次打卡
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    fun onFinishOnce(task: TaskCycle) {
+    suspend fun onFinishOnce(task: TaskCycle, data: Long = TimeUtil.getNowTime()) {
         when {
             // 时间设置正确
             (task.startTimes == 0L
@@ -47,7 +46,7 @@ object TaskCycleApi {
                 MassageUtil.sendToast("时间设置空白！")
             }
             // 不超出时间范围
-            (TimeUtil.isToDay(task.startTimes) && TimeUtil.isToDay(task.endTimes)) -> {
+            !((task.startTimes <= data) && (data <= task.endTimes)) -> {
                 MassageUtil.sendToast("当前时间不在可完成内！")
             }
             // 不超出可完成的次数
@@ -61,17 +60,20 @@ object TaskCycleApi {
             else -> {
                 task.finishedTimes = arrayListOf<Long>().also {
                     it.addAll(task.finishedTimes)
-                    it.add(TimeUtil.getNowTime())
+                    it.add(data)
                 }
 
                 task.state = false
             }
         }
 
-//        // 检查是否达到了完成任务的标准
-//        if (task.finishedTimes.size == task.needCompleteNum) {
-//            onCirculateAddNewTask(task)
-//        }
+        // 检查是否达到了完成任务的标准
+        if (task.finishedTimes.size == task.needCompleteNum) {
+            task.state = true
+            onCirculateAddNewTask(task)?.also {
+                insert(it)
+            }
+        }
 
     }
 
@@ -100,7 +102,7 @@ object TaskCycleApi {
             taskCycle.updateTimes = TimeUtil.getNowTime()
             // 检查是否需要循环创建清单
             onCirculateAddNewTask(taskCycle)?.also {
-                update(it)
+                insert(it)
             }
             // 更新数据
             sTaskCycleDao.update(taskCycle)
@@ -137,42 +139,11 @@ object TaskCycleApi {
      * 判断是否需要创建新的清单
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun onCirculateAddNewTask(taskCycle: TaskCycle): TaskCycle? {
-        when {
-            (! taskCycle.state) -> {
-                // 任务未完成
-                return null
-            }
-            (taskCycle.startTimes == 0L || taskCycle.endTimes == 0L || taskCycle.addTimeDay == 0) -> {
-                // 时间未设置全面
-                return null
-            }
-            (get(taskCycle.id).state) -> {
-                // 在数据库中原数据已经是完成的了
-                return null
-            }
-            (taskCycle.state && taskCycle.finishedTimes.size < taskCycle.needCompleteNum) -> {
-                onFinishOnce(taskCycle)
-                return null
-            }
-            else -> {
-                // 因为是循环周期的任务，只需要更改时间即可
-                taskCycle.apply {
-                    state = false
-                    updateTimes = TimeUtil.getNowTime()
-                    finishedTimes = listOf()
-                    // 向前推进日期
-                    startTimes = TimeUtil.getNewTime(startTimes, addTimeDay)
-                    endTimes = TimeUtil.getNewTime(endTimes, addTimeDay)
-                    // 将子项设置为未完成的状态
-                    if (checks.isNotEmpty()) {
-                        for (check in checks) {
-                            check.state.set(false)
-                        }
-                    }
-                }
-                return taskCycle
-            }
+    private fun onCirculateAddNewTask(taskCycle: TaskCycle): TaskCycle? {
+        return if (taskCycle.onLoopInspect()) {
+            taskCycle.onLoopNewData()
+        } else {
+            null
         }
     }
 
