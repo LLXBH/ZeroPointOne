@@ -143,7 +143,7 @@ object TimeUtil {
         // 开始时间
         val startOfDayLong = getSomeDayStartTimers(date)
         // 结束时间（加一天然后 - 1）
-        val endOfDayLong = getSomeDayStartTimers(date.plusDays(1)) - 1
+        val endOfDayLong = getSomeDayEndTimers(date)
         // 是否在范围内
         return (startOfDayLong <= times) && (times <= endOfDayLong)
     }
@@ -159,5 +159,32 @@ object TimeUtil {
     @RequiresApi(Build.VERSION_CODES.O)
     fun getSomeDayStartTimers(date: LocalDate = LocalDate.now()): Long {
         return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    }
+
+    /**
+     * 返回 “当天” 的结束时间
+     *
+     * @param date 日期
+     *
+     * @return 时间戳
+     *
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getSomeDayEndTimers(data: LocalDate = LocalDate.now()): Long {
+        return getSomeDayStartTimers(data.plusDays(1)) - 1
+    }
+
+    /**
+     * 将 时间戳 转换为 LocalDate
+     *
+     * @param times 时间戳
+     *
+     * @return 时间类
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getLocalData(times: Long): LocalDate {
+        return Instant.ofEpochMilli(times)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
     }
  }
