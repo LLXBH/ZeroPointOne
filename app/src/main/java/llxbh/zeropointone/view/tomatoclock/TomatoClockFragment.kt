@@ -17,12 +17,7 @@ import llxbh.zeropointone.util.tomato.TomatoClockStateInterface
 
 class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
-    private val sTomato = Tomato(
-        30,
-        4,
-        5,
-        45
-    )
+    private val sTomato = Tomato(30, 4, 5, 45)
     private val sTomatoCloakUtil = TomatoCloakUtil(
         sTomato,
         object : TomatoClockStateInterface {
