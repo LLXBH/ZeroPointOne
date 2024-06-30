@@ -12,25 +12,19 @@ import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.chad.library.adapter4.dragswipe.QuickDragAndSwipe
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.R
-import llxbh.zeropointone.base.BaseActivity
-import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.data.model.TaskCheck
-import llxbh.zeropointone.databinding.ActivityTaskContentBinding
 import llxbh.zeropointone.util.TextUtil
-import llxbh.zeropointone.api.TaskApi
 import llxbh.zeropointone.api.TaskCycleApi
 import llxbh.zeropointone.base.BindingBaseActivity
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.databinding.ActivityTaskCycleContentBinding
+import llxbh.zeropointone.util.TaskCheckUtil
 import llxbh.zeropointone.util.TimeUtil
-import llxbh.zeropointone.view.taskcontent.DatePickerDialogFragment
 import llxbh.zeropointone.view.taskcontent.TaskContentCheckAdapter
-import llxbh.zeropointone.view.taskcontent.TaskContentUpdateActivity
 import java.time.LocalDate
 
 /**
@@ -41,7 +35,9 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
     var sCheckAdapter = TaskContentCheckAdapter()
     private val sQuickDragAndSwipe = QuickDragAndSwipe()
 
-    val sMarkdownProcessor = TextUtil()
+    protected val sMarkdownProcessor = TextUtil()
+
+    private val sTaskCheckUtil = TaskCheckUtil()
 
     override fun setBinding(): ActivityTaskCycleContentBinding {
         return ActivityTaskCycleContentBinding.inflate(layoutInflater)
@@ -102,13 +98,11 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
                 // 判断是否是编辑模式
                 if (binding.viewEdit != false) {
                     // 显示模式，将编辑的内容转换且显示
-                    val text = binding.taskCycle!!.content
-                    val textMark = sMarkdownProcessor.markdownToHtml(text)
-                    binding.wvTaskContent.loadData(
-                        textMark,
-                        "text/html; charset=UTF-8",
-                        null
+                    sMarkdownProcessor.onMarkdownToHtmlView(
+                        binding.taskCycle!!.content,
+                        getBinding().wvTaskContent
                     )
+
                 }
                 binding.viewEdit = !binding.viewEdit!!
             }
@@ -133,79 +127,11 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
 
             // 内容 与 Check 相互转换
             binding.btnTaskContentSwitchCheck.setOnClickListener {
-                // 判断是否有内容
-                val ifContent = binding.etTaskContent.text.toString().isNotEmpty()
-                // 判断有子项
-                val ifCheck = sCheckAdapter.items.isNotEmpty()
-
-                // 根据详情和子项的内容与否，进行不同的操作
-                when {
-                    // 有详情，也有子项，将详情续接到子项上
-                    (ifContent && ifCheck) -> {
-                        // 将内容转为 TaskCheck
-                        val contentList = binding.etTaskContent.text.toString().split("\n")
-                        val checkList = arrayListOf<TaskCheck>()
-                        for (newCheck in contentList) {
-                            checkList.add(
-                                TaskCheck(
-                                    ObservableField(false),
-                                    ObservableField(newCheck)
-                                )
-                            )
-                        }
-
-                        // 接上
-                        sCheckAdapter.addAll(checkList)
-                        binding.etTaskContent.setText("")
-                    }
-
-                    // 详情为空，子项不为空：将子项转为内容
-                    (!ifContent && ifCheck) -> {
-                        // 将子项的内容提取出来，每一个子项的后面添加一个回车（换行）
-                        var newContent = ""
-                        for ((index, check) in sCheckAdapter.items.withIndex()) {
-                            // 从第二个开始，在前面加个回车换行
-                            newContent += if (index == 0) {
-                                "${check.content.get()}"
-                            } else {
-                                "\n${check.content.get()}"
-                            }
-                        }
-
-                        // 更新数据，新的详情，空的子项
-                        binding.etTaskContent.setText(newContent)
-                        sCheckAdapter.submitList(arrayListOf())
-                    }
-
-                    // 详情不为空，子项为空，将内容转换为子项
-                    (ifContent && !ifCheck) -> {
-                        // 将内容转为 TaskCheck
-                        val contentList = binding.etTaskContent.text.toString().split("\n")
-                        val checkList = arrayListOf<TaskCheck>()
-                        for (newCheck in contentList) {
-                            checkList.add(
-                                TaskCheck(
-                                    ObservableField(false),
-                                    ObservableField(newCheck)
-                                )
-                            )
-                        }
-
-                        // 更新数据，空的详情，新的子项
-                        binding.etTaskContent.setText("")
-                        sCheckAdapter.addAll(checkList)
-                    }
-                }
-
-                // 显示详情的状态，而不是编辑，需要同步刷新一下
-                if (binding.viewEdit == false) {
-                    binding.wvTaskContent.loadData(
-                        sMarkdownProcessor.markdownToHtml(binding.taskCycle?.content ?: ""),
-                        "text/html; charset=UTF-8",
-                        null
-                    )
-                }
-
+                sTaskCheckUtil.onSwitchStrongOrCheck(
+                    getBinding().etTaskContent,
+                    sCheckAdapter,
+                    getBinding().wvTaskContent
+                )
             }
         }
 

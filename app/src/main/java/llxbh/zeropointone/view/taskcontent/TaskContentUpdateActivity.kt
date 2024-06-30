@@ -12,8 +12,6 @@ import llxbh.zeropointone.util.TextUtil
 
 class TaskContentUpdateActivity: TaskContentCreateActivity() {
 
-    private val sMarkdownProcessor = TextUtil()
-
     companion object {
 
         fun start(taskId: Int, activity: Activity) {
@@ -41,9 +39,13 @@ class TaskContentUpdateActivity: TaskContentCreateActivity() {
                 getBinding().task = TaskApi.get(taskId)
                 sCheckAdapter.submitList(getBinding().task!!.checks ?: arrayListOf())
                 getBinding().wvTaskContent.loadData(
-                    sMarkdownProcessor.markdownToHtml(getBinding().task?.content ?: ""),
+                    sMarkdownProcessor.onMarkdownToHtml(getBinding().task?.content ?: ""),
                     "text/html; charset=UTF-8",
                     null
+                )
+                sMarkdownProcessor.onMarkdownToHtmlView(
+                    getBinding().task?.content ?: "",
+                    getBinding().wvTaskContent
                 )
             }
         } else {

@@ -6,18 +6,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.chad.library.adapter4.dragswipe.QuickDragAndSwipe
 import kotlinx.coroutines.runBlocking
 import llxbh.zeropointone.R
-import llxbh.zeropointone.base.BaseActivity
 import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.data.model.TaskCheck
 import llxbh.zeropointone.databinding.ActivityTaskContentBinding
 import llxbh.zeropointone.util.TextUtil
 import llxbh.zeropointone.api.TaskApi
 import llxbh.zeropointone.base.BindingBaseActivity
+import llxbh.zeropointone.util.TaskCheckUtil
 import llxbh.zeropointone.util.TimeUtil
 import java.time.LocalDate
 
@@ -29,7 +28,10 @@ open class TaskContentCreateActivity: BindingBaseActivity<ActivityTaskContentBin
     var sCheckAdapter = TaskContentCheckAdapter()
     private val sQuickDragAndSwipe = QuickDragAndSwipe()
     
-    private val sMarkdownProcessor = TextUtil()
+    protected val sMarkdownProcessor = TextUtil()
+
+    private val sTaskCheckUtil = TaskCheckUtil()
+
 
     override fun setBinding(): ActivityTaskContentBinding {
         return ActivityTaskContentBinding.inflate(layoutInflater)
@@ -50,12 +52,9 @@ open class TaskContentCreateActivity: BindingBaseActivity<ActivityTaskContentBin
             btnTaskContentChange.setOnClickListener {
                 // 判断是否是编辑模式
                 if (viewEdit != false) {
-                    val text = etTaskContent.text.toString()
-                    val textMark = sMarkdownProcessor.markdownToHtml(text)
-                    wvTaskContent.loadData(
-                        textMark,
-                        "text/html; charset=UTF-8",
-                        null
+                    sMarkdownProcessor.onMarkdownToHtmlView(
+                        etTaskContent.text.toString(),
+                        getBinding().wvTaskContent
                     )
                 }
                 viewEdit = !viewEdit!!
@@ -94,75 +93,11 @@ open class TaskContentCreateActivity: BindingBaseActivity<ActivityTaskContentBin
 
         // 将内容转换为 Check
         getBinding().btnTaskContentSwitchCheck.setOnClickListener {
-            // 判断是否有内容
-            val ifContent = getBinding().etTaskContent.text.toString().isNotEmpty()
-            // 判断有子项
-            val ifCheck = sCheckAdapter.items.isNotEmpty()
-
-            if (ifContent && ifCheck) {
-                // 有详情，也有子项，将详情续接到子项上
-
-                // 将内容转为 TaskCheck
-                val contentList = getBinding().etTaskContent.text.toString().split("\n")
-                val checkList = arrayListOf<TaskCheck>()
-                for (newCheck in contentList) {
-                    checkList.add(
-                        TaskCheck(
-                            ObservableField(false),
-                            ObservableField(newCheck)
-                        )
-                    )
-                }
-
-                // 接上
-                sCheckAdapter.addAll(checkList)
-                getBinding().etTaskContent.setText("")
-            } else if (!ifContent && ifCheck) {
-                //内容为空，子项不为空，将子项转换为内容
-
-                // 将子项的内容提取出来，每一个子项的后面添加一个回车（换行）
-                var newContent = ""
-                for ((index, check) in sCheckAdapter.items.withIndex()) {
-                    newContent += if (index == 0) {
-                        "${check.content.get()}"
-                    } else {
-                        "\n${check.content.get()}"
-                    }
-                }
-
-                // 更新数据
-                getBinding().etTaskContent.setText(newContent)
-                sCheckAdapter.submitList(arrayListOf())
-            } else if (ifContent && !ifCheck) {
-                // 内容不为空，子项为空，将内容转换为子项
-
-                // 将内容转为 TaskCheck
-                val contentList = getBinding().etTaskContent.text.toString().split("\n")
-                val checkList = arrayListOf<TaskCheck>()
-                for (newCheck in contentList) {
-                    checkList.add(
-                        TaskCheck(
-                            ObservableField(false),
-                            ObservableField(newCheck)
-                        )
-                    )
-                }
-
-                // 更新数据
-                sCheckAdapter.addAll(checkList)
-                getBinding().etTaskContent.setText("")
-            }
-
-            // 显示详情的状态，而不是编辑，需要同步刷新一下
-            if (getBinding().viewEdit == false) {
-                val content = getBinding().etTaskContent.text.toString()
-                getBinding().wvTaskContent.loadData(
-                    sMarkdownProcessor.markdownToHtml(getBinding().task?.content ?: ""),
-                    "text/html; charset=UTF-8",
-                    null
-                )
-            }
-
+            sTaskCheckUtil.onSwitchStrongOrCheck(
+                getBinding().etTaskContent,
+                sCheckAdapter,
+                getBinding().wvTaskContent
+            )
         }
 
         getBinding().tvTaskDate.apply {
