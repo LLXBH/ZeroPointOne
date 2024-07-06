@@ -64,6 +64,7 @@ object TaskCycleApi {
                 }
 
                 task.state = false
+                update(task)
             }
         }
 
@@ -180,5 +181,35 @@ object TaskCycleApi {
         } else if (task.startTimes == 0L && task.endTimes != 0L) {
             task.startTimes = task.endTimes
         }
+    }
+
+    /**
+     * 删除 “当天” 的打卡日期
+     *
+     * @param taskCycle 需要操作的打卡
+     * @param times 需要删除的某天（默认当天）
+     *
+     * @return 删除成功与否
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun deleteToDay(taskCycle: TaskCycle, times: Long = TimeUtil.getNowTime()): Boolean {
+        // 判断要删除哪一天的，标记出范围
+        val timeLocalDate = TimeUtil.getLocalData(times)
+        val start = TimeUtil.getSomeDayStartTimers(timeLocalDate)
+        val end = TimeUtil.getSomeDayEndTimers(timeLocalDate)
+
+        // 循环检查时间
+        for (saveTime in taskCycle.finishedTimes) {
+            if (saveTime in start..end) {
+                // 删除 “当天” 的打卡
+                val newList = arrayListOf<Long>()
+                newList.addAll(taskCycle.finishedTimes)
+                newList.remove(saveTime)
+                // 更新数据过去
+                taskCycle.finishedTimes = newList
+                return true
+            }
+        }
+        return false
     }
 }
