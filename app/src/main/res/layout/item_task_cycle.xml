@@ -34,7 +34,7 @@
                 android:id="@+id/cb_taskState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="@{taskCycle.state}"
+                android:checked="@={taskCycle.state}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +46,7 @@
                 android:lines="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:text="@{taskCycle.title}"
+                android:text="@={taskCycle.title}"
                 android:hint="无标题"
                 app:layout_constraintTop_toTopOf="@id/cb_taskState"
                 app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
@@ -57,7 +57,7 @@
                 android:id="@+id/tv_taskContent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{taskCycle.content}"
+                android:visibility="@{taskCycle.content.isEmpty() ? View.GONE : View.VISIBLE}"
                 android:hint="详细内容"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -102,6 +102,7 @@
                 android:id="@+id/tv_taskDateStart"
                 android:layout_width="wrap_content"
                 android:layout_height='wrap_content'
+                android:visibility="@{taskCycle.startTimes == 0L ? View.GONE : View.VISIBLE}"
                 android:hint="开始时间"
                 android:text="@{taskCycle.startTimes == 0L ? null : timeTools.timesToString(taskCycle.startTimes)}"
                 app:layout_constraintStart_toStartOf="@+id/tv_taskTitle"
@@ -120,6 +121,7 @@
                 android:id="@+id/tv_taskDateEnd"
                 android:layout_width="wrap_content"
                 android:layout_height='wrap_content'
+                android:visibility="@{taskCycle.startTimes == 0L ? View.GONE : View.VISIBLE}"
                 android:hint="结束时间"
                 android:text="@{taskCycle.endTimes == 0L ? null : timeTools.timesToString(taskCycle.endTimes)}"
                 app:layout_constraintTop_toTopOf="@+id/tv_taskDateStart"

@@ -24,6 +24,7 @@ import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.databinding.ActivityTaskCycleContentBinding
 import llxbh.zeropointone.util.TaskCheckUtil
 import llxbh.zeropointone.util.TimeUtil
+import llxbh.zeropointone.view.taskcontent.DatePickerDialogFragment
 import llxbh.zeropointone.view.taskcontent.TaskContentCheckAdapter
 import java.time.LocalDate
 
@@ -212,7 +213,11 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
             task.state = cbTaskState.isChecked
             task.addTimeDay = etTaskNextDate.text?.toString()?.toInt() ?: 0
             task.startTimes = TimeUtil.stringToTimes(tvTaskDateStart.text.toString()) ?: 0L
-            task.endTimes = TimeUtil.stringToTimes(tvTaskDateEnd.text.toString()) ?: 0L
+            task.endTimes = TimeUtil.stringToTimes(tvTaskDateEnd.text.toString())?.let {
+                // 转换为 "当天" 的最后一刻
+                val endTime = TimeUtil.getNewTime(it, 1)
+                endTime - 1
+            } ?: 0L
             task.needCompleteNum = etTaskNeedCompleteNum.text?.toString()?.toInt() ?: 0
             task.checks = sCheckAdapter.items
         }
@@ -274,7 +279,7 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
             object : DatePickerDialog.OnDateSetListener {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
-                    val time = LocalDate.of(year, month, day)
+                    val time = LocalDate.of(year, month+1, day)
                     timeTextView.text = time.toString()
                 }
             },

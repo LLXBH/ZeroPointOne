@@ -37,6 +37,8 @@ class TaskCycleListAdapter: BaseQuickAdapter<TaskCycle, TaskCycleListAdapter.VH>
     override fun onBindViewHolder(holder: VH, position: Int, item: TaskCycle?) {
         holder.binding.apply {
             taskCycle = item
+            timeTools = TimeUtil
+
             // 多选删除功能
             selectDeleteMode = mSelectDeleteMode
             // 通过 Map 保存选择的状态，避免 RecyclerView 的复用机制，导致显示混乱
