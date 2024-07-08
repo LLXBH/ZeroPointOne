@@ -42,6 +42,10 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
 
     }
 
+    // 是否显示已经完成的任务
+    private var viewComplete = false
+    private var hideList = mutableListOf<TaskCycle>()
+
     override fun setBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -136,24 +140,42 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
         }
     }
 
-    private suspend fun updateDataOrUI(list: List<Task>? = null, clear:Boolean = true) {
+    private suspend fun updateDataOrUI(list: List<TaskCycle>? = null, clear:Boolean = true) {
 
-//        /*
-//        先获取数据，对比有所不同了
-//         */
-//
-//        if (clear) {
-//            sTaskListAdapter.submitList(arrayListOf())
-//            hideList.clear()
-//        }
-//        if (list == null) {
-//            sTaskListAdapter.addAll(TaskApi.getAll())
-//        } else {
-//            sTaskListAdapter.addAll(list)
-//        }
-//        onViewComplete()
+        /*
+        先获取数据，对比有所不同了
+         */
 
-        sTaskCycleListAdapter.submitList(TaskCycleApi.getAll())
+        if (clear) {
+            sTaskCycleListAdapter.submitList(arrayListOf())
+            hideList.clear()
+        }
+        if (list == null) {
+            sTaskCycleListAdapter.addAll(TaskCycleApi.getAll())
+        } else {
+            sTaskCycleListAdapter.addAll(list)
+        }
+        onViewComplete()
+    }
+
+    private fun onViewComplete() {
+        if (viewComplete) {
+            // 显示
+            sTaskCycleListAdapter.addAll(hideList)
+            hideList = mutableListOf()
+        } else {
+            // 隐藏
+            for (data in sTaskCycleListAdapter.items) {
+                if (data.state || data.isDelete) {
+                    hideList.add(data)
+                }
+            }
+            // 剔除掉已经完成的
+            val newData = arrayListOf<TaskCycle>()
+            newData.addAll(sTaskCycleListAdapter.items)
+            newData.removeAll(hideList)
+            sTaskCycleListAdapter.submitList(newData)
+        }
     }
 
 }
