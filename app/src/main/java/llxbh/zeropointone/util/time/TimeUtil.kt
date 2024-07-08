@@ -1,14 +1,16 @@
-package llxbh.zeropointone.util
+package llxbh.zeropointone.util.time
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Build
 import androidx.annotation.RequiresApi
 import java.lang.Exception
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.ZoneId
+import java.util.Calendar
 import java.util.Date
 
 object TimeUtil {
@@ -182,9 +184,39 @@ object TimeUtil {
      * @return 时间类
      */
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getLocalData(times: Long): LocalDate {
+    fun getLocalData(times: Long = getNowTime()): LocalDate {
         return Instant.ofEpochMilli(times)
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
+    }
+
+    /**
+     * 展示一个日期选择界面
+     *
+     * @param activity 从哪个页面启动的
+     * @param dateSetListener 日期的选择接口，方便在调用处自定义
+     * @param time 默认选中的日期
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun showDatePick(
+        activity: Activity,
+        dateSetListener: DatePickInterface,
+        time: LocalDate = getLocalData()
+    ) {
+        val datePickerView = DatePickerDialog(
+            activity,
+            0,
+            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                // 月份是从 0 开始，进行修正一下
+                dateSetListener.onDateSet(year, month+1, dayOfMonth)
+            },
+            time.year,
+            // 月份是从 0 开始，进行修正一下
+            time.monthValue-1,
+            time.dayOfMonth
+        )
+        // 默认周一为一个星期的第一天
+        datePickerView.datePicker.firstDayOfWeek = Calendar.MONDAY
+        datePickerView.show()
     }
  }
