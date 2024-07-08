@@ -23,8 +23,8 @@ import llxbh.zeropointone.base.BindingBaseActivity
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.databinding.ActivityTaskCycleContentBinding
 import llxbh.zeropointone.util.TaskCheckUtil
-import llxbh.zeropointone.util.TimeUtil
-import llxbh.zeropointone.view.taskcontent.DatePickerDialogFragment
+import llxbh.zeropointone.util.time.DatePickInterface
+import llxbh.zeropointone.util.time.TimeUtil
 import llxbh.zeropointone.view.taskcontent.TaskContentCheckAdapter
 import java.time.LocalDate
 
@@ -269,24 +269,19 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
     /**
      * 弹出时间选择器，并显示用户点击的时间
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun onSetData(timeTextView: TextView) {
-        // 当前日期
-        val calendar = Calendar.getInstance()
-
-        // 时间选择器
-        DatePickerDialog(
+        TimeUtil.showDatePick(
             this,
-            object : DatePickerDialog.OnDateSetListener {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
-                    val time = LocalDate.of(year, month+1, day)
+            object : DatePickInterface {
+
+                override fun onDateSet(year: Int, month: Int, dayOfMonth: Int) {
+                    val time = LocalDate.of(year, month, dayOfMonth)
                     timeTextView.text = time.toString()
                 }
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+
+            }
+        )
     }
 
 }

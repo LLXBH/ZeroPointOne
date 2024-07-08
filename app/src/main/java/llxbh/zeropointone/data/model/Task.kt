@@ -3,9 +3,8 @@ package llxbh.zeropointone.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import llxbh.zeropointone.api.TaskApi
 import llxbh.zeropointone.data.repository.TaskCheckConverters
-import llxbh.zeropointone.util.TimeUtil
+import llxbh.zeropointone.util.time.TimeUtil
 
 /**
  * 清单任务数据类

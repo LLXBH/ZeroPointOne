@@ -17,7 +17,8 @@ import llxbh.zeropointone.util.TextUtil
 import llxbh.zeropointone.api.TaskApi
 import llxbh.zeropointone.base.BindingBaseActivity
 import llxbh.zeropointone.util.TaskCheckUtil
-import llxbh.zeropointone.util.TimeUtil
+import llxbh.zeropointone.util.time.DatePickInterface
+import llxbh.zeropointone.util.time.TimeUtil
 import java.time.LocalDate
 
 /**
@@ -103,7 +104,14 @@ open class TaskContentCreateActivity: BindingBaseActivity<ActivityTaskContentBin
         getBinding().tvTaskDate.apply {
             // 点击时间则展示显示日期选择
             setOnClickListener {
-                DatePickerDialogFragment().show(supportFragmentManager, "datePicker")
+                TimeUtil.showDatePick(
+                    this@TaskContentCreateActivity,
+                    object : DatePickInterface {
+                        override fun onDateSet(year: Int, month: Int, dayOfMonth: Int) {
+                            setDate(year, month, dayOfMonth)
+                        }
+                    }
+                )
             }
             // 长按时间清空已选
             setOnLongClickListener {

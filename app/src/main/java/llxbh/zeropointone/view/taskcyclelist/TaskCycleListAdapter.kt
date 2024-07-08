@@ -9,10 +9,9 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.ObservableBoolean
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
-import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.databinding.ItemTaskCycleBinding
-import llxbh.zeropointone.util.TimeUtil
+import llxbh.zeropointone.util.time.TimeUtil
 
 class TaskCycleListAdapter: BaseQuickAdapter<TaskCycle, TaskCycleListAdapter.VH>() {
 

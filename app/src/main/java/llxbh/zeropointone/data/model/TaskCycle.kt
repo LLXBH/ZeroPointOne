@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import llxbh.zeropointone.data.repository.ListLongConverters
 import llxbh.zeropointone.data.repository.TaskCheckConverters
-import llxbh.zeropointone.util.TimeUtil
+import llxbh.zeropointone.util.time.TimeUtil
 
 @Entity(tableName = "TaskCycle")
 @TypeConverters(TaskCheckConverters::class, ListLongConverters::class)

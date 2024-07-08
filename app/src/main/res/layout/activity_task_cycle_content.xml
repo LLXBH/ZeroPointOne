@@ -7,7 +7,7 @@
         <import type="android.view.View" />
         <variable
             name="timeTools"
-            type="llxbh.zeropointone.util.TimeUtil" />
+            type="llxbh.zeropointone.util.time.TimeUtil" />
         <variable
             name="taskCycle"
             type="llxbh.zeropointone.data.model.TaskCycle" />
@@ -85,16 +85,11 @@
                 android:hint="完成几次？"
                 android:text="@{String.valueOf(taskCycle.needCompleteNum)}"/>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/btn_taskAlreadyCompletedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="补登打卡"/>
 
         </LinearLayout>
 

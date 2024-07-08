@@ -3,7 +3,6 @@ package llxbh.zeropointone.view.tasklist
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.annotation.RequiresApi
@@ -15,7 +14,7 @@ import kotlinx.coroutines.launch
 import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.databinding.ItemTaskBinding
 import llxbh.zeropointone.api.TaskApi
-import llxbh.zeropointone.util.TimeUtil
+import llxbh.zeropointone.util.time.TimeUtil
 
 class TaskListAdapter: BaseQuickAdapter<Task, TaskListAdapter.VH>() {
 
