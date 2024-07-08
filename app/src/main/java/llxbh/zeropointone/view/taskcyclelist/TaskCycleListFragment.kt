@@ -127,6 +127,18 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        getBinding().srlTaskList.isRefreshing = true
+        GlobalScope.launch {
+            delay(1000)
+            launch(Dispatchers.Main) {
+                updateDataOrUI()
+            }
+            getBinding().srlTaskList.isRefreshing = false
+        }
+    }
+
     private fun onOpenTaskCycleContent(create: Boolean, taskData: TaskCycle?) {
         activity?.also {
             if (create || (taskData == null)) {
