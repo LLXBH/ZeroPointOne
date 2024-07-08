@@ -81,6 +81,21 @@ object TimeUtil {
     }
 
     /**
+     * 根据所给的日期，返回对应的 “时间戳”
+     *
+     * @param year 年
+     * @param month 月
+     * @param day 日
+     *
+     * @return 时间戳
+     *
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getNotTime(year: Int, month: Int, day: Int): Long {
+        return getSomeDayStartTimers(LocalDate.of(year, month, day))
+    }
+
+    /**
      * 根据需要的增加天数后的时间戳
      */
     fun getNewTime(times: Long, dayNum: Int): Long {
@@ -219,4 +234,5 @@ object TimeUtil {
         datePickerView.datePicker.firstDayOfWeek = Calendar.MONDAY
         datePickerView.show()
     }
+
  }
