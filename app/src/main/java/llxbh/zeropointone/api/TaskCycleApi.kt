@@ -30,6 +30,23 @@ object TaskCycleApi {
     suspend fun getAll(): List<TaskCycle> {
         return withContext(Dispatchers.IO) {
             sTaskCycleDao.getAll()
+                // 自定义排序，对数据处理一下顺序
+                .sortedWith(compareBy(
+                    // 按完成的状态排序
+                    { it.state },
+                    // 未完成的任务，按开始时间来排序（升序）
+                    { if (!it.state) {
+                        it.startTimes
+                    } else {
+                        0
+                    }},
+                    // 已完成的任务，按更新的时间排序（降序）
+                    { if (it.state) {
+                        -it.updateTimes
+                    } else {
+                        0
+                    }}
+                ))
         }
     }
 
@@ -71,9 +88,10 @@ object TaskCycleApi {
         // 检查是否达到了完成任务的标准
         if (task.finishedTimes.size == task.needCompleteNum) {
             task.state = true
-            onCirculateAddNewTask(task)?.also {
-                insert(it)
-            }
+            update(task)
+//            onCirculateAddNewTask(task)?.also {
+//                insert(it)
+//            }
         }
 
     }
