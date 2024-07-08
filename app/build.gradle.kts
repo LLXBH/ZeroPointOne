@@ -98,4 +98,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:$navigationVersion")
     implementation("androidx.navigation:navigation-ui:$navigationVersion")
     implementation("androidx.navigation:navigation-compose:$navigationVersion")
+    // CalendarView 第三方的日控件历库
+    implementation("com.haibin:calendarview:3.7.1")
 }

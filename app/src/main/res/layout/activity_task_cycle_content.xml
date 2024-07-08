@@ -85,11 +85,17 @@
                 android:hint="完成几次？"
                 android:text="@{String.valueOf(taskCycle.needCompleteNum)}"/>
 
-            <Button
-                android:id="@+id/btn_taskAlreadyCompletedDate"
-                android:layout_width="wrap_content"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.haibin.calendarview.CalendarView
+                android:id="@+id/cv_taskCompleteDate"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="补登打卡"/>
+                app:select_mode="multi_mode"/>
 
         </LinearLayout>
 
