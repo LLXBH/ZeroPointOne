@@ -149,6 +149,14 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onDestroy() {
+        super.onDestroy()
+        runBlocking {
+            onSaveTask()
+        }
+    }
+
 
 //    @RequiresApi(Build.VERSION_CODES.O)
 //    override fun onDestroy() {
