@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="androidx.databinding.ObservableField" />
         <variable
             name="timeTools"
             type="llxbh.zeropointone.util.time.TimeUtil" />
@@ -53,13 +54,17 @@
                 app:layout_constraintStart_toEndOf="@id/cb_taskState"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <!--
+            visibility：利用 @{} 来动态控制显示状态，有 “内容” 或 “子项” 的时候，就显示；
+            text：判断 “内容” 和 “子项” ， 根据优先级显示哪个；
+            -->
             <TextView
                 android:id="@+id/tv_taskContent"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="@{task.content.isEmpty() ? View.GONE : View.VISIBLE}"
+                android:visibility="@{task.content.isEmpty() ? (task.checks.isEmpty() ? View.GONE : View.VISIBLE) : View.VISIBLE }"
                 android:hint="详细内容"
-                android:text="@={task.content}"
+                android:text='@{task.content.isEmpty() ? (task.checks.isEmpty() ? "" : "- " + task.checks.get(0).content.get()) : task.content }'
                 android:maxLines="1"
                 android:singleLine="true"
                 android:ellipsize="end"
