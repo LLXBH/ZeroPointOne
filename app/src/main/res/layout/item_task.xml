@@ -16,99 +16,93 @@
             type="androidx.databinding.ObservableBoolean" />
     </data>
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
+        android:layout_height="wrap_content" >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+        <!--
+            任务状态
+            visibility：根据是在处于删除状态显示（不可见 与 可见）；
+        -->
+        <CheckBox
+            android:id="@+id/cb_taskState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{selectDeleteMode ? View.INVISIBLE : View.VISIBLE}"
+            android:checked="@={task.state}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <!--
-                任务状态
-                visibility：根据是在处于删除状态显示（不可见 与 可见）；
-            -->
-            <CheckBox
-                android:id="@+id/cb_taskState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="@{selectDeleteMode ? View.INVISIBLE : View.VISIBLE}"
-                android:checked="@={task.state}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <!--
+            多选删除
+            visibility：根据是在处于删除状态显示（可见 与 不可见（不占布局））；
+        -->
+        <CheckBox
+            android:id="@+id/cb_taskSelectDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{selectDeleteMode ? View.VISIBLE : View.GONE}"
+            style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+            app:layout_constraintTop_toTopOf="@id/cb_taskState"
+            app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
+            app:layout_constraintStart_toStartOf="@id/cb_taskState"
+            app:layout_constraintEnd_toEndOf="@id/cb_taskState"/>
 
-            <!--
-                多选删除
-                visibility：根据是在处于删除状态显示（可见 与 不可见（不占布局））；
-            -->
-            <CheckBox
-                android:id="@+id/cb_taskSelectDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="@{selectDeleteMode ? View.VISIBLE : View.GONE}"
-                style="@style/Widget.AppCompat.CompoundButton.RadioButton"
-                app:layout_constraintTop_toTopOf="@id/cb_taskState"
-                app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
-                app:layout_constraintStart_toStartOf="@id/cb_taskState"
-                app:layout_constraintEnd_toEndOf="@id/cb_taskState"/>
+        <TextView
+            android:id="@+id/tv_taskTitle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:lines="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:text="@={task.title}"
+            android:hint="无标题"
+            app:layout_constraintTop_toTopOf="@id/cb_taskState"
+            app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
+            app:layout_constraintStart_toEndOf="@id/cb_taskState"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_taskTitle"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="10dp"
-                android:lines="1"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:text="@={task.title}"
-                android:hint="无标题"
-                app:layout_constraintTop_toTopOf="@id/cb_taskState"
-                app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
-                app:layout_constraintStart_toEndOf="@id/cb_taskState"
-                app:layout_constraintEnd_toEndOf="parent" />
+        <!--
+            详细内容
+            visibility：利用 @{} 来动态控制显示状态，有 “内容” 或 “子项” 的时候，就显示；
+            text：判断 “内容” 和 “子项” ， 根据优先级显示哪个；
+        -->
+        <TextView
+            android:id="@+id/tv_taskContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{task.content.isEmpty() ? (task.checks.isEmpty() ? View.GONE : View.VISIBLE) : View.VISIBLE }"
+            android:hint="详细内容"
+            android:text='@{task.content.isEmpty() ? (task.checks.isEmpty() ? "" : "- " + task.checks.get(0).content.get()) : task.content }'
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/tv_taskTitle"
+            app:layout_constraintStart_toStartOf="@id/tv_taskTitle"
+            app:layout_constraintEnd_toEndOf="@id/tv_taskTitle" />
 
-            <!--
-                详细内容
-                visibility：利用 @{} 来动态控制显示状态，有 “内容” 或 “子项” 的时候，就显示；
-                text：判断 “内容” 和 “子项” ， 根据优先级显示哪个；
-            -->
-            <TextView
-                android:id="@+id/tv_taskContent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="@{task.content.isEmpty() ? (task.checks.isEmpty() ? View.GONE : View.VISIBLE) : View.VISIBLE }"
-                android:hint="详细内容"
-                android:text='@{task.content.isEmpty() ? (task.checks.isEmpty() ? "" : "- " + task.checks.get(0).content.get()) : task.content }'
-                android:maxLines="1"
-                android:singleLine="true"
-                android:ellipsize="end"
-                app:layout_constraintTop_toBottomOf="@id/tv_taskTitle"
-                app:layout_constraintStart_toStartOf="@id/tv_taskTitle"
-                app:layout_constraintEnd_toEndOf="@id/tv_taskTitle" />
+        <TextView
+            android:id="@+id/tv_taskDate"
+            android:layout_width="0dp"
+            android:layout_height='wrap_content'
+            android:visibility="@{task.startTimes == 0L ? View.GONE : View.VISIBLE}"
+            android:hint="开始时间"
+            android:text="@{task.startTimes == 0L ? null : timeTools.timesToString(task.startTimes)}"
+            app:layout_constraintEnd_toEndOf="@id/tv_taskTitle"
+            app:layout_constraintStart_toStartOf="@+id/tv_taskTitle"
+            app:layout_constraintTop_toBottomOf="@id/tv_taskContent" />
 
-            <TextView
-                android:id="@+id/tv_taskDate"
-                android:layout_width="0dp"
-                android:layout_height='wrap_content'
-                android:visibility="@{task.startTimes == 0L ? View.GONE : View.VISIBLE}"
-                android:hint="开始时间"
-                android:text="@{task.startTimes == 0L ? null : timeTools.timesToString(task.startTimes)}"
-                app:layout_constraintEnd_toEndOf="@id/tv_taskTitle"
-                app:layout_constraintStart_toStartOf="@+id/tv_taskTitle"
-                app:layout_constraintTop_toBottomOf="@id/tv_taskContent" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="#555555"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_taskDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="#555555"
-                android:layout_marginTop="5dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_taskDate"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
