@@ -21,23 +21,37 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp" >
 
-        <CheckBox
-            android:id="@+id/cb_taskSelectDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{selectDeleteMode ? View.VISIBLE : View.GONE}" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
+            <!--
+                任务状态
+                visibility：根据是在处于删除状态显示（不可见 与 可见）；
+            -->
             <CheckBox
                 android:id="@+id/cb_taskState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="@{selectDeleteMode ? View.INVISIBLE : View.VISIBLE}"
                 android:checked="@={task.state}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <!--
+                多选删除
+                visibility：根据是在处于删除状态显示（可见 与 不可见（不占布局））；
+            -->
+            <CheckBox
+                android:id="@+id/cb_taskSelectDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{selectDeleteMode ? View.VISIBLE : View.GONE}"
+                style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                app:layout_constraintTop_toTopOf="@id/cb_taskState"
+                app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
+                app:layout_constraintStart_toStartOf="@id/cb_taskState"
+                app:layout_constraintEnd_toEndOf="@id/cb_taskState"/>
 
             <TextView
                 android:id="@+id/tv_taskTitle"
