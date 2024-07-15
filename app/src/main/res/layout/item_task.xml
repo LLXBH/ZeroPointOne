@@ -55,8 +55,9 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <!--
-            visibility：利用 @{} 来动态控制显示状态，有 “内容” 或 “子项” 的时候，就显示；
-            text：判断 “内容” 和 “子项” ， 根据优先级显示哪个；
+                详细内容
+                visibility：利用 @{} 来动态控制显示状态，有 “内容” 或 “子项” 的时候，就显示；
+                text：判断 “内容” 和 “子项” ， 根据优先级显示哪个；
             -->
             <TextView
                 android:id="@+id/tv_taskContent"
