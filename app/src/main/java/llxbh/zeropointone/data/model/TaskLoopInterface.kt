@@ -1,9 +1,10 @@
 package llxbh.zeropointone.data.model
 
 /**
- * 一个创建循环任务的接口
+ * 任务的 “循环” 接口，在 “数据类” 中继承，编写各自独立的相关事项
  *
- * 在 “数据类” 中继承，编写各自独立的相关事项
+ * 定义了如何判断 “循环” 的逻辑，以及如何复制出一个新的数据
+ *
  */
 interface TaskLoopInterface<T> {
 
