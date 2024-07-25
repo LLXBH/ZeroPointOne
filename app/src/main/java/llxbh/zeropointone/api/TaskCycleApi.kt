@@ -101,11 +101,10 @@ object TaskCycleApi {
      */
     suspend fun insert(taskCycle: TaskCycle) {
         return withContext(Dispatchers.IO) {
-            if (! onInspectData(taskCycle)) {
-                Log.e("TaskCycle", "数据检查不通过。")
+            onInspectData(taskCycle)?.also {
+                it.updateTimes = TimeUtil.getNowTime()
+                sTaskCycleDao.insert(it)
             }
-            taskCycle.updateTimes = TimeUtil.getNowTime()
-            sTaskCycleDao.insert(taskCycle)
         }
     }
 
@@ -115,16 +114,17 @@ object TaskCycleApi {
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun update(taskCycle: TaskCycle) {
         return withContext(Dispatchers.IO) {
-            if (! onInspectData(taskCycle)) {
-                Log.e("TaskCycle", "数据检查不通过。")
+            onInspectData(taskCycle)?.also {
+                it.updateTimes = TimeUtil.getNowTime()
+
+                // 检查是否需要循环创建清单
+                onCirculateAddNewTask(it)?.also { newData ->
+                    insert(newData)
+                }
+
+                // 更新数据
+                sTaskCycleDao.update(it)
             }
-            taskCycle.updateTimes = TimeUtil.getNowTime()
-            // 检查是否需要循环创建清单
-            onCirculateAddNewTask(taskCycle)?.also {
-                insert(it)
-            }
-            // 更新数据
-            sTaskCycleDao.update(taskCycle)
         }
     }
 
@@ -167,37 +167,14 @@ object TaskCycleApi {
     }
 
     /**
-     * 检查数据是否有不规范的地方
+     * 检查数据是否有不规范的地方，且尝试修正
      */
-    private fun onInspectData(task: TaskCycle): Boolean {
-        // 标题和内容不能都为空
-        try {
-            if (task.title.isEmpty() && task.content.isEmpty()) {
-                throw Exception("清单：标题和内容不能都为空。")
-            }
-            if (task.addTimeDay != 0 && task.startTimes == 0L && task.endTimes == 0L) {
-                throw Exception("清单：若设置了自增天数，开始时间和结束时间都不为 0 。")
-            }
-        } catch (e: Exception) {
-            Log.e("Task", e.message.toString())
-            return false
-        }
-        onInspectDataTime(task)
-        return true
-    }
-
-    /**
-     * 检查且修正有关于时间的设置
-     */
-    private fun onInspectDataTime(task: TaskCycle) {
-        if (task.addTimeDay != 0 && task.startTimes == 0L && task.endTimes == 0L) {
-            // 若设置了自增天数，开始时间和结束时间都不能为 0 ；
-            task.addTimeDay = 0
-        } else if (task.startTimes != 0L && task.endTimes == 0L) {
-            // 开始时间和结束时间不能一边不为 0 ，一边为 0 ，如果设置同一天，则开始和结束需要相同
-            task.endTimes = task.startTimes
-        } else if (task.startTimes == 0L && task.endTimes != 0L) {
-            task.startTimes = task.endTimes
+    private fun onInspectData(task: TaskCycle): TaskCycle? {
+        return if (! task.onInspect()) {
+            task.onCorrectContent()
+                ?.onCorrectDateTime()
+        } else {
+            task
         }
     }
 
