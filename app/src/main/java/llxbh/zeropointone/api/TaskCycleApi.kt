@@ -27,25 +27,14 @@ object TaskCycleApi {
     /**
      * 获取全部清单
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun getAll(): List<TaskCycle> {
         return withContext(Dispatchers.IO) {
             sTaskCycleDao.getAll()
                 // 自定义排序，对数据处理一下顺序
                 .sortedWith(compareBy(
-                    // 按完成的状态排序
-                    { it.state },
-                    // 未完成的任务，按开始时间来排序（升序）
-                    { if (!it.state) {
-                        it.startTimes
-                    } else {
-                        0
-                    }},
-                    // 已完成的任务，按更新的时间排序（降序）
-                    { if (it.state) {
-                        -it.updateTimes
-                    } else {
-                        0
-                    }}
+                    // 按今天是否已经完成打卡排序
+                    {TimeUtil.isToDay(it.finishedTimes)}
                 ))
         }
     }
