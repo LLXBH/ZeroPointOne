@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 240725001,
-      "versionName": "1.0.43",
-      "outputFile": "1.0.43_release.apk"
+      "versionCode": 240801001,
+      "versionName": "1.0.44",
+      "outputFile": "1.0.44_release.apk"
     }
   ],
   "elementType": "File",
@@ -22,14 +22,14 @@
       "minApi": 28,
       "maxApi": 30,
       "baselineProfiles": [
-        "baselineProfiles/1/1.0.43_release.dm"
+        "baselineProfiles/1/1.0.44_release.dm"
       ]
     },
     {
       "minApi": 31,
       "maxApi": 2147483647,
       "baselineProfiles": [
-        "baselineProfiles/0/1.0.43_release.dm"
+        "baselineProfiles/0/1.0.44_release.dm"
       ]
     }
   ],
