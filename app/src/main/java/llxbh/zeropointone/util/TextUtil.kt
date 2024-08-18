@@ -6,7 +6,7 @@ import com.vladsch.flexmark.parser.Parser
 import com.vladsch.flexmark.util.data.MutableDataSet
 
 /**
- * Markdown 文本处理器
+ * 文本处理器
  */
 class TextUtil {
 
@@ -15,13 +15,23 @@ class TextUtil {
     private val sRenderer = HtmlRenderer.builder(sOptions).build()
 
     /**
-     * 将 Markdown 转换为 Html
+     * 将 Markdown 转换为 Html 样式
+     *
+     * @param markdownText 文本
+     *
      */
     fun onMarkdownToHtml(markdownText: String): String {
         val document = sParser.parse(markdownText)
         return sRenderer.render(document)
     }
 
+    /**
+     * 将 Markdown 文本加载到 WebView
+     *
+     * @param markdownText 文本
+     * @param webView 浏览器
+     *
+     */
     fun onMarkdownToHtmlView(markdownText: String, webView: WebView) {
         webView.loadData(
             onMarkdownToHtml(markdownText),

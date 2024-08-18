@@ -77,6 +77,9 @@ abstract class CountDownTimer(
 
     /**
      * 间歇，同 onTick
+     *
+     * @param millisUntilFinished 剩余时间
+     *
      */
     abstract fun onInterval(millisUntilFinished: Long)
 

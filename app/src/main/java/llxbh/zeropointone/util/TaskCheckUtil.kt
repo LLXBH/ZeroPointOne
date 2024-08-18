@@ -59,9 +59,14 @@ class TaskCheckUtil {
     }
 
     /**
-     * @param textView
-     * @param checkAdapter
-     * @param webView
+     * “文本” 与 "子项任务" 的相互转换
+     *
+     * 逻辑内部以定义，负责调用就行，自动判断如何转换
+     *
+     * @param textView 文本控件
+     * @param checkAdapter 文本列表适配器
+     * @param webView 浏览器
+     *
      */
     fun onSwitchStrongOrCheck(textView: TextView, checkAdapter: TaskContentCheckAdapter, webView: WebView?) {
         // 判断当前状态
