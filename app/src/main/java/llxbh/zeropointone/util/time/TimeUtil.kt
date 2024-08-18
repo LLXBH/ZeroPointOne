@@ -3,16 +3,17 @@ package llxbh.zeropointone.util.time
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java.lang.Exception
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 
+/**
+ * 时间工具类
+ */
 object TimeUtil {
 
     val ONE_DAY_TIMES: Long = 86400000
@@ -22,6 +23,10 @@ object TimeUtil {
 
     /**
      * 将 LocalDate 转换为 Date
+     *
+     * @param value 本地日期类
+     *
+     * @return 时间类
      */
     @RequiresApi(Build.VERSION_CODES.O)
     fun localDateToDate(value: LocalDate): Date {
@@ -34,6 +39,10 @@ object TimeUtil {
 
     /**
      * 将 Date 转换为 字符串
+     *
+     * @param value 时间类
+     *
+     * @return 日期（yyyy-mm-dd）
      */
     @RequiresApi(Build.VERSION_CODES.O)
     fun dateToString(value: Date): String {
@@ -43,10 +52,26 @@ object TimeUtil {
         return toString(localDate.year, localDate.monthValue, localDate.dayOfMonth)
     }
 
+    /**
+     * 更加给定的年、月、日，输出固定格式的日期
+     *
+     * @param year 年
+     * @param month 月
+     * @param day 日
+     *
+     * @return 日期
+     */
     fun toString(year: Int, month: Int, day: Int): String {
         return "$year-${month}-$day"
     }
 
+    /**
+     * 将 “字符串” 转换为 Date
+     *
+     * @param time 时间（yyyy-mm-dd）
+     *
+     * @return 时间类
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun stringToDate(time: String): Date? {
         val times = time.split("-")
@@ -63,6 +88,11 @@ object TimeUtil {
 
     /**
      * 根据给的时间往后增加天数，给出新的时间
+     *
+     * @param date 时间类
+     * @param dayNum 要增加的天数
+     *
+     * @return 时间类（增加天数后）
      */
     @SuppressLint("NewApi")
     fun onDateOnAddDay(date: Date, dayNum: Int): Date? {
@@ -75,6 +105,8 @@ object TimeUtil {
 
     /**
      * 获取当前时间的时间戳
+     *
+     * @return 时间戳
      */
     fun getNowTime(): Long {
         return System.currentTimeMillis()
@@ -97,6 +129,11 @@ object TimeUtil {
 
     /**
      * 根据需要的增加天数后的时间戳
+     *
+     * @param times 时间戳
+     * @param dayNum 要增加的天数
+     *
+     * @return 时间戳
      */
     fun getNewTime(times: Long, dayNum: Int): Long {
         return times+(dayNum * ONE_DAY_TIMES)
@@ -104,6 +141,10 @@ object TimeUtil {
 
     /**
      * 将 时间戳 转换为 字符串
+     *
+     * @param 时间戳
+     *
+     * @return 日期（yyyy-mm-dd）
      */
     @SuppressLint("NewApi")
     fun timesToString(times: Long): String {
@@ -115,6 +156,10 @@ object TimeUtil {
 
     /**
      * 将 字符串 转换为 时间戳
+     *
+     * @param dateTime 日期（yyyy-dd-mm）
+     *
+     * @return 时间戳
      */
     @SuppressLint("NewApi")
     fun stringToTimes(dateTime: String): Long? {
@@ -133,6 +178,11 @@ object TimeUtil {
         return isSomeDay(times, LocalDate.now())
     }
 
+    /**
+     * 判断一个列表里的时间戳，里面是否包含了 “今天”
+     *
+     * @param times 时间戳列表
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     fun isToDay(times: List<Long>): Boolean {
         // 开始时间
@@ -144,7 +194,7 @@ object TimeUtil {
             startOfDayLong <= it
         }.filter {
             it <= endOfDayLong
-        }.size >= 1
+        }.isNotEmpty()
     }
 
     /**
