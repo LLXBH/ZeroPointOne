@@ -13,8 +13,8 @@ android {
         applicationId = "llxbh.zeropointone"
         minSdk = 24
         targetSdk = 33
-        versionCode = 240818001
-        versionName = "1.0.46"
+        versionCode = 240825001
+        versionName = "1.0.47"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
