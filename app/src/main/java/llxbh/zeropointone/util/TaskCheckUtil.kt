@@ -109,12 +109,7 @@ class TaskCheckUtil {
         }
 
         // 显示详情的状态，而不是编辑，需要同步刷新一下
-        webView?.loadData(
-            sMarkdownProcessor.onMarkdownToHtml(textView.text.toString() ?: ""),
-            "text/html; charset=UTF-8",
-            null
-        )
-
+        sMarkdownProcessor.onMarkdownToHtmlView(textView.text.toString() ?: "", webView)
     }
 
 }

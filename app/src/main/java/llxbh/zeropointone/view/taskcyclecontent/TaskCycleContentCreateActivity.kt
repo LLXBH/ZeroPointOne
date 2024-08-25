@@ -75,8 +75,8 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
                 // 长按时间清空已选
                 setOnLongClickListener {
                     text = ""
-                    Toast.makeText(this@TaskCycleContentCreateActivity, "清空已选时间！", Toast.LENGTH_SHORT)
-                        .show()
+                    MassageUtil.sendToast("清空已选时间！")
+
                     return@setOnLongClickListener true
                 }
             }
@@ -88,8 +88,7 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
                 // 长按时间清空已选
                 setOnLongClickListener {
                     text = ""
-                    Toast.makeText(this@TaskCycleContentCreateActivity, "清空已选时间！", Toast.LENGTH_SHORT)
-                        .show()
+                    MassageUtil.sendToast("清空已选时间！")
                     return@setOnLongClickListener true
                 }
             }
@@ -237,11 +236,9 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
         val data = getUiData()
         if (data != null) {
             TaskCycleApi.insert(data)
-            Toast.makeText(this, "插入数据！", Toast.LENGTH_SHORT)
-                .show()
+            MassageUtil.sendToast("插入数据！")
         } else {
-            Toast.makeText(this, "无法获取数据！", Toast.LENGTH_SHORT)
-                .show()
+            MassageUtil.sendToast("无法获取数据！")
         }
     }
 
@@ -253,11 +250,9 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
         val data = getUiData()
         if (data != null) {
             TaskCycleApi.delete(data)
-            Toast.makeText(this, "删除数据！", Toast.LENGTH_SHORT)
-                .show()
+            MassageUtil.sendToast("删除数据！")
         } else {
-            Toast.makeText(this, "无法获取数据！", Toast.LENGTH_SHORT)
-                .show()
+            MassageUtil.sendToast("无法获取数据！")
         }
     }
 
@@ -266,11 +261,9 @@ open class TaskCycleContentCreateActivity: BindingBaseActivity<ActivityTaskCycle
         val data = getUiData()
         if (data != null) {
             TaskCycleApi.restore(data)
-            Toast.makeText(this, "恢复数据！", Toast.LENGTH_SHORT)
-                .show()
+            MassageUtil.sendToast("恢复数据！")
         } else {
-            Toast.makeText(this, "无法获取数据！", Toast.LENGTH_SHORT)
-                .show()
+            MassageUtil.sendToast("无法获取数据！")
         }
     }
 
