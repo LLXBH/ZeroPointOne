@@ -127,6 +127,7 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
         getBinding().srlTaskList.isRefreshing = true
@@ -149,6 +150,7 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun updateDataOrUI(list: List<TaskCycle>? = null, clear:Boolean = true) {
 
         /*

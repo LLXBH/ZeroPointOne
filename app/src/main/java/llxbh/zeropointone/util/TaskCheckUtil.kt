@@ -68,7 +68,7 @@ class TaskCheckUtil {
      * @param webView 浏览器
      *
      */
-    fun onSwitchStrongOrCheck(textView: TextView, checkAdapter: TaskContentCheckAdapter, webView: WebView?) {
+    fun onSwitchStrongOrCheck(textView: TextView, checkAdapter: TaskContentCheckAdapter, webView: WebView) {
         // 判断当前状态
         val haveContent = textView.text.toString().isNotEmpty()
         val haveCheck = checkAdapter.items.isNotEmpty()
@@ -109,7 +109,7 @@ class TaskCheckUtil {
         }
 
         // 显示详情的状态，而不是编辑，需要同步刷新一下
-        sMarkdownProcessor.onMarkdownToHtmlView(textView.text.toString() ?: "", webView)
+        sMarkdownProcessor.onMarkdownToHtmlView(textView.text.toString(), webView)
     }
 
 }
