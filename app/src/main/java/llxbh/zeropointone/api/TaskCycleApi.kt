@@ -33,8 +33,9 @@ object TaskCycleApi {
             sTaskCycleDao.getAll()
                 // 自定义排序，对数据处理一下顺序
                 .sortedWith(compareBy(
+                    { it.startTimes },
                     // 按今天是否已经完成打卡排序
-                    {TimeUtil.isToDay(it.finishedTimes)}
+                    { TimeUtil.isToDay(it.finishedTimes) }
                 ))
         }
     }
