@@ -30,7 +30,6 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
             override fun onPracticeEnd(num: Int) {
                 getBinding().also {
-                    it.mPracticeTiming = getMillisecondsToTimeFormat(0)
                     it.mAllFrequency = num.toString()
                 }
                 MassageUtil.sendNotification("练习结束！")
@@ -68,7 +67,6 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
         }
     )
-
     private val sTomatoClick = View.OnClickListener {
 
         getBinding().apply {
@@ -109,6 +107,29 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
         )
     }
 
+    /**
+     * 自定义的 TextWatcher ，主要用于减少样本代码
+     */
+    abstract class MyTextWatcher : TextWatcher {
+
+        override fun beforeTextChanged(p0: CharSequence?, start: Int, count: Int, after: Int) {
+            //...
+        }
+
+        override fun onTextChanged(p0: CharSequence?, start: Int, count: Int, after: Int) {
+            //...
+        }
+
+        override fun afterTextChanged(editable: Editable?) {
+            val input = editable.toString().trim()
+            afterTextChanged(input)
+
+        }
+
+        abstract fun afterTextChanged(text: String)
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -119,111 +140,28 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
             // 监控用户输入的数值，同步修改到 sTomato
             // 练习数值
-            etTomatoClockPracticeTime.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                    //TODO("Not yet implemented")
+            etTomatoClockPracticeTime.addTextChangedListener(object : MyTextWatcher() {
+                override fun afterTextChanged(text: String) {
+                    sTomato.practiceTime = text.toInt()
                 }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    //TODO("Not yet implemented")
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    onAfterTextChanged(etTomatoClockPracticeTime, s)
-                }
-
             })
-            etTomatoClockPracticeFrequency.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                    //TODO("Not yet implemented")
+            etTomatoClockPracticeFrequency.addTextChangedListener(object : MyTextWatcher() {
+                override fun afterTextChanged(text: String) {
+                    sTomato.practiceFrequency = text.toInt()
                 }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    //TODO("Not yet implemented")
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    onAfterTextChanged(etTomatoClockPracticeFrequency, s)
-                }
-
             })
             // 休息数值
-            etTomatoClockRestShortTime.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                    //TODO("Not yet implemented")
+            etTomatoClockRestShortTime.addTextChangedListener(object : MyTextWatcher() {
+                override fun afterTextChanged(text: String) {
+                    sTomato.restShortTime = text.toInt()
                 }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    //TODO("Not yet implemented")
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    onAfterTextChanged(etTomatoClockRestShortTime, s)
-                }
-
             })
-            etTomatoClockRestLongTime.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                    //TODO("Not yet implemented")
+            etTomatoClockRestLongTime.addTextChangedListener(object : MyTextWatcher() {
+                override fun afterTextChanged(text: String) {
+                    sTomato.restLongTime = text.toInt()
                 }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    //TODO("Not yet implemented")
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    onAfterTextChanged(etTomatoClockRestLongTime, s)
-                }
-
             })
-
         }
     }
-
-    private fun onAfterTextChanged(view: View, editable: Editable?) {
-        val input = editable.toString().trim()
-        if (input.isNotEmpty()) {
-            try {
-                getBinding().apply {
-                    when (view.id) {
-                        etTomatoClockPracticeTime.id -> {
-                            sTomato.practiceTime = input.toInt()
-                        }
-                        etTomatoClockPracticeFrequency.id -> {
-                            sTomato.practiceFrequency = input.toInt()
-                        }
-                        etTomatoClockRestShortTime.id -> {
-                            sTomato.restShortTime = input.toInt()
-                        }
-                        etTomatoClockRestLongTime.id -> {
-                            sTomato.restLongTime = input.toInt()
-                        }
-                    }
-                }
-            } catch (e: NullPointerException) {
-                // 不变
-            }
-        }
-    }
-
 }
+
