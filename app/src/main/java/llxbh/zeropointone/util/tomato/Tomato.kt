@@ -13,8 +13,13 @@ import androidx.databinding.ObservableLong
  * @param restLongTime 大休时间
  */
 data class Tomato(
-    var practiceTime: Int,
-    var practiceFrequency: Int,
-    var restShortTime: Int,
-    var restLongTime: Int
-)
+    var practiceTime: Int = 30,
+    var practiceFrequency: Int = 4,
+    var restShortTime: Int = 5,
+    var restLongTime: Int = 45
+) {
+    val defaultPracticeTime = 30
+    val defaultPracticeFrequency = 4
+    val defaultRestShortTime = 5
+    val defaultRestLongTime = 45
+}
