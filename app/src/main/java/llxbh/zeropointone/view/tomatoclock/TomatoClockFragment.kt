@@ -17,7 +17,7 @@ import llxbh.zeropointone.util.tomato.TomatoClockStateInterface
 
 class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
 
-    private val sTomato = Tomato(30, 4, 5, 45)
+    private val sTomato = Tomato()
     private val sTomatoCloakUtil = TomatoCloakUtil(
         sTomato,
         object : TomatoClockStateInterface {
@@ -123,7 +123,6 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
         override fun afterTextChanged(editable: Editable?) {
             val input = editable.toString().trim()
             afterTextChanged(input)
-
         }
 
         abstract fun afterTextChanged(text: String)
@@ -142,23 +141,23 @@ class TomatoClockFragment: BindingBaseFragment<FragmentTomatoClockBinding>() {
             // 练习数值
             etTomatoClockPracticeTime.addTextChangedListener(object : MyTextWatcher() {
                 override fun afterTextChanged(text: String) {
-                    sTomato.practiceTime = text.toInt()
+                    sTomato.practiceTime = text.toIntOrNull() ?: sTomato.defaultPracticeTime
                 }
             })
             etTomatoClockPracticeFrequency.addTextChangedListener(object : MyTextWatcher() {
                 override fun afterTextChanged(text: String) {
-                    sTomato.practiceFrequency = text.toInt()
+                    sTomato.practiceFrequency = text.toIntOrNull() ?: sTomato.defaultPracticeFrequency
                 }
             })
             // 休息数值
             etTomatoClockRestShortTime.addTextChangedListener(object : MyTextWatcher() {
                 override fun afterTextChanged(text: String) {
-                    sTomato.restShortTime = text.toInt()
+                    sTomato.restShortTime = text.toIntOrNull() ?: sTomato.defaultRestShortTime
                 }
             })
             etTomatoClockRestLongTime.addTextChangedListener(object : MyTextWatcher() {
                 override fun afterTextChanged(text: String) {
-                    sTomato.restLongTime = text.toInt()
+                    sTomato.restLongTime = text.toIntOrNull() ?: sTomato.defaultRestLongTime
                 }
             })
         }
