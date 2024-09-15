@@ -87,17 +87,17 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" >-->
 
-            <com.haibin.calendarview.CalendarView
-                android:id="@+id/cv_taskCompleteDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:select_mode="multi_mode"/>
+<!--            <com.haibin.calendarview.CalendarView-->
+<!--                android:id="@+id/cv_taskCompleteDate"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:select_mode="multi_mode"/>-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
         <!--Center-->
         <androidx.core.widget.NestedScrollView
