@@ -69,7 +69,11 @@ class TaskListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
         getBinding().rvTaskList.also {
             it.adapter = sTaskListAdapter.apply {
                 setOnItemClickListener { adapter, view, position ->
-                    onOpenTaskContent(false, adapter.getItem(position))
+                    TaskApi.onOpenContent(
+                        requireActivity(),
+                        false,
+                        adapter.getItem(position)
+                    )
                 }
                 // 点击任务的完成状态
                 addOnItemChildClickListener(R.id.cb_taskState) { adapter, view, position ->
@@ -117,7 +121,11 @@ class TaskListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
         // 点击按钮（+）进入 “内容” 界面创建新的任务
         getBinding().fabtnTaskAdd.also {
             it.setOnClickListener {
-                onOpenTaskContent(true, null)
+                TaskApi.onOpenContent(
+                    requireActivity(),
+                    true,
+                    null
+                )
             }
         }
     }
@@ -187,22 +195,6 @@ class TaskListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
             sTaskListAdapter.addAll(list)
         }
         onViewComplete()
-    }
-
-    /**
-     * 以什么样的状态进入内容界面
-     */
-    private fun onOpenTaskContent(create: Boolean, taskData: Task?) {
-        activity?.also {
-            if (create || (taskData == null)) {
-                startActivity(Intent(
-                    it,
-                    TaskContentCreateActivity::class.java
-                ))
-            } else {
-                TaskContentUpdateActivity.start(taskData.id, it)
-            }
-        }
     }
 
     private fun onViewComplete() {

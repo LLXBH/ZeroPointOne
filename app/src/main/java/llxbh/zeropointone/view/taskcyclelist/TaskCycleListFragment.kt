@@ -63,7 +63,11 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
             binding.rvTaskList.adapter = sTaskCycleListAdapter.also { adapter ->
                 // 打开对应的内容界面
                 adapter.setOnItemClickListener { adapter, view, position ->
-                    onOpenTaskCycleContent(false, adapter.getItem(position))
+                    TaskCycleApi.onOpenContent(
+                        requireActivity(),
+                        false,
+                        adapter.getItem(position)
+                    )
                 }
 
                 // 长按列表，进入多选删除模式
@@ -108,7 +112,11 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
 
             // 增加任务
             binding.fabtnTaskAdd.setOnClickListener {
-                onOpenTaskCycleContent(true, null)
+                TaskCycleApi.onOpenContent(
+                    requireActivity(),
+                    true,
+                    null
+                )
             }
 
             // 下拉刷新
@@ -137,16 +145,6 @@ class TaskCycleListFragment: BindingBaseFragment<FragmentTaskListBinding>() {
                 updateDataOrUI()
             }
             getBinding().srlTaskList.isRefreshing = false
-        }
-    }
-
-    private fun onOpenTaskCycleContent(create: Boolean, taskData: TaskCycle?) {
-        activity?.also {
-            if (create || (taskData == null)) {
-                TaskCycleContentCreateActivity.start(it)
-            } else {
-                TaskCycleContentUpdateActivity.start(it, taskData.id)
-            }
         }
     }
 

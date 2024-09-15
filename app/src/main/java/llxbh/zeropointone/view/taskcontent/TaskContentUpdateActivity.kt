@@ -14,7 +14,7 @@ class TaskContentUpdateActivity: TaskContentCreateActivity() {
 
     companion object {
 
-        fun start(taskId: Int, activity: Activity) {
+        fun start(activity: Activity, taskId: Int) {
             val intent = Intent(
                 activity,
                 TaskContentUpdateActivity::class.java

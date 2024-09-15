@@ -1,5 +1,7 @@
 package llxbh.zeropointone.view.taskcontent
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -19,6 +21,7 @@ import llxbh.zeropointone.base.BindingBaseActivity
 import llxbh.zeropointone.util.TaskCheckUtil
 import llxbh.zeropointone.util.time.DatePickInterface
 import llxbh.zeropointone.util.time.TimeUtil
+import llxbh.zeropointone.view.taskcyclecontent.TaskCycleContentCreateActivity
 import java.time.LocalDate
 
 /**
@@ -32,6 +35,18 @@ open class TaskContentCreateActivity: BindingBaseActivity<ActivityTaskContentBin
     protected val sMarkdownProcessor = TextUtil()
 
     private val sTaskCheckUtil = TaskCheckUtil()
+
+    companion object {
+
+        fun start(activity: Activity) {
+            val intent = Intent(
+                activity,
+                TaskContentCreateActivity::class.java
+            )
+            activity.startActivity(intent)
+        }
+
+    }
 
 
     override fun setBinding(): ActivityTaskContentBinding {

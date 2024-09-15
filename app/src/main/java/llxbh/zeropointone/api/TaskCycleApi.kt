@@ -1,14 +1,21 @@
 package llxbh.zeropointone.api
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import llxbh.zeropointone.data.model.Task
 import llxbh.zeropointone.data.model.TaskCycle
 import llxbh.zeropointone.data.repository.AppDatabase
 import llxbh.zeropointone.util.MassageUtil
 import llxbh.zeropointone.util.time.TimeUtil
+import llxbh.zeropointone.view.taskcontent.TaskContentCreateActivity
+import llxbh.zeropointone.view.taskcontent.TaskContentUpdateActivity
+import llxbh.zeropointone.view.taskcyclecontent.TaskCycleContentCreateActivity
+import llxbh.zeropointone.view.taskcyclecontent.TaskCycleContentUpdateActivity
 
 object TaskCycleApi {
 
@@ -184,5 +191,20 @@ object TaskCycleApi {
             }
         }
         return false
+    }
+
+    /**
+     * 打开详情内容界面
+     *
+     * @param activity Activity
+     * @param create 是否创建模式
+     * @param taskData 用于对应的 Task 界面
+     */
+    fun onOpenContent(activity: Activity, create: Boolean, taskData: TaskCycle?) {
+        if (create || (taskData == null)) {
+            TaskCycleContentCreateActivity.start(activity)
+        } else {
+            TaskCycleContentUpdateActivity.start(activity, taskData.id)
+        }
     }
 }
