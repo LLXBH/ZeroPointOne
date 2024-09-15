@@ -87,24 +87,13 @@ object TaskApi {
                 it.updateTimes = TimeUtil.getNowTime()
 
                 // 检查是否需要循环创建清单
-                onCirculateAddNewTask(it)?.also { newData ->
-                    insert(newData)
+                if (it.onLoopInspect()) {
+                    insert(it.onLoopNewData())
                 }
 
                 // 更新数据
                 sTaskDao.update(it)
             }
-        }
-    }
-
-    /**
-     * 判断是否需要创建新的清单
-     */
-    private fun onCirculateAddNewTask(task: Task): Task? {
-        return if (task.onLoopInspect()) {
-            task.onLoopNewData()
-        } else {
-            null
         }
     }
 

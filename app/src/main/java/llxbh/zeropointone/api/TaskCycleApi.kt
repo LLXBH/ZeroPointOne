@@ -108,8 +108,8 @@ object TaskCycleApi {
                 it.updateTimes = TimeUtil.getNowTime()
 
                 // 检查是否需要循环创建清单
-                onCirculateAddNewTask(it)?.also { newData ->
-                    insert(newData)
+                if (it.onLoopInspect()) {
+                    insert(it.onLoopNewData())
                 }
 
                 // 更新数据
@@ -141,18 +141,6 @@ object TaskCycleApi {
             taskCycle.updateTimes = TimeUtil.getNowTime()
             taskCycle.isDelete = false
             update(taskCycle)
-        }
-    }
-
-    /**
-     * 判断是否需要创建新的清单
-     */
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun onCirculateAddNewTask(taskCycle: TaskCycle): TaskCycle? {
-        return if (taskCycle.onLoopInspect()) {
-            taskCycle.onLoopNewData()
-        } else {
-            null
         }
     }
 
