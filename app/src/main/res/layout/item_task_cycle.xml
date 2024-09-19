@@ -60,7 +60,7 @@
             app:layout_constraintTop_toTopOf="@id/cb_taskState"
             app:layout_constraintBottom_toBottomOf="@id/cb_taskState"
             app:layout_constraintStart_toEndOf="@id/cb_taskState"
-            app:layout_constraintEnd_toStartOf="@id/tv_taskFinishedNum" />
+            app:layout_constraintEnd_toStartOf="@id/tv_taskNeedCompleteNumHint" />
 
         <!--
             详细内容
@@ -94,11 +94,12 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <View
+            android:id="@+id/view"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="#555555"
-            app:layout_constraintStart_toStartOf="@id/tv_taskFinishedNum"
             app:layout_constraintEnd_toEndOf="@id/tv_taskFinishedNum"
+            app:layout_constraintStart_toStartOf="@id/tv_taskFinishedNum"
             app:layout_constraintTop_toBottomOf="@id/tv_taskFinishedNum" />
 
         <TextView
@@ -112,6 +113,19 @@
             app:layout_constraintStart_toStartOf="@id/tv_taskFinishedNum"
             app:layout_constraintEnd_toEndOf="@id/tv_taskFinishedNum"
             app:layout_constraintTop_toBottomOf="@id/tv_taskFinishedNum" />
+
+        <TextView
+            android:id="@+id/tv_taskNeedCompleteNumHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="急"
+            android:textColor="#F44336"
+            android:textSize="24sp"
+            android:visibility="@{((taskCycle.startTimes != 0L) == (timeTools.onCountDayNum(taskCycle.endTimes) &lt;= (taskCycle.needCompleteNum - taskCycle.finishedTimes.size()))) ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_taskNeedCompleteNum"
+            app:layout_constraintEnd_toStartOf="@+id/tv_taskFinishedNum"
+            app:layout_constraintTop_toTopOf="@+id/tv_taskFinishedNum" />
 
         <TextView
             android:id="@+id/tv_taskDateStart"
