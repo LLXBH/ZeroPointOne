@@ -285,4 +285,17 @@ object TimeUtil {
         datePickerView.show()
     }
 
+    /**
+     * 计算今天与 date 相差的天数
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun onCountDayNum(dateTime: Long): Int {
+        val toDayTime = getSomeDayStartTimers()
+        val countDayTime = getSomeDayStartTimers(getLocalData(dateTime))
+
+        val distanceTime = countDayTime - toDayTime
+        return (distanceTime / java.util.concurrent.TimeUnit.DAYS.toMillis(1)).toInt()
+
+    }
+
  }
