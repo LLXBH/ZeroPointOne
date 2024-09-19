@@ -96,11 +96,11 @@ object TimeUtil {
      */
     @SuppressLint("NewApi")
     fun onDateOnAddDay(date: Date, dayNum: Int): Date? {
-        val date =  date.toInstant()
+        val newDate =  date.toInstant()
             .atZone(zoneId)
             .toLocalDate()
             .plusDays(dayNum.toLong())
-        return stringToDate(toString(date.year, date.monthValue, date.dayOfMonth))
+        return stringToDate(toString(newDate.year, newDate.monthValue, newDate.dayOfMonth))
     }
 
     /**
