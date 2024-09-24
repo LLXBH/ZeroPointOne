@@ -4,6 +4,7 @@
 
     <data>
         <import type="android.view.View" />
+
         <variable
             name="timeTools"
             type="llxbh.zeropointone.util.time.TimeUtil" />
@@ -114,6 +115,12 @@
             app:layout_constraintEnd_toEndOf="@id/tv_taskFinishedNum"
             app:layout_constraintTop_toBottomOf="@id/tv_taskFinishedNum" />
 
+        <!--
+        一个小提示，提示这个任务需要及时去完成
+        1. 任务没有日期；
+        2. 没有需要完成的次数；
+        3. 距离结束的日期（“今天” 也算一天） <= 还需要完成的次数；
+        -->
         <TextView
             android:id="@+id/tv_taskNeedCompleteNumHint"
             android:layout_width="0dp"
@@ -122,7 +129,7 @@
             android:text="急"
             android:textColor="#F44336"
             android:textSize="24sp"
-            android:visibility="@{((taskCycle.startTimes != 0L) == (timeTools.onCountDayNum(taskCycle.endTimes) &lt;= (taskCycle.needCompleteNum - taskCycle.finishedTimes.size()))) ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{((taskCycle.startTimes == 0L) || (taskCycle.needCompleteNum == 0) || ((timeTools.onCountDayNum(taskCycle.endTimes)+1 &lt;= taskCycle.needCompleteNum-taskCycle.finishedTimes.size()))) ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_taskNeedCompleteNum"
             app:layout_constraintEnd_toStartOf="@+id/tv_taskFinishedNum"
             app:layout_constraintTop_toTopOf="@+id/tv_taskFinishedNum" />
